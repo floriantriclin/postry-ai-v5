@@ -1,51 +1,47 @@
 @import "tailwindcss";
 
 @theme {
-  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-}
-
-:root {
-  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-}
-
-body {
-  font-family: var(--font-mono);
-  background-color: white;
-  color: black;
+  --font-sans: var(--font-inter);
+  --font-heading: var(--font-chivo);
+  --font-mono: var(--font-jetbrains-mono);
+  
+  --color-carbon: #09090b;
+  --color-signal-orange: #f97316;
 }
 
 @layer base {
   * {
-    border-color: black;
+    border-color: var(--color-carbon);
     border-radius: 0;
+  }
+  
+  body {
+    font-family: var(--font-sans);
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
   }
 }
 
 @layer components {
   .raw-button {
-    padding: 0.5rem 1rem;
-    border-width: 2px;
-    border-color: black;
-    text-transform: uppercase;
-    font-weight: 900;
-    transition-property: color, background-color;
-    transition-duration: 200ms;
+    @apply h-12 px-6 border-2 border-carbon font-heading font-black uppercase tracking-tighter transition-all active:scale-[0.98] inline-flex items-center justify-center;
   }
   
-  .raw-button:hover {
-    background-color: black;
-    color: white;
+  .raw-button-primary {
+    @apply bg-carbon text-white hover:bg-zinc-800;
+  }
+  
+  .raw-button-secondary {
+    @apply bg-white text-carbon hover:bg-zinc-100;
   }
   
   .raw-card {
-    border-width: 2px;
-    border-color: black;
-    padding: 1.5rem;
+    @apply bg-white border-2 border-carbon p-6;
   }
   
   .raw-input {
-    border-width: 2px;
-    border-color: black;
-    padding: 0.5rem 0.75rem;
+    @apply bg-transparent border-b-2 border-carbon px-0 py-2 font-mono focus:outline-none focus:border-b-4 focus:border-signal-orange;
   }
 }
