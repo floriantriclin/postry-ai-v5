@@ -1,0 +1,30 @@
+{
+  "name": "postry-ai",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "clsx": "latest",
+    "lucide-react": "latest",
+    "next": "16.1.1-canary.27",
+    "react": "rc",
+    "react-dom": "rc",
+    "tailwind-merge": "latest",
+    "zod": "latest"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.0.0-alpha.33",
+    "@types/node": "^20.0.0",
+    "@types/react": "rc",
+    "@types/react-dom": "rc",
+    "autoprefixer": "^10.0.0",
+    "postcss": "^8.0.0",
+    "tailwindcss": "^4.0.0-alpha.33",
+    "typescript": "^5.0.0"
+  }
+}

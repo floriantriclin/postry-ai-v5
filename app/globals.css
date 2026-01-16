@@ -1,0 +1,51 @@
+@import "tailwindcss";
+
+@theme {
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+}
+
+:root {
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+}
+
+body {
+  font-family: var(--font-mono);
+  background-color: white;
+  color: black;
+}
+
+@layer base {
+  * {
+    border-color: black;
+    border-radius: 0;
+  }
+}
+
+@layer components {
+  .raw-button {
+    padding: 0.5rem 1rem;
+    border-width: 2px;
+    border-color: black;
+    text-transform: uppercase;
+    font-weight: 900;
+    transition-property: color, background-color;
+    transition-duration: 200ms;
+  }
+  
+  .raw-button:hover {
+    background-color: black;
+    color: white;
+  }
+  
+  .raw-card {
+    border-width: 2px;
+    border-color: black;
+    padding: 1.5rem;
+  }
+  
+  .raw-input {
+    border-width: 2px;
+    border-color: black;
+    padding: 0.5rem 0.75rem;
+  }
+}
