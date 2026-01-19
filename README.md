@@ -32,3 +32,9 @@ This project follows the "Raw UI" design philosophy:
 - Monospace font for a technical look.
 - Strict TypeScript typing.
 - Server Components by default.
+
+## Qualité et Tests
+
+Le projet adhère à des standards de test stricts pour garantir la qualité et la maintenabilité du code. Avant de soumettre une Pull Request, veuillez vous assurer que votre code est couvert par des tests pertinents.
+
+Pour une documentation détaillée sur les outils, la syntaxe et les meilleures pratiques, veuillez consulter nos **[Standards de Test](./docs/architecture/testing-standards.md)**.

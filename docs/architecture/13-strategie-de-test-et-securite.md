@@ -1,27 +1,5 @@
 # 13. Stratégie de Test & Sécurité
 
-## Stratégie de Test (MVP "Lean")
-
-Nous n'avons pas le temps pour une couverture à 100%. Nous ciblons les zones critiques.
-
-### 1. Tests Unitaires (Critiques Uniquement)
-
-- **Outil :** Vitest (plus rapide que Jest).
-- **Cible :**
-    - lib/utils.ts : Fonctions de formatage.
-    - actions/cv-parser.ts : Vérifier que l'extraction PDF retourne du texte propre (mock du buffer).
-    - lib/credit-logic.ts : Vérifier que la décrémentation des crédits fonctionne et bloque à 0.
-
-### 2. Tests d'Intégration (Manuels / Scriptés)
-
-- **Cible :** Le flux "Quiz -> API Gemini -> JSON".
-- **Méthode :** Script scripts/test-gemini.ts à lancer manuellement pour vérifier que Gemini répond bien au format JSON attendu (smoke test) sans lancer toute l'UI.
-
-### 3. Tests UI (Manuels)
-
-- **Cible :** Responsivité Mobile.
-- **Méthode :** Vérification visuelle sur Chrome DevTools (mode Device) et sur un vrai smartphone avant chaque déploiement Prod.
-
 ## Sécurité (Security by Design)
 
 ### 1. Protection des Données (Privacy)

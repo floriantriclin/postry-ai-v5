@@ -22,6 +22,9 @@ L'intelligence est fournie par **Google Gemini 2.5 Flash**.
 | **Paiements** | **Stripe Checkout** | **Latest** | Monetisation | Hosted Page, conformité PCI. |
 | **Validation** | **Zod** | **3.x** | Validation Données | Validation schémas API/Formulaires. |
 | **Client HTTP** | **Fetch API** | **Native** | Requêtes API | Natif Next.js, caching/revalidation. |
+| **Testing** | **Vitest** | **^4.0.17** | Test Runner | Rapide, compatible Jest, ESM natif. |
+| **Testing** | **React Testing Library** | **^16.3.2** | Test Composants UI | Simule comportement utilisateur. |
+| **Testing** | **Playwright** | **^1.57.0**| Test E2E | Cross-browser, fiable. |
 
 ## Infrastructure Cloud
 
