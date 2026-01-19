@@ -1,6 +1,6 @@
 # Story 1.3 : Fondation de l'UI du Quiz (Statique)
 
-**Status:** In Progress
+**Status:** Done
 **Parent Epic:** [Epic 1 : Fondation & Tunnel Public (Acquisition)](docs/epics/epic-1-acquisition.md)
 
 ## Description
@@ -32,70 +32,71 @@ Cette story a pour but de développer le composant React `QuizEngine` qui gère 
 ## Critères d'Acceptation
 
 ### 1. Sélection du Thème
-- [ ] Une grille de 10 thèmes est affichée, chargée depuis un fichier de configuration simple et facilement modifiable.
-- [ ] Aucun bouton "Démarrer" n'est présent sous la liste des thèmes.
-- [ ] Le clic sur une tuile de thème valide immédiatement la sélection et transitionne vers l'écran suivant.
+- [x] Une grille de 10 thèmes est affichée, chargée depuis un fichier de configuration simple et facilement modifiable.
+- [x] Aucun bouton "Démarrer" n'est présent sous la liste des thèmes.
+- [x] Le clic sur une tuile de thème valide immédiatement la sélection et transitionne vers l'écran suivant.
 
 ### 2. Consigne (Interstitiel)
-- [ ] Un écran explicatif s'affiche après la sélection du thème.
-- [ ] Le texte indique à l'utilisateur qu'il va être soumis à une première série de questions A/B pour déterminer son archétype rédactionnel.
-- [ ] Un bouton permet de lancer effectivement la phase de questions.
+- [x] Un écran explicatif s'affiche après la sélection du thème.
+- [x] Le texte indique à l'utilisateur qu'il va être soumis à une première série de questions A/B pour déterminer son archétype rédactionnel.
+- [x] Un bouton permet de lancer effectivement la phase de questions.
 
 ### 3. Phase 1 (Polarisation)
-- [ ] Le quiz démarre et affiche la première question de la Phase 1 depuis le fichier mock.
-- [ ] L'utilisateur peut répondre aux 6 questions.
-- [ ] Un clic sur une réponse (A ou B) passe automatiquement à la question suivante.
-- [ ] Une barre de progression indique "1/6", "2/6", etc.
-- [ ] Un bouton "Précédent" permet de revenir en arrière et de modifier sa réponse.
+- [x] Le quiz démarre et affiche la première question de la Phase 1 depuis le fichier mock.
+- [x] L'utilisateur peut répondre aux 6 questions.
+- [x] Un clic sur une réponse (A ou B) passe automatiquement à la question suivante.
+- [x] Une barre de progression indique "1/6", "2/6", etc.
+- [x] Un bouton "Précédent" permet de revenir en arrière et de modifier sa réponse.
 
 ### 4. Transition et Révélation de l'Archétype
-- [ ] Après la 6ème question, un écran de transition affiche le nom de l'archétype mocké (ex: "Le Stratège").
-- [ ] Un bouton "Continuer pour affiner" déclenche le passage à la phase suivante.
+- [x] Après la 6ème question, un écran de transition affiche le nom de l'archétype mocké (ex: "Le Stratège").
+- [x] Un bouton "Continuer pour affiner" déclenche le passage à la phase suivante.
 
 ### 5. Phase 2 (Affinage)
-- [ ] Le quiz affiche les 5 questions de la Phase 2 depuis le fichier mock.
-- [ ] La barre de progression indique un pourcentage d'affinage (ex: "Précision: 80%").
-- [ ] La navigation (Suivant/Précédent) reste fonctionnelle.
+- [x] Le quiz affiche les 5 questions de la Phase 2 depuis le fichier mock.
+- [x] La barre de progression indique un pourcentage d'affinage (ex: "Précision: 80%").
+- [x] La navigation (Suivant/Précédent) reste fonctionnelle.
 
 ### 6. Révélation Finale du Profil Augmenté
-- [ ] Après la 11ème question, un écran de chargement simulé (2-3 secondes) est affiché.
-- [ ] L'écran de révélation finale montre le "Label Final" et la "Définition" du profil augmenté mocké.
-- [ ] Un champ de saisie "De quoi voulez-vous parler ?" et un bouton "Générer un post" sont présents sous le profil révélé.
+- [x] Après la 11ème question, un écran de chargement simulé (2-3 secondes) est affiché.
+- [x] L'écran de révélation finale montre le "Label Final" et la "Définition" du profil augmenté mocké.
+- [x] Un champ de saisie "De quoi voulez-vous parler ?" et un bouton "Générer un post" sont présents sous le profil révélé.
 
 ### 7. Conception et Responsivité
-- [ ] L'interface est pleinement responsive (mobile-first).
-- [ ] Le design Néo-Brutaliste (bordures épaisses, pas d'arrondis, typographies contrastées) est respecté sur tous les écrans.
+- [x] L'interface est pleinement responsive (mobile-first).
+- [x] Le design Néo-Brutaliste (bordures épaisses, pas d'arrondis, typographies contrastées) est respecté sur tous les écrans.
 
 ### 8. Qualité et Tests
-- [ ] Implémentation des outils et pratiques définis dans les standards de test (data-testid, structure de test, etc.).
+- [x] Implémentation des outils et pratiques définis dans les standards de test (data-testid, structure de test, etc.).
 
 ## Tâches Techniques
 
 ### 1. Setup & Data
-- [ ] Créer le répertoire `lib/data` (Architecture: Shared Logic & Utils).
-- [ ] Créer `lib/data/themes.json` (10 thèmes hardcodés).
-- [ ] Créer `lib/data/mock-quiz.json` (Données complètes simulées).
+- [x] Créer le répertoire `lib/data` (Architecture: Shared Logic & Utils).
+- [x] Créer `lib/data/themes.json` (10 thèmes hardcodés).
+- [x] Créer `lib/data/mock-quiz.json` (Données complètes simulées).
 
 ### 2. Architecture & Routing
-- [ ] Créer la route `app/quiz/page.tsx`.
-- [ ] Initialiser le composant `components/feature/quiz-engine.tsx` (Client Component).
-- [ ] Implémenter le `useReducer` pour la machine à états :
+- [x] Créer la route `app/quiz/page.tsx`.
+- [x] Initialiser le composant `components/feature/quiz-engine.tsx` (Client Component).
+- [x] Implémenter le `useReducer` pour la machine à états :
   - `THEMES` -> `INSTRUCTIONS` -> `PHASE1` -> `TRANSITION_ARCHETYPE` -> `PHASE2` -> `LOADING` -> `FINAL_REVEAL`.
 
 ### 3. Composants UI (Mobile First + Neo-Brutalist)
-- [ ] `components/feature/quiz/theme-selector.tsx` : Grille de sélection.
-- [ ] `components/feature/quiz/quiz-interstitial.tsx` : Écran "Consigne".
-- [ ] `components/feature/quiz/question-card.tsx` : Affichage A/B + Barre de progression (Compatible Phase 1 & 2).
-- [ ] `components/feature/quiz/archetype-transition.tsx` : Reveal intermédiaire.
-- [ ] `components/feature/quiz/final-reveal.tsx` : Affichage du profil augmenté (Mocké).
+- [x] `components/feature/quiz/theme-selector.tsx` : Grille de sélection.
+- [x] `components/feature/quiz/quiz-interstitial.tsx` : Écran "Consigne".
+- [x] `components/feature/quiz/question-card.tsx` : Affichage A/B + Barre de progression (Compatible Phase 1 & 2).
+- [x] `components/feature/quiz/archetype-transition.tsx` : Reveal intermédiaire.
+- [x] `components/feature/quiz/final-reveal.tsx` : Affichage du profil augmenté (Mocké).
 
 ### 4. Intégration & Styles
-- [ ] Appliquer les classes Tailwind (Bordures noires, ombres dures, typo).
-- [ ] Vérifier la responsivité (Mobile / Desktop).
+- [x] Appliquer les classes Tailwind (Bordures noires, ombres dures, typo).
+- [x] Vérifier la responsivité (Mobile / Desktop).
 
 ## QA & Test Strategy
 
 **Risk Assessment:** [Analysis](docs/qa/assessments/1.3-risk-20260119.md)
+**NFR Assessment:** [Report](docs/qa/assessments/1.3-nfr-20260119.md)
 **Test Design:** [Test Plan](docs/qa/assessments/1.3-test-design-20260119.md)
 
 ### Key Risks Identified

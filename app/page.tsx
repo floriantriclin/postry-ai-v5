@@ -6,8 +6,8 @@ import LandingClient from './landing-client';
 export default function Home() {
   const router = useRouter();
 
-  const handleStart = (topic: string) => {
-    router.push(`/quiz?topic=${encodeURIComponent(topic.toLowerCase())}`);
+  const handleStart = () => {
+    router.push('/quiz');
   };
 
   return (

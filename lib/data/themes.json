@@ -1,0 +1,12 @@
+[
+  { "id": "t1", "label": "Tech & Innovation", "emoji": "💻" },
+  { "id": "t2", "label": "Marketing & Growth", "emoji": "🚀" },
+  { "id": "t3", "label": "Management & Leadership", "emoji": "👔" },
+  { "id": "t4", "label": "Entrepreneuriat", "emoji": "💡" },
+  { "id": "t5", "label": "Développement Personnel", "emoji": "🌱" },
+  { "id": "t6", "label": "Finance & Investissement", "emoji": "💰" },
+  { "id": "t7", "label": "Productivité & Organisation", "emoji": "⚡" },
+  { "id": "t8", "label": "Vente & Négociation", "emoji": "🤝" },
+  { "id": "t9", "label": "Design & Créativité", "emoji": "🎨" },
+  { "id": "t10", "label": "Société & Culture", "emoji": "🌍" }
+]
