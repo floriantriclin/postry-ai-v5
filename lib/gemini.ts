@@ -47,6 +47,24 @@ export function sanitizeTopic(topic: string): string {
 const genAI = new GoogleGenerativeAI(env.GEMINI_API_KEY || '');
 
 /**
+ * Returns a configured Gemini model instance.
+ */
+export function getGeminiModel(config: {
+  systemInstruction?: string;
+  temperature?: number;
+  responseMimeType?: 'application/json' | 'text/plain';
+} = {}) {
+  return genAI.getGenerativeModel({
+    model: 'gemini-2.5-flash',
+    systemInstruction: config.systemInstruction,
+    generationConfig: {
+      responseMimeType: config.responseMimeType || 'application/json',
+      temperature: config.temperature,
+    },
+  });
+}
+
+/**
  * Calls Gemini API with retry logic and robust parsing.
  */
 export async function generateWithGemini(
