@@ -1,7 +1,33 @@
 import { NextRequest } from 'next/server';
 import { POST as archetypePOST } from './archetype/route';
 import { POST as refinePOST } from './refine/route';
+import { POST as generatePOST } from './generate/route';
+import { POST as profilePOST } from './profile/route';
 import { ICE_PHASE1_DIMENSIONS_ORDER } from '@/lib/ice-constants';
+import { vi } from 'vitest';
+
+// Mock Gemini to avoid real API calls
+vi.mock('@/lib/gemini', () => ({
+  generateWithGemini: vi.fn().mockResolvedValue([
+    { id: 'Q7', dimension: 'STR', option_A: 'A', option_B: 'B' },
+    { id: 'Q8', dimension: 'INF', option_A: 'A', option_B: 'B' },
+    { id: 'Q9', dimension: 'ANC', option_A: 'A', option_B: 'B' },
+    { id: 'Q10', dimension: 'DEN', option_A: 'A', option_B: 'B' },
+    { id: 'Q11', dimension: 'PRI', option_A: 'A', option_B: 'B' },
+  ]),
+  sanitizeTopic: (t: string) => t,
+  getGeminiModel: vi.fn().mockReturnValue({
+    generateContent: vi.fn().mockResolvedValue({
+      response: {
+        text: () => JSON.stringify({
+          label_final: "Le Stratège Lumineux",
+          definition_longue: "Une définition de plus de quarante-cinq mots pour valider la règle de longueur minimale imposée par le schéma Zod dans la route profile. Il faut que ce texte soit assez long pour passer le test sans erreur. Voici donc quelques mots supplémentaires pour être absolument certain que nous dépassons la limite requise de quarante-cinq mots et ainsi valider le test avec succès."
+        })
+      }
+    })
+  }),
+  cleanJsonResponse: (t: string) => t
+}));
 
 describe('Quiz Logic API Integration Tests', () => {
   describe('POST /api/quiz/archetype', () => {
@@ -157,6 +183,81 @@ describe('Quiz Logic API Integration Tests', () => {
       const data = await res.json();
       
       expect(data.newVector[0]).toBe(65);
+    });
+  });
+
+  describe('POST /api/quiz/generate (Phase 2)', () => {
+    it('should generate Phase 2 questions with valid context', async () => {
+      const req = new NextRequest('http://localhost/api/quiz/generate', {
+        method: 'POST',
+        body: JSON.stringify({
+          phase: 2,
+          topic: 'Test Topic',
+          context: {
+            archetypeName: 'Le Stratège',
+            archetypeVector: [25, 65, 85, 85, 30, 15, 20, 60, 60],
+            targetDimensions: ['STR', 'INF', 'ANC', 'DEN', 'PRI']
+          }
+        }),
+      });
+
+      const res = await generatePOST(req);
+      expect(res.status).toBe(200);
+      const data = await res.json();
+      
+      expect(data).toHaveLength(5);
+      expect(data[0].id).toBe('Q7');
+      expect(data[0].dimension).toBe('STR');
+    });
+
+    it('should fail if context is missing for phase 2', async () => {
+      const req = new NextRequest('http://localhost/api/quiz/generate', {
+        method: 'POST',
+        body: JSON.stringify({
+          phase: 2,
+          topic: 'Test Topic'
+          // context missing
+        }),
+      });
+
+      const res = await generatePOST(req);
+      expect(res.status).toBe(400);
+    });
+  });
+
+  describe('POST /api/quiz/profile', () => {
+    it('should generate profile with valid payload', async () => {
+      const req = new NextRequest('http://localhost/api/quiz/profile', {
+        method: 'POST',
+        body: JSON.stringify({
+          baseArchetype: 'Le Stratège',
+          finalVector: [30, 60, 80, 80, 35, 20, 25, 65, 65]
+        }),
+      });
+
+      const res = await profilePOST(req);
+      if (res.status !== 200) {
+        const errorData = await res.json();
+        console.error('Profile API Error:', errorData);
+      }
+      expect(res.status).toBe(200);
+      const data = await res.json();
+      
+      expect(data.label_final).toBe("Le Stratège Lumineux");
+      expect(data.definition_longue).toBeDefined();
+    });
+
+    it('should fail with invalid vector', async () => {
+      const req = new NextRequest('http://localhost/api/quiz/profile', {
+        method: 'POST',
+        body: JSON.stringify({
+          baseArchetype: 'Le Stratège',
+          finalVector: [30, 60] // Invalid length
+        }),
+      });
+
+      const res = await profilePOST(req);
+      expect(res.status).toBe(400);
     });
   });
 });

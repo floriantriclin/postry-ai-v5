@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { generateWithGemini, sanitizeTopic } from '@/lib/gemini';
-import { ICE_VECTOR_ORDER } from '@/lib/ice-constants';
+import { ICE_VECTOR_ORDER, ICE_PHASE1_DIMENSIONS_ORDER } from '@/lib/ice-constants';
+import themes from '@/lib/data/themes.json';
 
 // Zod schemas for request validation
 const Phase1RequestSchema = z.object({
@@ -24,8 +25,24 @@ const GenerateRequestSchema = z.discriminatedUnion('phase', [
   Phase2RequestSchema,
 ]);
 
+// Helper to normalize dimensions from potential LLM variations to codes
+function normalizeDimension(dim: string): string {
+  const map: Record<string, string> = {
+    'POSTURE': 'POS',
+    'TEMPÉRATURE': 'TEM', 'TEMPERATURE': 'TEM',
+    'DENSITÉ': 'DEN', 'DENSITE': 'DEN',
+    'STRUCTURE': 'STR',
+    'PRISME': 'PRI',
+    'CADENCE': 'CAD',
+    'REGISTRE': 'REG',
+    'INFLEXION': 'INF',
+    'ANCRAGE': 'ANC'
+  };
+  return map[dim.toUpperCase()] || dim;
+}
+
 export async function POST(req: NextRequest) {
-  const timeoutMs = 15000;
+  const timeoutMs = 45000; // Increased to 45s to handle potential model latencies/retries
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
 
@@ -42,7 +59,12 @@ export async function POST(req: NextRequest) {
     }
 
     const { phase, topic } = validationResult.data;
-    const cleanTopic = sanitizeTopic(topic);
+    
+    // Resolve theme ID to label if necessary
+    const matchedTheme = themes.find((t: { id: string; label: string }) => t.id === topic);
+    const resolvedTopic = matchedTheme ? matchedTheme.label : topic;
+    
+    const cleanTopic = sanitizeTopic(resolvedTopic);
 
     // 2. Phase 1 Logic
     if (phase === 1) {
@@ -52,27 +74,27 @@ export async function POST(req: NextRequest) {
 
 ### RÉFÉRENTIEL DES DIMENSIONS (PHASE 1)
 
-Q1 : POSTURE (Hiérarchie)
+Q1 : POSTURE (Code: POS)
 - Borne 0 (Humble/Pair) : Partage d'expérience, doute, 'Je', vulnérabilité. Ex: 'J'ai fait cette erreur au début.'
 - Borne 100 (Guru/Vertical) : Affirmation, vérité générale, 'Vous', autorité. Ex: 'Voici la seule méthode qui fonctionne.'
 
-Q2 : TEMPÉRATURE (Émotion)
+Q2 : TEMPÉRATURE (Code: TEM)
 - Borne 0 (Froid/Clinique) : Constat objectif, neutre, sans adjectif émotionnel. Ex: 'Le résultat est de 12%.'
 - Borne 100 (Chaud/Viscéral) : Passion, exclamation, ressenti fort, tripes. Ex: 'C'est une victoire incroyable !'
 
-Q3 : DENSITÉ (Complexité)
+Q3 : DENSITÉ (Code: DEN)
 - Borne 0 (Simple/Vulgarisé) : Mots courants, analogies accessibles, zéro jargon. Ex: 'C'est comme un moteur de vélo.'
 - Borne 100 (Expert/Technique) : Jargon précis, acronymes, niveau professionnel. Ex: 'L'architecture micro-services permet la scalabilité.'
 
-Q4 : PRISME (Vision)
+Q4 : PRISME (Code: PRI)
 - Borne 0 (Optimiste/Opportunité) : Focus sur le positif, l'avenir, la solution. Ex: 'L'IA est une chance pour nous.'
 - Borne 100 (Critique/Sceptique) : Focus sur le risque, le danger, la mise en garde. Ex: 'L'IA est une menace pour l'emploi.'
 
-Q5 : CADENCE (Rythme)
+Q5 : CADENCE (Code: CAD)
 - Borne 0 (Haché/Percutant) : Phrases très courtes. Sujet-Verbe-Point. Impact. Ex: 'C'est fait. On avance.'
 - Borne 100 (Fluide/Lié) : Phrases longues, virgules, connecteurs, musicalité. Ex: 'Une fois la tâche finie, nous progressons sereinement.'
 
-Q6 : REGISTRE (Couleur)
+Q6 : REGISTRE (Code: REG)
 - Borne 0 (Sérieux/Pro) : Gravité, sobriété, premier degré, respect des codes. Ex: 'Il faut respecter les délais.'
 - Borne 100 (Ludique/Décalé) : Humour, second degré, emojis, décalage. Ex: 'Houston, on a un (petit) problème 🚀.'
 
@@ -81,11 +103,26 @@ Q6 : REGISTRE (Couleur)
 2. Chaque paire A/B doit traiter du MÊME sujet thématique (ex: Q1 sur l'apprentissage, Q2 sur un résultat, etc.).
 3. Les options doivent être claires, contrastées mais crédibles (pas de caricature grossière).
 4. Longueur maximale par option : 15 mots.
+5. IMPORTANT : Utilise les codes à 3 lettres (POS, TEM, DEN, PRI, CAD, REG) pour le champ "dimension".
 
 FORMAT DE RÉPONSE ATTENDU :
-Un tableau JSON d'objets : [{"id": "Q1", "dimension": "POSTURE", "option_A": "...", "option_B": "..."}, ...]`;
+Un tableau JSON d'objets : [{"id": "Q1", "dimension": "POS", "option_A": "...", "option_B": "..."}, ...]`;
 
       const questions = await generateWithGemini(systemInstruction, userPrompt, 2, controller.signal);
+
+      // Normalize dimensions
+      questions.forEach(q => {
+        q.dimension = normalizeDimension(q.dimension) as any;
+      });
+
+      // Validate Phase 1 dimensions
+      const generatedDims = questions.map(q => q.dimension);
+      const missingDims = ICE_PHASE1_DIMENSIONS_ORDER.filter(dim => !generatedDims.includes(dim));
+      
+      if (missingDims.length > 0) {
+        throw new Error(`Generated quiz missing dimensions: ${missingDims.join(', ')}`);
+      }
+
       return NextResponse.json(questions);
     }
 
@@ -121,16 +158,31 @@ Un tableau JSON d'objets : [{"id": "Q1", "dimension": "POSTURE", "option_A": "..
 - Dimensions à tester impérativement : ${context.targetDimensions.join(', ')}
 
 ### CONSIGNES DE GÉNÉRATION
-1. Pour chaque dimension listée, génère une paire A/B. 
+1. Pour chaque dimension listée, génère une paire A/B.
 2. L'option A doit correspondre à la borne 0, l'option B à la borne 100.
-3. **Nuance cruciale** : Ne sois pas caricatural. Les phrases doivent refléter le style de l'archétype ${context.archetypeName}. 
+3. **Nuance cruciale** : Ne sois pas caricatural. Les phrases doivent refléter le style de l'archétype ${context.archetypeName}.
 4. Chaque paire doit traiter d'un sujet différent lié au thème ${cleanTopic} pour éviter la répétition.
 5. Longueur maximale par option : 15 mots.
+6. IMPORTANT : Utilise les codes à 3 lettres indiqués (ex: CAD, DEN) pour le champ "dimension".
 
 FORMAT DE RÉPONSE ATTENDU :
-Un tableau JSON d'objets : [{"id": "Q7", "dimension": "...", "option_A": "...", "option_B": "..."}, ...]`;
+Un tableau JSON d'objets : [{"id": "Q7", "dimension": "CAD", "option_A": "...", "option_B": "..."}, ...]`;
 
       const questions = await generateWithGemini(systemInstruction, userPrompt, 2, controller.signal);
+
+      // Normalize dimensions
+      questions.forEach(q => {
+        q.dimension = normalizeDimension(q.dimension) as any;
+      });
+
+      // Validate Phase 2 dimensions
+      const generatedDims = questions.map(q => q.dimension);
+      const missingDims = context.targetDimensions.filter(dim => !generatedDims.includes(dim as any));
+      
+      if (missingDims.length > 0) {
+         throw new Error(`Generated quiz missing dimensions: ${missingDims.join(', ')}`);
+      }
+
       return NextResponse.json(questions);
     }
 

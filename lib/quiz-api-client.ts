@@ -26,6 +26,16 @@ export interface ArchetypeResponse {
   targetDimensions: DimensionCode[];
 }
 
+export interface GenerateProfileRequest {
+  baseArchetype: string;
+  finalVector: number[];
+}
+
+export interface ProfileResponse {
+  label_final: string;
+  definition_longue: string;
+}
+
 class QuizApiClient {
   private async handleResponse<T>(response: Response): Promise<T> {
     if (!response.ok) {
@@ -65,6 +75,23 @@ class QuizApiClient {
       return this.handleResponse<ArchetypeResponse>(response);
     } catch (error) {
       console.error('QuizApiClient.identifyArchetype error:', error);
+      throw error;
+    }
+  }
+
+  async generateProfile(request: GenerateProfileRequest): Promise<ProfileResponse> {
+    try {
+      const response = await fetch('/api/quiz/profile', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(request),
+      });
+
+      return this.handleResponse<ProfileResponse>(response);
+    } catch (error) {
+      console.error('QuizApiClient.generateProfile error:', error);
       throw error;
     }
   }

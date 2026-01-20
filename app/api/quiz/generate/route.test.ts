@@ -22,7 +22,14 @@ describe('API /api/quiz/generate', () => {
   });
 
   it('should call generateWithGemini for Phase 1', async () => {
-    const mockQuestions: QuizQuestion[] = [{ id: 'Q1', dimension: 'POS', option_A: 'A', option_B: 'B' }];
+    const mockQuestions: QuizQuestion[] = [
+      { id: 'Q1', dimension: 'POS', option_A: 'A', option_B: 'B' },
+      { id: 'Q2', dimension: 'TEM', option_A: 'A', option_B: 'B' },
+      { id: 'Q3', dimension: 'DEN', option_A: 'A', option_B: 'B' },
+      { id: 'Q4', dimension: 'PRI', option_A: 'A', option_B: 'B' },
+      { id: 'Q5', dimension: 'CAD', option_A: 'A', option_B: 'B' },
+      { id: 'Q6', dimension: 'REG', option_A: 'A', option_B: 'B' },
+    ];
     vi.mocked(gemini.generateWithGemini).mockResolvedValue(mockQuestions);
 
     const req = new NextRequest('http://localhost/api/quiz/generate', {
@@ -38,7 +45,13 @@ describe('API /api/quiz/generate', () => {
   });
 
   it('should call generateWithGemini for Phase 2', async () => {
-    const mockQuestions: QuizQuestion[] = [{ id: 'Q7', dimension: 'STR', option_A: 'A', option_B: 'B' }];
+    const mockQuestions: QuizQuestion[] = [
+      { id: 'Q7', dimension: 'STR', option_A: 'A', option_B: 'B' },
+      { id: 'Q8', dimension: 'INF', option_A: 'A', option_B: 'B' },
+      { id: 'Q9', dimension: 'ANC', option_A: 'A', option_B: 'B' },
+      { id: 'Q10', dimension: 'POS', option_A: 'A', option_B: 'B' },
+      { id: 'Q11', dimension: 'TEM', option_A: 'A', option_B: 'B' },
+    ];
     vi.mocked(gemini.generateWithGemini).mockResolvedValue(mockQuestions);
 
     const req = new NextRequest('http://localhost/api/quiz/generate', {
@@ -88,7 +101,14 @@ describe('API /api/quiz/generate', () => {
   });
 
   it('should sanitize the topic', async () => {
-    const mockQuestions: QuizQuestion[] = [{ id: 'Q1', dimension: 'POS', option_A: 'A', option_B: 'B' }];
+    const mockQuestions: QuizQuestion[] = [
+      { id: 'Q1', dimension: 'POS', option_A: 'A', option_B: 'B' },
+      { id: 'Q2', dimension: 'TEM', option_A: 'A', option_B: 'B' },
+      { id: 'Q3', dimension: 'DEN', option_A: 'A', option_B: 'B' },
+      { id: 'Q4', dimension: 'PRI', option_A: 'A', option_B: 'B' },
+      { id: 'Q5', dimension: 'CAD', option_A: 'A', option_B: 'B' },
+      { id: 'Q6', dimension: 'REG', option_A: 'A', option_B: 'B' },
+    ];
     vi.mocked(gemini.generateWithGemini).mockResolvedValue(mockQuestions);
 
     const req = new NextRequest('http://localhost/api/quiz/generate', {
@@ -98,6 +118,33 @@ describe('API /api/quiz/generate', () => {
 
     await POST(req);
     expect(gemini.sanitizeTopic).toHaveBeenCalled();
+  });
+
+  it('should resolve theme ID to label', async () => {
+    const mockQuestions: QuizQuestion[] = [
+      { id: 'Q1', dimension: 'POS', option_A: 'A', option_B: 'B' },
+      { id: 'Q2', dimension: 'TEM', option_A: 'A', option_B: 'B' },
+      { id: 'Q3', dimension: 'DEN', option_A: 'A', option_B: 'B' },
+      { id: 'Q4', dimension: 'PRI', option_A: 'A', option_B: 'B' },
+      { id: 'Q5', dimension: 'CAD', option_A: 'A', option_B: 'B' },
+      { id: 'Q6', dimension: 'REG', option_A: 'A', option_B: 'B' },
+    ];
+    vi.mocked(gemini.generateWithGemini).mockResolvedValue(mockQuestions);
+
+    const req = new NextRequest('http://localhost/api/quiz/generate', {
+      method: 'POST',
+      body: JSON.stringify({ phase: 1, topic: 't1' }),
+    });
+
+    await POST(req);
+
+    // Expect the prompt to contain the resolved label "Tech & Innovation"
+    expect(gemini.generateWithGemini).toHaveBeenCalledWith(
+      expect.any(String),
+      expect.stringContaining('Tech & Innovation'),
+      expect.any(Number),
+      expect.any(AbortSignal)
+    );
   });
 
   it('should return 504 on timeout', async () => {

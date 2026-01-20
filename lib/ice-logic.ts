@@ -100,7 +100,7 @@ export function getTargetDimensions(archetypeVector: Vstyle): DimensionCode[] {
   // Calculer les distances à 50 pour les dimensions de Phase 1
   const distances = phase1Dims.map(dim => {
     const index = ICE_VECTOR_ORDER.indexOf(dim);
-    const value = archetypeVector[index];
+    const value = archetypeVector?.[index] ?? 50;
     return {
       dim,
       distance: Math.abs(value - 50)

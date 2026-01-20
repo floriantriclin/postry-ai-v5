@@ -8,8 +8,9 @@ import { ArchetypeTransition } from './archetype-transition';
 import { FinalReveal } from './final-reveal';
 import { quizReducer, initialState } from './quiz-engine.logic';
 import { quizApiClient } from '@/lib/quiz-api-client';
+import { getTargetDimensions } from '@/lib/ice-logic';
 import mockData from '@/lib/data/mock-quiz.json';
-import { DimensionCode } from '@/lib/types';
+import { DimensionCode, Vstyle } from '@/lib/types';
 
 export function QuizEngine() {
   const [state, dispatch] = useReducer(quizReducer, initialState);
@@ -71,15 +72,65 @@ export function QuizEngine() {
     }
   }, [state.step, state.answersP1, state.questionsP1.length, state.status, state.archetypeData]);
 
-  // 3. Simulate Phase 2 Loading (Temporary until story 1.8.2)
+  // 3. Pre-load Phase 2 Questions (AC 1.1)
   useEffect(() => {
-    if (state.step === 'LOADING_RESULTS') {
-      const timer = setTimeout(() => {
-        dispatch({ type: 'FINISH_LOADING' });
-      }, 2500);
-      return () => clearTimeout(timer);
+    // We trigger this as soon as we have archetype data (during Transition screen)
+    if (state.archetypeData && state.questionsP2.length === 0) {
+      const loadP2 = async () => {
+        dispatch({ type: 'API_LOAD_P2_START' });
+        try {
+          const targetDims = getTargetDimensions(state.archetypeData!.archetype.baseVector as Vstyle);
+          
+          const questions = await quizApiClient.generateQuestions({
+            phase: 2,
+            topic: state.themeId!,
+            context: {
+              archetypeName: state.archetypeData!.archetype.name,
+              archetypeVector: [...state.archetypeData!.archetype.baseVector],
+              targetDimensions: targetDims
+            }
+          });
+          dispatch({ type: 'API_LOAD_P2_SUCCESS', payload: questions });
+        } catch (error) {
+          console.error('P2 Loading failed, falling back to mock.', error);
+          dispatch({
+            type: 'API_LOAD_P2_ERROR',
+            payload: {
+              error: error instanceof Error ? error.message : 'Unknown error',
+              fallback: mockData.phase2 as any
+            }
+          });
+        }
+      };
+      loadP2();
     }
-  }, [state.step]);
+  }, [state.archetypeData, state.questionsP2.length, state.themeId]);
+
+  // 4. Generate Final Profile (AC 2.1)
+  useEffect(() => {
+    if (state.step === 'LOADING_RESULTS' && state.status !== 'loading' && state.currentVector && state.archetypeData) {
+      const generateProfile = async () => {
+        dispatch({ type: 'API_PROFILE_START' });
+        try {
+          const profile = await quizApiClient.generateProfile({
+            baseArchetype: state.archetypeData!.archetype.name,
+            finalVector: state.currentVector!
+          });
+          dispatch({ type: 'API_PROFILE_SUCCESS', payload: profile });
+        } catch (error) {
+          console.error('Profile generation failed, falling back to mock.', error);
+          dispatch({
+            type: 'API_PROFILE_ERROR',
+            payload: {
+              error: error instanceof Error ? error.message : 'Unknown error',
+              fallback: mockData.augmentedProfile as any
+            }
+          });
+        }
+      };
+      generateProfile();
+    }
+  }, [state.step, state.status, state.currentVector, state.archetypeData]);
 
   const renderStep = () => {
     switch (state.step) {
@@ -132,15 +183,28 @@ export function QuizEngine() {
         );
       
       case 'PHASE2':
-        // Note: For Phase 1 story, Phase 2 still uses mock data for questions
-        // but it will be updated in story 1.8.2
+        // AC 1.3: Handle latency if P2 questions aren't ready yet
+        if (state.questionsP2.length === 0) {
+           return (
+            <div className="flex flex-col items-center justify-center min-h-[60vh]">
+              <div className="w-12 h-12 border-4 border-zinc-200 border-t-black animate-spin rounded-full mb-4"></div>
+              <p className="font-mono text-sm uppercase tracking-widest text-zinc-500">
+                Préparation de l'affinage...
+              </p>
+            </div>
+          );
+        }
+
+        const currentQuestionP2 = state.questionsP2[state.questionIndex];
+        if (!currentQuestionP2) return null;
+
         return (
           <QuestionCard
-            question={mockData.phase2[state.questionIndex]}
+            question={currentQuestionP2}
             progressLabel={`Précision: ${50 + (state.questionIndex * 10)}%`}
-            onAnswer={(choice) => dispatch({ 
-              type: 'ANSWER_PHASE2', 
-              payload: { dimension: mockData.phase2[state.questionIndex].dimension as DimensionCode, choice } 
+            onAnswer={(choice) => dispatch({
+              type: 'ANSWER_PHASE2',
+              payload: { dimension: currentQuestionP2.dimension as DimensionCode, choice }
             })}
             onBack={() => dispatch({ type: 'PREVIOUS_PHASE2' })}
             canGoBack={true}
@@ -157,7 +221,8 @@ export function QuizEngine() {
         );
       
       case 'FINAL_REVEAL':
-        return <FinalReveal profile={mockData.augmentedProfile as any} />;
+        // We use state.profileData if available, otherwise fallback is handled in logic
+        return <FinalReveal profile={state.profileData || mockData.augmentedProfile as any} />;
       
       default:
         return null;

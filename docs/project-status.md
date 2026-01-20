@@ -25,11 +25,11 @@
 | **Story 1.6** | API de Calcul d'Archétype et d'Affinage | [DONE] |
 | **Story 1.7** | API de Synthèse du Profil Augmenté | [DONE] |
 | **Story 1.8.1** | API Infrastructure - Phase 1 | [DONE] |
-| **Story 1.8.2** | Phase 2 - Augmentation & Affinage | [-] In Progress |
+| **Story 1.8.2** | Phase 2 - Augmentation & Affinage | [DONE] |
 
 ## Next Steps
 
-1.  **Integration:** Phase 2 - Augmentation & Affinage (Story 1.8.2).
+1.  **UX Hardening:** Robustness & Mobile Polish (Story 1.8.3).
 
 ## Technical Achievements (Sprint 1)
 
@@ -41,6 +41,7 @@
 *   **Quiz Generation API:** Implemented `POST /api/quiz/generate` with Gemini integration, sanitization, and robust error handling (92% coverage).
 *   **Quiz Logic API:** Implemented `POST /api/quiz/archetype` and `POST /api/quiz/refine` with 100% logic coverage and Zod validation.
 *   **Profile Synthesis API:** Implemented `POST /api/quiz/profile` with Gemini, Drift Hint calculation, and strict 45-75 word count validation.
+*   **Zero-Latency Augmentation:** Implemented Client-Side vector refinement for Phase 2, eliminating network latency for Q7-Q11.
 
 ## Known Risks
 

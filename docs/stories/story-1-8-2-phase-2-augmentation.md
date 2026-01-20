@@ -1,6 +1,6 @@
 # Story 1.8.2 : Orchestration Phase 2 & Profil Augmenté
 
-**Status:** Ready
+**Status:** Done
 **Parent Epic:** [Epic 1 : Fondation & Tunnel Public (Acquisition)](docs/epics/epic-1-acquisition.md)
 **Dépendances :** [Story 1.8.1](docs/stories/story-1-8-1-api-infrastructure-phase-1.md).
 
@@ -53,15 +53,15 @@ Cette story complète le flux ICE en intégrant la Phase 2 (questions 7 à 11) e
 ## Plan d'Action (Tâches Techniques)
 
 - **Frontend :**
-  - [ ] Implémenter la logique de pré-chargement pour la phase 2 dans le `QuizEngine`.
-  - [ ] Intégrer la logique de mise à jour vectorielle (`updateVector` depuis `lib/ice-logic`) directement dans le `QuizEngine`.
-  - [ ] Intégrer l'appel final à `/profile` avec le vecteur calculé (V11) et gérer l'état de chargement associé.
-  - [ ] Assurer la mise à jour de la barre de progression "Précision" (50% -> 100%).
+  - [x] Implémenter la logique de pré-chargement pour la phase 2 dans le `QuizEngine`.
+  - [x] Intégrer la logique de mise à jour vectorielle (`updateVector` depuis `lib/ice-logic`) directement dans le `QuizEngine`.
+  - [x] Intégrer l'appel final à `/profile` avec le vecteur calculé (V11) et gérer l'état de chargement associé.
+  - [x] Assurer la mise à jour de la barre de progression "Précision" (50% -> 100%).
 - **Backend :**
-  - [ ] (Story 1.8.1) S'assurer que l'endpoint `/profile` est prêt. (L'endpoint `/refine` devient obsolète ou purement utilitaire).
+  - [x] (Story 1.8.1) S'assurer que l'endpoint `/profile` est prêt. (L'endpoint `/refine` devient obsolète ou purement utilitaire).
 - **Tests :**
-  - [ ] Mettre à jour les tests d'intégration pour simuler le flux complet (prefetch, profile).
-  - [ ] Ajouter des tests unitaires pour la gestion des états de chargement (attente phase 2, attente profil final).
+  - [x] Mettre à jour les tests d'intégration pour simuler le flux complet (prefetch, profile).
+  - [x] Ajouter des tests unitaires pour la gestion des états de chargement (attente phase 2, attente profil final).
 
 ## Assurance Qualité
 
