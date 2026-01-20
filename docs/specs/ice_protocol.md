@@ -17,6 +17,7 @@ Nom de fichier : ice_protocol.md
 | 2.3 | 15/01/2026 | FTR | Mise à jour du super prompt |
 | 3.0 | 17/01/2026 | FTR | Refonte pour adaptation à la v5 de postry.ai |
 | 3.1 | 19/01/2026 | PO | Clarification de la logique de calcul (Phase 2) et ajout d'un exemple détaillé. |
+| 3.2 | 20/01/2026 | PO | Mise à jour des schémas JSON et synchronisation avec la Story 1.5. |
 
 ---
 
@@ -256,11 +257,29 @@ Dès que la 6ème réponse de la Phase 1 est enregistrée :
     - **Priorité 1 (Les 3 Incontournables)** : Dimensions non testées en Phase 1 : **STRUCTURE (STR), INFLEXION (INF), ANCRAGE (ANC)**.
     - **Priorité 2 (Les 2 Floues)** : Les deux dimensions parmi les 6 autres dont le score actuel est le plus proche de 50 (Indice d'ambiguïté maximal).
     - ***Règle de départage (Tie-Breaking)*** *: En cas d'égalité (par exemple, plusieurs dimensions avec un score de 40), le système sélectionnera les deux premières dimensions rencontrées dans l'ordre de test de la Phase 1 : `POS`, `TEM`, `DEN`, `PRI`, `CAD`, `REG`.*
-3. **Appel Batch Gemini** : Le Backend demande à Gemini de générer le bloc des 5 questions de nuance.
-
----
-
-## 3.2 L'Algorithme d'Affinage (Phase 2)
+    3. **Appel Batch Gemini** : Le Backend demande à Gemini de générer le bloc des 5 questions de nuance.
+    
+    ### 3.1.1 Schéma de Requête (POST /api/quiz/generate)
+    
+    Pour la Phase 2, le backend attend un `context` structuré :
+    
+    ```json
+    {
+      "phase": 2,
+      "topic": "Intelligence Artificielle",
+      "context": {
+        "archetypeName": "Le Stratège",
+        "archetypeVector": {
+          "CAD": 25, "DEN": 65, "STR": 85, "POS": 85, "TEM": 30, "REG": 15, "INF": 20, "PRI": 60, "ANC": 60
+        },
+        "targetDimensions": ["STR", "INF", "ANC", "POS", "TEM"]
+      }
+    }
+    ```
+    
+    ---
+    
+    ## 3.2 L'Algorithme d'Affinage (Phase 2)
 
 Chaque réponse à ces 5 questions fait varier le vecteur $V$par attraction.
 
@@ -302,7 +321,7 @@ Pour clarifier le mécanisme, voici un cas pratique :
 
 ## 3.3 Exploitation de Gemini : La "Batch Request" (Phase 2)
 
-L'API Gemini 1.5 Flash génère le set de questions durant le "Reveal Intermédiaire" (l'écran qui présente l'archétype à l'utilisateur).
+L'API Gemini 2.5 Flash génère le set de questions durant le "Reveal Intermédiaire" (l'écran qui présente l'archétype à l'utilisateur).
 
 ### Payload de la Requête (Backend → Gemini)
 
@@ -331,11 +350,11 @@ Gemini renvoie les 5 questions que le Backend stocke pour une diffusion immédia
 
 ```json
 [
-  { "id": "Q7", "dim": "STR", "optA": "...", "optB": "..." },
-  { "id": "Q8", "dim": "INF", "optA": "...", "optB": "..." },
-  { "id": "Q9", "dim": "ANC", "optA": "...", "optB": "..." },
-  { "id": "Q10", "dim": "DIM_FLOU_1", "optA": "...", "optB": "..." },
-  { "id": "Q11", "dim": "DIM_FLOU_2", "optA": "...", "optB": "..." }
+  { "id": "Q7", "dimension": "STR", "option_A": "...", "option_B": "..." },
+  { "id": "Q8", "dimension": "INF", "option_A": "...", "option_B": "..." },
+  { "id": "Q9", "dimension": "ANC", "option_A": "...", "option_B": "..." },
+  { "id": "Q10", "dimension": "DIM_FLOU_1", "option_A": "...", "option_B": "..." },
+  { "id": "Q11", "dimension": "DIM_FLOU_2", "option_A": "...", "option_B": "..." }
 ]
 ```
 
@@ -354,7 +373,7 @@ Gemini renvoie les 5 questions que le Backend stocke pour une diffusion immédia
 
 C’est l'étape de transformation où le vecteur mathématique $V11$ devient une identité de marque personnelle. Le système génère un profil "non-standard" qui combine l'archétype de base avec une nuance qualificative unique.
 
-## 4.1 La Requête de Synthèse (Backend → Gemini 1.5 Flash)
+## 4.1 La Requête de Synthèse (Backend → Gemini 2.5 Flash)
 
 Cette requête est envoyée dès la validation de la 11ème question. Elle inclut tout le savoir du protocole pour garantir la cohérence entre les chiffres et le texte.
 

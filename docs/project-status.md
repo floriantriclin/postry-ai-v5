@@ -2,7 +2,7 @@
 
 **Current Phase:** Sprint 1 - Core Logic & API
 **Date:** 2026-01-20
-**Milestone:** Story 1.4 Validated - Ready for API (1.5)
+**Milestone:** Story 1.5 In Progress - API Generation
 
 ## Epic Status
 
@@ -21,14 +21,14 @@
 | **Story 1.2** | Landing Page Statique & Navigation | [DONE] |
 | **Story 1.3** | Fondation de l'UI du Quiz (Statique) | [DONE] |
 | **Story 1.4** | Logique socle du Protocole ICE (Backend) | [DONE] |
-| **Story 1.5** | API de Génération de Questions ICE | [TODO] |
+| **Story 1.5** | API de Génération de Questions ICE | [-] |
 | **Story 1.6** | API de Calcul d'Archétype et d'Affinage | [TODO] |
 | **Story 1.7** | API de Synthèse du Profil Augmenté | [TODO] |
 | **Story 1.8** | Intégration Complète du Quiz Dynamique (Frontend) | [TODO] |
 
 ## Next Steps
 
-1.  **API Integration:** Implement Story 1.5 (Question Generation API).
+1.  **API Integration:** Developing Story 1.5 (Question Generation API).
 2.  **Auth Setup:** Plan Epic 2 integration.
 3.  **Tests:** Enhance E2E coverage for Mobile Viewports (Visual Regression).
 
