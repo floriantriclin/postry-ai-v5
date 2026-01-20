@@ -25,20 +25,44 @@ Cette story complète le flux ICE en intégrant la Phase 2 (questions 7 à 11) e
 
 ## Critères d'Acceptation
 
-### 1. Orchestration Phase 2 (Performance)
-- [ ] **Background Prefetch :** Lancement de `POST /api/quiz/generate?phase=2` immédiatement après la récupération de l'archétype, pendant la lecture de l'interstitiel.
-- [ ] **Asynchronous Refine :** Après chaque réponse (7-11), appel à `POST /api/quiz/refine` pour mettre à jour le vecteur de style (non-bloquant).
-- [ ] Gestion des "race conditions" si le prefetch n'est pas terminé quand l'utilisateur veut commencer la Phase 2.
+### 1. Orchestration & Performance
+- **AC 1.1 : Pré-chargement Efficace**
+  - **Quand** l'interstitiel de la phase 1 est affiché,
+  - **Alors** un appel `POST /api/quiz/generate?phase=2` est lancé en arrière-plan pour préparer les questions 7 à 11.
+- **AC 1.2 : Raffinement Asynchrone**
+  - **Quand** l'utilisateur soumet une réponse (de 7 à 11),
+  - **Alors** un appel `POST /api/quiz/refine` est envoyé de manière asynchrone (non-bloquante) pour mettre à jour le profil.
+  - **Et** l'interface utilisateur passe immédiatement à la question suivante sans attendre la réponse du serveur.
+- **AC 1.3 : Gestion de la Latence du Pré-chargement**
+  - **Quand** l'utilisateur clique pour commencer la phase 2 mais que le pré-chargement n'est pas terminé,
+  - **Alors** un indicateur de chargement est affiché jusqu'à ce que les données soient disponibles.
 
-### 2. Profil Final
-- [ ] Après la 11ème réponse, appel à `POST /api/quiz/profile`.
-- [ ] Récupération et stockage des données `label_final` et `definition_longue`.
-- [ ] Mise à jour de l'indicateur de progression "Précision" (de 50% à 100%).
+### 2. Génération du Profil Augmenté
+- **AC 2.1 : Déclenchement du Calcul Final**
+  - **Quand** la 11ème et dernière réponse est soumise,
+  - **Alors** l'appel à `/refine` est suivi immédiatement d'un appel `POST /api/quiz/profile`.
+- **AC 2.2 : Affichage du Résultat Final**
+  - **Quand** l'appel à `/profile` réussit,
+  - **Alors** les données `label_final` et `definition_longue` sont récupérées et stockées dans l'état du client.
+  - **Et** l'indicateur de progression "Précision" passe de 50% à 100%.
+- **AC 2.3 : Gestion de l'Attente du Profil**
+  - **Quand** l'appel `/profile` est en cours,
+  - **Alors** un état de chargement spécifique est affiché à l'utilisateur, indiquant la génération de son profil personnalisé.
 
-## Plan d'Action (Tâches)
+## Plan d'Action (Tâches Techniques)
 
-- [ ] Implémenter le prefetching de la Phase 2 dans `QuizEngine`.
-- [ ] Ajouter la logique d'appel asynchrone pour `/refine` (Fire & Forget).
-- [ ] Intégrer l'appel final à `/profile` après la question 11.
-- [ ] Gérer l'état de chargement spécifique pour la génération du profil final.
-- [ ] Mettre à jour les tests unitaires du reducer pour couvrir ces nouvelles transitions.
+- **Frontend :**
+  - [ ] Implémenter la logique de pré-chargement pour la phase 2 dans le `QuizEngine`.
+  - [ ] Mettre en place la mécanique "fire-and-forget" pour les appels à `/refine`.
+  - [ ] Intégrer l'appel final à `/profile` et gérer l'état de chargement associé.
+  - [ ] Assurer la mise à jour de la barre de progression "Précision".
+- **Backend :**
+  - [ ] (Story 1.8.1) S'assurer que les endpoints `/refine` et `/profile` sont prêts et performants.
+- **Tests :**
+  - [ ] Mettre à jour les tests d'intégration pour simuler et valider le flux complet (prefetch, refine, profile).
+  - [ ] Ajouter des tests unitaires pour la gestion des états de chargement (attente phase 2, attente profil final).
+
+## Assurance Qualité
+
+- **Analyse des Risques :** [Analyse des Risques pour la Story 1.8.2](docs/qa/assessments/1.8.2-risk-20260120.md)
+- **Plan de Test :** [Plan de Test pour la Story 1.8.2](docs/qa/assessments/1.8.2-test-plan-20260120.md)
