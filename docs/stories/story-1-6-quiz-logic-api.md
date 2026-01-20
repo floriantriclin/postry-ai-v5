@@ -1,6 +1,6 @@
 # Story 1.6 : API de Calcul d'Archétype et d'Affinage
 
-**Status:** Ready
+**Status:** In Progress
 **Parent Epic:** [Epic 1 : Fondation & Tunnel Public (Acquisition)](docs/epics/epic-1-acquisition.md)
 **Dépendance :** [Story 1.4 : Logique socle du Protocole ICE (Backend)](./new-story-1-4-ice-core-logic.md)
 

@@ -11,7 +11,9 @@
     "test:e2e": "playwright test"
   },
   "dependencies": {
+    "@google/generative-ai": "^0.24.1",
     "clsx": "latest",
+    "dotenv": "^17.2.3",
     "lucide-react": "latest",
     "next": "16.1.1-canary.27",
     "react": "rc",

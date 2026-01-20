@@ -3,11 +3,13 @@ import {
   ICE_PHASE1_DIMENSIONS_ORDER,
   ICE_PHASE2_LOGIC,
   ICE_VECTOR_ORDER,
+} from './ice-constants';
+import {
   type Archetype,
   type BinarySignature,
   type DimensionCode,
   type Vstyle,
-} from './ice-constants';
+} from './types';
 
 /**
  * Calcule la distance de Hamming entre deux chaînes binaires de même longueur.

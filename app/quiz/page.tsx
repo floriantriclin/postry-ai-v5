@@ -1,4 +1,4 @@
-import { QuizEngine } from '@/components/feature/quiz/quiz-engine';
+import { QuizEngine } from '@/components/feature/quiz-engine';
 
 export default function QuizPage() {
   return (

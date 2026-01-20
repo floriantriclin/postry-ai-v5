@@ -339,22 +339,6 @@ export const ICE_ARCHETYPES = {
 export const vstyleSchema = z.array(z.number().min(0).max(100)).length(9);
 export const binarySignatureSchema = z.string().regex(/^[01]{6}$/);
 
-/**
- * Types TypeScript dérivés.
- */
-export type Vstyle = number[];
-export type BinarySignature = string;
-export type DimensionCode = keyof typeof ICE_DIMENSIONS;
-
-export interface Archetype {
-  id: number;
-  name: string;
-  family: string;
-  binarySignature: string;
-  signature: string;
-  description: string;
-  baseVector: readonly number[];
-}
 
 // Section 4 : Logique du Quiz
 

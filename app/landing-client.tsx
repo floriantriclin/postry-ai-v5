@@ -1,10 +1,8 @@
 'use client';
 
-interface LandingClientProps {
-  onStart: () => void;
-}
+import Link from 'next/link';
 
-export default function LandingClient({ onStart }: LandingClientProps) {
+export default function LandingClient() {
   return (
     <section className="flex flex-col items-center justify-center space-y-8 animate-in fade-in duration-500">
       <div className="text-center space-y-4">
@@ -17,12 +15,12 @@ export default function LandingClient({ onStart }: LandingClientProps) {
         </p>
       </div>
 
-      <button 
-        onClick={onStart}
+      <Link 
+        href="/quiz"
         className="raw-button raw-button-primary text-xl md:text-2xl px-12 h-16"
       >
         [ DÉTERMINER MON STYLE ]
-      </button>
+      </Link>
     </section>
   );
 }
