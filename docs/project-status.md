@@ -21,7 +21,7 @@
 | **Story 1.2** | Landing Page Statique & Navigation | [DONE] |
 | **Story 1.3** | Fondation de l'UI du Quiz (Statique) | [DONE] |
 | **Story 1.4** | Logique socle du Protocole ICE (Backend) | [DONE] |
-| **Story 1.5** | API de Génération de Questions ICE | [DONE] |
+| **Story 1.5** | API de Génération de Questions ICE | [DONE*] |
 | **Story 1.6** | API de Calcul d'Archétype et d'Affinage | [IN PROGRESS] |
 | **Story 1.7** | API de Synthèse du Profil Augmenté | [TODO] |
 | **Story 1.8** | Intégration Complète du Quiz Dynamique (Frontend) | [TODO] |
@@ -43,6 +43,7 @@
 
 ## Known Risks
 
-*   **Latency:** Generation via Gemini must stay under 15s.
+*   **[*] Observability (Story 1.5):** Missing `correlationId` and structured logs for API failures. Must be addressed before production (Story 1.8).
+*   **Latency:** Generation via Gemini must stay under 15s (current implementation has 15s hard timeout).
 *   **Mobile UX:** The Equalizer and Quiz must be perfectly responsive (Touch targets).
 *   **Privacy:** CVs must be secured with RLS immediately.
