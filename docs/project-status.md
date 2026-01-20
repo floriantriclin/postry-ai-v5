@@ -2,7 +2,7 @@
 
 **Current Phase:** Sprint 1 - Core Logic & API
 **Date:** 2026-01-20
-**Milestone:** Story 1.6 In Progress - Archetype & Refinement API
+**Milestone:** Story 1.7 TODO - Augmented Profile API
 
 ## Epic Status
 
@@ -22,14 +22,13 @@
 | **Story 1.3** | Fondation de l'UI du Quiz (Statique) | [DONE] |
 | **Story 1.4** | Logique socle du Protocole ICE (Backend) | [DONE] |
 | **Story 1.5** | API de Génération de Questions ICE | [DONE*] |
-| **Story 1.6** | API de Calcul d'Archétype et d'Affinage | [IN PROGRESS] |
+| **Story 1.6** | API de Calcul d'Archétype et d'Affinage | [DONE] |
 | **Story 1.7** | API de Synthèse du Profil Augmenté | [TODO] |
 | **Story 1.8** | Intégration Complète du Quiz Dynamique (Frontend) | [TODO] |
 
 ## Next Steps
 
-1.  **Quiz Logic API:** Implementing Story 1.6 (Archetype calculation & Vector refinement).
-2.  **Synthesis API:** Preparing Story 1.7 (Augmented Profile Synthesis).
+1.  **Synthesis API:** Implementing Story 1.7 (Augmented Profile Synthesis).
 3.  **Integration:** Full frontend dynamic quiz integration (Story 1.8).
 
 ## Technical Achievements (Sprint 1)
@@ -40,6 +39,7 @@
 *   **Tech Stack:** Next.js 16 + Tailwind 4 + TypeScript verified and operational.
 *   **Quiz Engine:** Validated state machine for 2-phase quiz + transition logic (Unit & E2E passed).
 *   **Quiz Generation API:** Implemented `POST /api/quiz/generate` with Gemini integration, sanitization, and robust error handling (92% coverage).
+*   **Quiz Logic API:** Implemented `POST /api/quiz/archetype` and `POST /api/quiz/refine` with 100% logic coverage and Zod validation.
 
 ## Known Risks
 
