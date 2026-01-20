@@ -26,23 +26,27 @@ Cette story se concentre sur l'aspect "Feel" de l'application (Identité "Tech &
 ## Critères d'Acceptation
 
 ### 1. Identité Visuelle "Tech & Brut"
-- [ ] **Loader "Machine" :** Remplacement des spinners par des séquences monospace clignotantes et messages système (`BOOTING_ICE_PROTOCOL...`).
-- [ ] **Transitions Sèches :** Transitions de type "Snap" ou fondus ultra-courts (100ms).
-- [ ] **Compteur Digital :** Remplacement de la barre de progression par un compteur type `[ 04 / 11 ]`.
-- [ ] **Zéro Friction :** Suppression des boutons "Suivant", validation immédiate au clic sur une réponse.
+- [ ] **Loader "Machine" :** Remplacement des spinners actuels (Tailwind `animate-spin`) par un composant `LoaderMachine` affichant des séquences monospace clignotantes et messages système (`BOOTING_ICE_PROTOCOL...`, `CALIBRATING_VECTORS...`).
+- [ ] **Transitions Sèches :** Transitions de type "Snap" ou fondus ultra-courts (100ms) entre les questions.
+- [ ] **Compteur Digital :** Mise à jour de `QuestionCard` pour afficher un compteur type `[ 04 / 11 ]` (monospace brackets).
+- [ ] **Zéro Friction :** Validation immédiate au clic sur une réponse (déjà partiellement en place, à confirmer sur mobile).
 
 ### 2. Robustesse & Persistance
-- [ ] **Persistance Locale :** Sauvegarde automatique de l'état dans `localStorage` pour permettre la reprise après rafraîchissement.
-- [ ] **Graceful Degradation :** Validation finale de la bascule sur le mock en cas de coupure réseau ou erreur 500.
+- [ ] **Persistance Locale :** Création d'un hook `useQuizPersistence` pour sauvegarder l'état du reducer dans `localStorage` et permettre la reprise après rafraîchissement (F5).
+- [ ] **Feedback Mode Dégradé :** Styliser le "Toast" d'erreur actuel (rouge générique) pour qu'il s'intègre à l'identité "Tech" (ex: bordure orange clignotante, police mono).
 
 ### 3. Validation Finale
-- [ ] **E2E Playwright :** Création de `e2e/quiz-flow.spec.ts` simulant un parcours complet avec succès et avec erreurs API.
-- [ ] **Audit Accessibilité :** Vérification des contrastes et de la navigation clavier sur les nouveaux éléments.
+- [ ] **E2E Playwright :** Enrichissement de `e2e/quiz-phase-2.spec.ts` ou création de `e2e/quiz-robustness.spec.ts` pour tester spécifiquement la persistance (reload) et les fallbacks API.
+- [ ] **Audit Accessibilité :** Vérification des contrastes (notamment sur le thème sombre/brut) et de la navigation clavier.
 
 ## Plan d'Action (Tâches)
 
-- [ ] Créer le composant `LoaderMachine` et l'intégrer aux états de chargement.
-- [ ] Implémenter le compteur digital et ajuster les transitions CSS.
-- [ ] Ajouter le hook de persistance `localStorage` dans `QuizEngine`.
-- [ ] Écrire et valider les tests E2E avec Playwright.
-- [ ] Effectuer une revue d'accessibilité.
+- [ ] **UI/UX :** Créer le composant `components/ui/loader-machine.tsx` et l'intégrer dans `QuizEngine` et `QuizInterstitial` en remplacement des spinners.
+- [ ] **UI/UX :** Styliser le compteur de `QuestionCard` et le Toast d'erreur (Mode Dégradé) pour coller à l'esthétique Brut.
+- [ ] **Logic :** Créer le hook `hooks/use-quiz-persistence.ts` et l'intégrer dans `QuizEngine` pour hydrater le state initial.
+- [ ] **QA :** Écrire un test E2E dédié à la robustesse (`e2e/quiz-robustness.spec.ts`) vérifiant la reprise après reload.
+- [ ] **QA :** Vérifier manuellement ou via test auto le déclenchement visuel du mode dégradé.
+
+## Documentation QA
+- [Analyse des Risques](../qa/assessments/1.8.3-risk-20260120.md)
+- [Plan de Tests](../qa/assessments/1.8.3-test-plan-20260120.md)
