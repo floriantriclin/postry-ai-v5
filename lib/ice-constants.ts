@@ -1,3 +1,5 @@
+import { z } from 'zod';
+
 /**
  * @file Contient toutes les constantes immuables du protocole ICE.
  * @description Ce fichier centralise les données fondamentales du modèle stylistique
@@ -175,7 +177,7 @@ export const ICE_VECTOR_ORDER: (keyof typeof ICE_DIMENSIONS)[] = [
   'CAD', 'DEN', 'STR', 'POS', 'TEM', 'REG', 'INF', 'PRI', 'ANC'
 ];
 
-// Section 2 : La Matrice des 16 Archétypes
+// Section 2 : La Matrice des 15 Archétypes
 
 /**
  * Les 4 familles d'archétypes.
@@ -329,7 +331,32 @@ export const ICE_ARCHETYPES = {
 } as const;
 
 
-// Section 3 : Logique du Quiz
+// Section 3 : Types et Schémas Zod
+
+/**
+ * Schémas Zod pour la validation runtime (Tech Stack Standard).
+ */
+export const vstyleSchema = z.array(z.number().min(0).max(100)).length(9);
+export const binarySignatureSchema = z.string().regex(/^[01]{6}$/);
+
+/**
+ * Types TypeScript dérivés.
+ */
+export type Vstyle = number[];
+export type BinarySignature = string;
+export type DimensionCode = keyof typeof ICE_DIMENSIONS;
+
+export interface Archetype {
+  id: number;
+  name: string;
+  family: string;
+  binarySignature: string;
+  signature: string;
+  description: string;
+  baseVector: readonly number[];
+}
+
+// Section 4 : Logique du Quiz
 
 /**
  * Séquence ordonnée des 6 dimensions discriminantes pour la Phase 1.

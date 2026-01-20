@@ -8,8 +8,9 @@ export default defineConfig({
     environment: 'jsdom',
     globals: true,
     setupFiles: [], // Add setup files if needed later (e.g. for jest-dom matchers)
-    include: ['**/*.test.{ts,tsx}'],
+    include: ['**/*.{test,spec}.{ts,tsx}'],
     exclude: ['e2e/**', 'node_modules/**'],
+    reporters: ['tap-flat'],
   },
   resolve: {
     alias: {

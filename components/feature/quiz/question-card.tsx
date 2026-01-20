@@ -35,7 +35,7 @@ export function QuestionCard({ question, progressLabel, onAnswer, onBack, canGoB
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
         <button
           onClick={() => onAnswer('A')}
-          className="raw-card hover:bg-zinc-50 transition-all active:scale-[0.98] text-left min-h-[200px] flex items-center justify-center p-8 group"
+          className="raw-card hover:bg-zinc-50 transition-all active:scale-95 text-left min-h-52 flex items-center justify-center p-8 group"
           data-testid="option-a"
         >
            <span className="text-lg md:text-xl font-medium group-hover:text-signal-orange transition-colors">
@@ -44,7 +44,7 @@ export function QuestionCard({ question, progressLabel, onAnswer, onBack, canGoB
         </button>
         <button
           onClick={() => onAnswer('B')}
-          className="raw-card hover:bg-zinc-50 transition-all active:scale-[0.98] text-left min-h-[200px] flex items-center justify-center p-8 group"
+          className="raw-card hover:bg-zinc-50 transition-all active:scale-95 text-left min-h-52 flex items-center justify-center p-8 group"
           data-testid="option-b"
         >
            <span className="text-lg md:text-xl font-medium group-hover:text-signal-orange transition-colors">

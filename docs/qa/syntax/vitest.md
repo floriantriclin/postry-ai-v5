@@ -1,104 +1,138 @@
 # Syntaxe de Base de Vitest
 
-_**Note :** La syntaxe présentée ici est confirmée comme étant valide et recommandée pour **Vitest v4.x**._
+_**Note :** La syntaxe présentée ici est confirmée comme étant valide et recommandée pour **Vitest v4.x** dans ce projet._
 
 Ce document est un aide-mémoire pour la syntaxe courante de [Vitest](https://vitest.dev/).
 
-## 1. Structure d'un Fichier de Test
+## 1. Configuration du Projet
 
-Un fichier de test se termine généralement par `.test.ts` ou `.spec.ts`.
+Le projet est configuré avec `globals: true` dans `vitest.config.ts`. 
+Cela signifie que les fonctions suivantes sont disponibles **globalement** et n'ont pas besoin d'être importées explicitement :
+- `describe`, `it`, `test`, `expect`
+- `beforeEach`, `afterEach`, `beforeAll`, `afterAll`
+- `vi` (pour les mocks)
+
+## 2. Structure d'un Fichier de Test
+
+Un fichier de test doit se terminer par `.test.ts`, `.spec.ts`, `.test.tsx` ou `.spec.tsx`.
+
+### Exemple de Test Unitaire (Logique)
 
 ```typescript
 // mon-module.test.ts
-import { describe, it, expect } from 'vitest';
 import { addition } from '../mon-module';
 
-// `describe` groupe des tests liés
 describe('addition', () => {
-
-  // `it` ou `test` définit un cas de test individuel
   it('should add two numbers correctly', () => {
     // Assertion
     expect(addition(1, 2)).toBe(3);
   });
+
+  it('should handle negative numbers', () => {
+    expect(addition(-1, 1)).toBe(0);
+  });
 });
 ```
 
-## 2. Fonctions Globales
-
-- `describe(name, factory)`: Crée un bloc qui groupe plusieurs tests.
-- `it(name, fn)` / `test(name, fn)`: Définit un test.
-- `beforeEach(fn)`: S'exécute avant chaque test dans le `describe`.
-- `afterEach(fn)`: S'exécute après chaque test dans le `describe`.
-- `beforeAll(fn)`: S'exécute une fois avant tous les tests du `describe`.
-- `afterAll(fn)`: S'exécute une fois après tous les tests du `describe`.
-
-## 3. Assertions (`expect`)
-
-`expect` permet de vérifier si une valeur correspond à une attente.
+## 3. Assertions Courantes (`expect`)
 
 | Matcher | Description | Exemple |
 | :--- | :--- | :--- |
 | `.toBe(value)` | Égalité stricte (`===`) | `expect(2).toBe(2);` |
 | `.toEqual(value)` | Égalité profonde (objets/tableaux) | `expect({a:1}).toEqual({a:1});` |
 | `.toBeTruthy()` / `.toBeFalsy()` | Vérifie si la valeur est vraie/fausse | `expect(true).toBeTruthy();` |
-| `.toContain(item)` | Vérifie si un tableau contient un item | `expect([1,2]).toContain(2);` |
-| `.toThrow()` | Vérifie si une fonction lève une erreur | `expect(() => fn()).toThrow();` |
-| `.toHaveBeenCalled()` | Vérifie si un mock a été appelé | `expect(mockFn).toHaveBeenCalled();` |
+| `.toBeDefined()` / `.toBeUndefined()` | Vérifie si la valeur est définie | `expect(x).toBeDefined();` |
+| `.toContain(item)` | Vérifie si un tableau/string contient un item | `expect([1,2]).toContain(2);` |
+| `.toThrow(error?)` | Vérifie si une fonction lève une erreur | `expect(() => fn()).toThrow();` |
+| `.toHaveLength(n)` | Vérifie la longueur d'un tableau/string | `expect([1,2]).toHaveLength(2);` |
 
-## 4. Mocks
-
-Les mocks permettent d'isoler le code à tester de ses dépendances.
-
-### `vi.fn()`
-
-Crée une fonction mock vide.
+### Matchers étendus (DOM)
+Pour les tests de composants, nous utilisons `@testing-library/jest-dom`. 
+*Note: Nécessite l'import dans le test ou un fichier de setup.*
 
 ```typescript
-import { vi } from 'vitest';
-
-const mockCallback = vi.fn();
-mockCallback();
-expect(mockCallback).toHaveBeenCalled();
+import '@testing-library/jest-dom';
+// ...
+expect(screen.getByRole('button')).toBeInTheDocument();
+expect(screen.getByText('Submit')).toHaveClass('btn-primary');
 ```
 
-### `vi.spyOn()`
+## 4. Tests Asynchrones
 
-"Espionne" une méthode existante sur un objet.
+Pour tester des promesses ou du code `async/await`.
 
 ```typescript
-import { vi } from 'vitest';
+it('should fetch data correctly', async () => {
+  const data = await fetchData();
+  expect(data).toBe('success');
+});
 
-const obj = {
-  methode: () => 'original'
-};
+it('should reject with error', async () => {
+  await expect(fetchDataFailure()).rejects.toThrow('error');
+});
+```
 
-const spy = vi.spyOn(obj, 'methode');
-obj.methode();
+## 5. Mocks et Espions (`vi`)
 
+Les mocks permettent d'isoler le code à tester.
+
+### `vi.fn()` (Fonction Mock)
+```typescript
+const mockCallback = vi.fn();
+mockCallback('hello');
+expect(mockCallback).toHaveBeenCalledWith('hello');
+```
+
+### `vi.spyOn()` (Espion)
+```typescript
+const spy = vi.spyOn(console, 'log');
+myFunctionThatLogs();
 expect(spy).toHaveBeenCalled();
-spy.mockRestore(); // Restaure l'implémentation originale
+spy.mockRestore(); // Important pour nettoyer
 ```
 
 ### Mocking de Modules
+```typescript
+vi.mock('@/lib/api', () => ({
+  fetchUser: vi.fn().mockResolvedValue({ id: 1, name: 'Alice' }),
+}));
+```
 
-Utilisez `vi.mock` pour remplacer un module entier.
+## 6. Tests de Composants (React)
+
+Utilisez `@testing-library/react`.
+
+```tsx
+import { render, screen } from '@testing-library/react';
+import { MyComponent } from './MyComponent';
+
+describe('MyComponent', () => {
+  it('should render title', () => {
+    render(<MyComponent title="Hello" />);
+    // screen.getByText retourne l'élément ou lève une erreur s'il n'existe pas
+    expect(screen.getByText('Hello')).toBeDefined();
+  });
+});
+```
+
+## 7. Gabarit de Nouveau Fichier (Boilerplate)
+
+Copiez-collez ceci pour démarrer un nouveau test :
 
 ```typescript
-// service.ts
-export const fetchData = () => Promise.resolve('real data');
+// [nom].test.ts
+import { describe, it, expect } from 'vitest'; // Optionnel car globals: true
 
-// test.ts
-import { vi } from 'vitest';
-import { fetchData } from './service';
-
-// Doit être en haut du fichier
-vi.mock('./service', () => ({
-  fetchData: vi.fn().mockResolvedValue('mocked data'),
-}));
-
-it('should fetch mocked data', async () => {
-  const data = await fetchData();
-  expect(data).toBe('mocked data');
+describe('NomDuModule', () => {
+  it('devrait [comportement attendu]', () => {
+    // Arrange
+    const input = 'test';
+    
+    // Act
+    const result = input.toUpperCase();
+    
+    // Assert
+    expect(result).toBe('TEST');
+  });
 });
 ```

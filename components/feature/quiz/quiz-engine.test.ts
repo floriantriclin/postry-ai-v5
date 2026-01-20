@@ -1,4 +1,4 @@
-import { quizReducer, initialState } from './quiz-engine';
+import { quizReducer, initialState, type QuizState } from './quiz-engine';
 
 describe('Quiz Reducer State Machine', () => {
   it('should start in THEMES state', () => {
@@ -11,38 +11,42 @@ describe('Quiz Reducer State Machine', () => {
   });
 
   it('should start PHASE1 when START_QUIZ is dispatched', () => {
-    // @ts-ignore - Mocking state for test
-    const startState = { step: 'INSTRUCTIONS', themeId: 't1' };
-    const newState = quizReducer(startState as any, { type: 'START_QUIZ' });
+    const startState: QuizState = { step: 'INSTRUCTIONS', themeId: 't1' };
+    const newState = quizReducer(startState, { type: 'START_QUIZ' });
     expect(newState).toEqual({ step: 'PHASE1', themeId: 't1', questionIndex: 0, answers: [] });
   });
 
   it('should increment question index in PHASE1', () => {
-    // @ts-ignore
-    const state = { step: 'PHASE1', themeId: 't1', questionIndex: 0, answers: [] };
-    const newState = quizReducer(state as any, { type: 'ANSWER_PHASE1', payload: 'A' });
-    // @ts-ignore
-    expect(newState.questionIndex).toBe(1);
-    // @ts-ignore
-    expect(newState.answers).toEqual(['A']);
+    const state: QuizState = { step: 'PHASE1', themeId: 't1', questionIndex: 0, answers: [] };
+    const newState = quizReducer(state, { type: 'ANSWER_PHASE1', payload: 'A' });
+    
+    if (newState.step === 'PHASE1') {
+      expect(newState.questionIndex).toBe(1);
+      expect(newState.answers).toEqual(['A']);
+    } else {
+      throw new Error('State should be PHASE1');
+    }
   });
 
   it('should transition to TRANSITION_ARCHETYPE after last question of PHASE1', () => {
-    // @ts-ignore
-    const state = { step: 'PHASE1', themeId: 't1', questionIndex: 5, answers: ['A','A','A','A','A'] };
-    const newState = quizReducer(state as any, { type: 'ANSWER_PHASE1', payload: 'B' });
+    const state: QuizState = { step: 'PHASE1', themeId: 't1', questionIndex: 5, answers: ['A','A','A','A','A'] };
+    const newState = quizReducer(state, { type: 'ANSWER_PHASE1', payload: 'B' });
     expect(newState.step).toBe('TRANSITION_ARCHETYPE');
-    // @ts-ignore
-    expect(newState.answersP1).toHaveLength(6);
+    
+    if (newState.step === 'TRANSITION_ARCHETYPE') {
+      expect(newState.answersP1).toHaveLength(6);
+    }
   });
 
   it('should handle PREVIOUS_PHASE1 correctly', () => {
-     // @ts-ignore
-     const state = { step: 'PHASE1', themeId: 't1', questionIndex: 1, answers: ['A'] };
-     const newState = quizReducer(state as any, { type: 'PREVIOUS_PHASE1' });
-     // @ts-ignore
-     expect(newState.questionIndex).toBe(0);
-     // @ts-ignore
-     expect(newState.answers).toEqual([]);
+     const state: QuizState = { step: 'PHASE1', themeId: 't1', questionIndex: 1, answers: ['A'] };
+     const newState = quizReducer(state, { type: 'PREVIOUS_PHASE1' });
+     
+     if (newState.step === 'PHASE1') {
+       expect(newState.questionIndex).toBe(0);
+       expect(newState.answers).toEqual([]);
+     } else {
+       throw new Error('State should be PHASE1');
+     }
   });
 });

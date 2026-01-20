@@ -90,7 +90,7 @@ export const generateAugmentedProfileMock = (
 
   return {
     label_final: `${baseArchetype.name} ${randomAdjective}`,
-    definition_longue: `Ceci est une définition mock de 50 à 60 mots qui explique la force unique de ce mélange stylistique. Elle valorise la manière dont vous équilibrez votre côté ${baseArchetype.family} et votre nuance ${randomAdjective} pour impacter brillamment votre audience.`,
+    definition_longue: `Votre identité transcende la simple rigueur de l'expert pour devenir une force d'inspiration narrative rare. Tout en conservant une précision chirurgicale dans vos données stratégiques, vous habillez chaque analyse d'une humanité vibrante qui captive votre audience. Cette capacité rare à transformer des chiffres froids en récits habités fait de vous un leader d'opinion mémorable et inspirant pour tous vos pairs.`,
   };
 };
 

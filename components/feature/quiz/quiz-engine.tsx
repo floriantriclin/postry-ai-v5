@@ -10,7 +10,7 @@ import mockData from '@/lib/data/mock-quiz.json';
 
 // --- State Machine Types ---
 
-type QuizState = 
+export type QuizState =
   | { step: 'THEMES' }
   | { step: 'INSTRUCTIONS'; themeId: string }
   | { step: 'PHASE1'; themeId: string; questionIndex: number; answers: string[] }
@@ -98,54 +98,64 @@ export function QuizEngine() {
     }
   }, [state.step]);
 
+  const renderStep = () => {
+    switch (state.step) {
+      case 'THEMES':
+        return <ThemeSelector onSelect={(id) => dispatch({ type: 'SELECT_THEME', payload: id })} />;
+      
+      case 'INSTRUCTIONS':
+        return <QuizInterstitial onStart={() => dispatch({ type: 'START_QUIZ' })} />;
+      
+      case 'PHASE1':
+        return (
+          <QuestionCard
+            question={mockData.phase1[state.questionIndex]}
+            progressLabel={`${state.questionIndex + 1}/${mockData.phase1.length}`}
+            onAnswer={(choice) => dispatch({ type: 'ANSWER_PHASE1', payload: choice })}
+            onBack={() => dispatch({ type: 'PREVIOUS_PHASE1' })}
+            canGoBack={true}
+          />
+        );
+      
+      case 'TRANSITION_ARCHETYPE':
+        return (
+          <ArchetypeTransition
+            archetype={mockData.archetype}
+            onContinue={() => dispatch({ type: 'CONTINUE_TO_PHASE2' })}
+          />
+        );
+      
+      case 'PHASE2':
+        return (
+          <QuestionCard
+            question={mockData.phase2[state.questionIndex]}
+            progressLabel={`Précision: ${50 + (state.questionIndex * 10)}%`}
+            onAnswer={(choice) => dispatch({ type: 'ANSWER_PHASE2', payload: choice })}
+            onBack={() => dispatch({ type: 'PREVIOUS_PHASE2' })}
+            canGoBack={true}
+          />
+        );
+      
+      case 'LOADING':
+        return (
+          <div className="flex flex-col items-center justify-center min-h-[80vh]">
+            <div className="w-16 h-16 border-4 border-black border-t-signal-orange animate-spin rounded-full mb-8"></div>
+            <h2 className="text-2xl font-black uppercase">Génération de votre identité...</h2>
+            <p className="font-mono text-zinc-500 mt-2">Calibration des 9 dimensions</p>
+          </div>
+        );
+      
+      case 'FINAL_REVEAL':
+        return <FinalReveal profile={mockData.augmentedProfile} />;
+      
+      default:
+        return null;
+    }
+  };
+
   return (
     <div className="w-full">
-      {state.step === 'THEMES' && (
-        <ThemeSelector onSelect={(id) => dispatch({ type: 'SELECT_THEME', payload: id })} />
-      )}
-
-      {state.step === 'INSTRUCTIONS' && (
-        <QuizInterstitial onStart={() => dispatch({ type: 'START_QUIZ' })} />
-      )}
-
-      {state.step === 'PHASE1' && (
-        <QuestionCard 
-          question={mockData.phase1[state.questionIndex]}
-          progressLabel={`${state.questionIndex + 1}/${mockData.phase1.length}`}
-          onAnswer={(choice) => dispatch({ type: 'ANSWER_PHASE1', payload: choice })}
-          onBack={() => dispatch({ type: 'PREVIOUS_PHASE1' })}
-          canGoBack={true}
-        />
-      )}
-
-      {state.step === 'TRANSITION_ARCHETYPE' && (
-        <ArchetypeTransition 
-          archetype={mockData.archetype}
-          onContinue={() => dispatch({ type: 'CONTINUE_TO_PHASE2' })}
-        />
-      )}
-
-      {state.step === 'PHASE2' && (
-        <QuestionCard 
-           question={mockData.phase2[state.questionIndex]}
-           progressLabel={`Précision: ${50 + (state.questionIndex * 10)}%`} 
-           onAnswer={(choice) => dispatch({ type: 'ANSWER_PHASE2', payload: choice })}
-           onBack={() => dispatch({ type: 'PREVIOUS_PHASE2' })}
-           canGoBack={true}
-        />
-      )}
-
-      {state.step === 'LOADING' && (
-        <div className="flex flex-col items-center justify-center min-h-[80vh]">
-          <div className="w-16 h-16 border-4 border-black border-t-signal-orange animate-spin rounded-full mb-8"></div>
-          <h2 className="text-2xl font-black uppercase">Génération de votre identité...</h2>
-          <p className="font-mono text-zinc-500 mt-2">Calibration des 9 dimensions</p>
-        </div>
-      )}
-
-      {state.step === 'FINAL_REVEAL' && (
-        <FinalReveal profile={mockData.augmentedProfile} />
-      )}
+      {renderStep()}
     </div>
   );
 }
