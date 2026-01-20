@@ -1,5 +1,7 @@
 'use client';
 
+import { LoaderMachine } from '../ui/loader-machine';
+
 interface QuizInterstitialProps {
   onStart: () => void;
   isLoading?: boolean;
@@ -19,17 +21,17 @@ export function QuizInterstitial({ onStart, isLoading = false }: QuizInterstitia
             ⚠️ Répondez spontanément. Il n'y a pas de mauvaise réponse, seulement votre style.
          </p>
       </div>
-      <button
-        onClick={onStart}
-        disabled={isLoading}
-        className="raw-button raw-button-primary w-full md:w-auto text-xl py-8 flex items-center justify-center gap-3"
-        data-testid="start-quiz-btn"
-      >
-        {isLoading && (
-          <div className="w-5 h-5 border-2 border-white/30 border-t-white animate-spin rounded-full"></div>
-        )}
-        {isLoading ? 'Initialisation...' : 'Lancer la calibration'}
-      </button>
+      {isLoading ? (
+        <LoaderMachine message="INITIALISATION..." className="mt-8" />
+      ) : (
+        <button
+          onClick={onStart}
+          className="raw-button raw-button-primary w-full md:w-auto text-xl py-8 flex items-center justify-center gap-3"
+          data-testid="start-quiz-btn"
+        >
+          Lancer la calibration
+        </button>
+      )}
     </div>
   );
 }

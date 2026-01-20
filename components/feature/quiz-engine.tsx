@@ -3,10 +3,12 @@
 import { useReducer, useEffect } from 'react';
 import { ThemeSelector } from './theme-selector';
 import { QuizInterstitial } from './quiz-interstitial';
+import { LoaderMachine } from '../ui/loader-machine';
 import { QuestionCard } from './question-card';
 import { ArchetypeTransition } from './archetype-transition';
 import { FinalReveal } from './final-reveal';
 import { quizReducer, initialState } from './quiz-engine.logic';
+import { useQuizPersistence } from '@/hooks/use-quiz-persistence';
 import { quizApiClient } from '@/lib/quiz-api-client';
 import { getTargetDimensions } from '@/lib/ice-logic';
 import mockData from '@/lib/data/mock-quiz.json';
@@ -14,6 +16,19 @@ import { DimensionCode, Vstyle } from '@/lib/types';
 
 export function QuizEngine() {
   const [state, dispatch] = useReducer(quizReducer, initialState);
+  const { isHydrated, persistedState, saveState } = useQuizPersistence();
+
+  // Hydrate from local storage
+  useEffect(() => {
+    if (isHydrated && persistedState) {
+      dispatch({ type: 'HYDRATE', payload: persistedState });
+    }
+  }, [isHydrated, persistedState]);
+
+  // Persist state to local storage
+  useEffect(() => {
+    saveState(state);
+  }, [state, saveState]);
 
   // 1. Pre-load Phase 1 questions (Early Trigger)
   useEffect(() => {
@@ -149,10 +164,9 @@ export function QuizEngine() {
         if (state.status === 'loading') {
           return (
             <div className="flex flex-col items-center justify-center min-h-[60vh]">
-              <div className="w-12 h-12 border-4 border-zinc-200 border-t-black animate-spin rounded-full mb-4"></div>
-              <p className="font-mono text-sm uppercase tracking-widest text-zinc-500">
-                {state.questionsP1.length === 0 ? "Initialisation du calibrage..." : "Analyse de votre archétype..."}
-              </p>
+              <LoaderMachine
+                message={state.questionsP1.length === 0 ? "INITIALISATION DU CALIBRAGE..." : "ANALYSE DE VOTRE ARCHETYPE..."}
+              />
             </div>
           );
         }
@@ -163,9 +177,9 @@ export function QuizEngine() {
         return (
           <QuestionCard
             question={currentQuestion}
-            progressLabel={`${state.questionIndex + 1}/${state.questionsP1.length}`}
-            onAnswer={(choice) => dispatch({ 
-              type: 'ANSWER_PHASE1', 
+            progressLabel={`[ ${(state.questionIndex + 1).toString().padStart(2, '0')} / ${state.questionsP1.length.toString().padStart(2, '0')} ]`}
+            onAnswer={(choice) => dispatch({
+              type: 'ANSWER_PHASE1',
               payload: { dimension: currentQuestion.dimension as DimensionCode, choice } 
             })}
             onBack={() => dispatch({ type: 'PREVIOUS_PHASE1' })}
@@ -187,10 +201,7 @@ export function QuizEngine() {
         if (state.questionsP2.length === 0) {
            return (
             <div className="flex flex-col items-center justify-center min-h-[60vh]">
-              <div className="w-12 h-12 border-4 border-zinc-200 border-t-black animate-spin rounded-full mb-4"></div>
-              <p className="font-mono text-sm uppercase tracking-widest text-zinc-500">
-                Préparation de l'affinage...
-              </p>
+              <LoaderMachine message="PREPARATION DE L'AFFINAGE..." />
             </div>
           );
         }
@@ -201,7 +212,7 @@ export function QuizEngine() {
         return (
           <QuestionCard
             question={currentQuestionP2}
-            progressLabel={`Précision: ${50 + (state.questionIndex * 10)}%`}
+            progressLabel={`[ PRECISION : ${50 + (state.questionIndex * 10)}% ]`}
             onAnswer={(choice) => dispatch({
               type: 'ANSWER_PHASE2',
               payload: { dimension: currentQuestionP2.dimension as DimensionCode, choice }
@@ -214,9 +225,8 @@ export function QuizEngine() {
       case 'LOADING_RESULTS':
         return (
           <div className="flex flex-col items-center justify-center min-h-[80vh]">
-            <div className="w-16 h-16 border-4 border-black border-t-signal-orange animate-spin rounded-full mb-8"></div>
-            <h2 className="text-2xl font-black uppercase">Génération de votre identité...</h2>
-            <p className="font-mono text-zinc-500 mt-2">Calibration des 9 dimensions</p>
+            <LoaderMachine message="GENERATION DE VOTRE IDENTITE..." />
+            <p className="font-mono text-zinc-500 mt-4 text-sm">CALIBRATION DES 9 DIMENSIONS</p>
           </div>
         );
       
@@ -233,11 +243,23 @@ export function QuizEngine() {
     <div className="w-full">
       {renderStep()}
       
-      {/* Debug Error Toast (Simple implementation) */}
+      {/* Tech Error Toast */}
       {state.error && state.status === 'error' && (
-        <div className="fixed bottom-4 right-4 bg-red-100 border-l-4 border-red-500 text-red-700 p-4 shadow-lg z-50">
-          <p className="font-bold">API Notice</p>
-          <p className="text-sm">Mode dégradé activé : {state.error}</p>
+        <div className="fixed bottom-6 right-6 max-w-sm z-50 animate-in slide-in-from-right fade-in duration-300">
+           <div className="bg-zinc-900 border border-signal-orange p-4 shadow-[4px_4px_0px_0px_rgba(255,82,0,0.5)]">
+             <div className="flex items-center gap-3 mb-2">
+                <div className="w-2 h-2 bg-signal-orange animate-pulse rounded-full" />
+                <h4 className="font-mono text-signal-orange text-sm font-bold uppercase tracking-wider">
+                   SYSTEM ALERT
+                </h4>
+             </div>
+             <p className="font-mono text-xs text-zinc-300 leading-relaxed mb-1">
+                CONNEXION INSTABLE. MODE DEGRADE ACTIVE.
+             </p>
+             <p className="font-mono text-[10px] text-zinc-500 uppercase">
+                ERR: {state.error}
+             </p>
+           </div>
         </div>
       )}
     </div>

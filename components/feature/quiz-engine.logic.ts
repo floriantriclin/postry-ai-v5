@@ -54,7 +54,8 @@ export type QuizAction =
   | { type: 'API_PROFILE_START' }
   | { type: 'API_PROFILE_SUCCESS'; payload: ProfileResponse }
   | { type: 'API_PROFILE_ERROR'; payload: { error: string; fallback: ProfileResponse } }
-  | { type: 'FINISH_LOADING' };
+  | { type: 'FINISH_LOADING' }
+  | { type: 'HYDRATE'; payload: QuizState };
 
 export const initialState: QuizState = {
   step: 'THEMES',
@@ -256,6 +257,9 @@ export function quizReducer(state: QuizState, action: QuizAction): QuizState {
     case 'FINISH_LOADING':
       if (state.step !== 'LOADING_RESULTS') return state;
       return { ...state, step: 'FINAL_REVEAL' };
+
+    case 'HYDRATE':
+      return action.payload;
 
     default:
       return state;
