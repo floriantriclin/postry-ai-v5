@@ -24,11 +24,12 @@
 | **Story 1.5** | API de Génération de Questions ICE | [DONE*] |
 | **Story 1.6** | API de Calcul d'Archétype et d'Affinage | [DONE] |
 | **Story 1.7** | API de Synthèse du Profil Augmenté | [DONE] |
-| **Story 1.8** | Intégration Complète du Quiz Dynamique (Frontend) | [-] In Progress |
+| **Story 1.8.1** | API Infrastructure - Phase 1 | [DONE] |
+| **Story 1.8.2** | Phase 2 - Augmentation & Affinage | [-] In Progress |
 
 ## Next Steps
 
-1.  **Integration:** Full frontend dynamic quiz integration (Story 1.8).
+1.  **Integration:** Phase 2 - Augmentation & Affinage (Story 1.8.2).
 
 ## Technical Achievements (Sprint 1)
 

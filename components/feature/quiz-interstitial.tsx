@@ -2,9 +2,10 @@
 
 interface QuizInterstitialProps {
   onStart: () => void;
+  isLoading?: boolean;
 }
 
-export function QuizInterstitial({ onStart }: QuizInterstitialProps) {
+export function QuizInterstitial({ onStart, isLoading = false }: QuizInterstitialProps) {
   return (
     <div className="flex flex-col items-center justify-center min-h-[80vh] max-w-2xl mx-auto p-6 text-center">
       <h2 className="text-3xl font-black mb-6 uppercase tracking-tight">
@@ -20,10 +21,14 @@ export function QuizInterstitial({ onStart }: QuizInterstitialProps) {
       </div>
       <button
         onClick={onStart}
-        className="raw-button raw-button-primary w-full md:w-auto text-xl py-8"
+        disabled={isLoading}
+        className="raw-button raw-button-primary w-full md:w-auto text-xl py-8 flex items-center justify-center gap-3"
         data-testid="start-quiz-btn"
       >
-        Lancer la calibration
+        {isLoading && (
+          <div className="w-5 h-5 border-2 border-white/30 border-t-white animate-spin rounded-full"></div>
+        )}
+        {isLoading ? 'Initialisation...' : 'Lancer la calibration'}
       </button>
     </div>
   );
