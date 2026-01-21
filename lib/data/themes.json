@@ -1,12 +1,12 @@
 [
-  { "id": "t1", "label": "Tech & Innovation", "emoji": "💻" },
-  { "id": "t2", "label": "Marketing & Growth", "emoji": "🚀" },
-  { "id": "t3", "label": "Management & Leadership", "emoji": "👔" },
-  { "id": "t4", "label": "Entrepreneuriat", "emoji": "💡" },
-  { "id": "t5", "label": "Développement Personnel", "emoji": "🌱" },
-  { "id": "t6", "label": "Finance & Investissement", "emoji": "💰" },
-  { "id": "t7", "label": "Productivité & Organisation", "emoji": "⚡" },
-  { "id": "t8", "label": "Vente & Négociation", "emoji": "🤝" },
-  { "id": "t9", "label": "Design & Créativité", "emoji": "🎨" },
-  { "id": "t10", "label": "Société & Culture", "emoji": "🌍" }
+  { "id": "t1", "label": "Management & RH", "emoji": "👔" },
+  { "id": "t2", "label": "Stratégie Digitale", "emoji": "🌐" },
+  { "id": "t3", "label": "Soft Skills", "emoji": "🧠" },
+  { "id": "t4", "label": "Équilibre Vie Pro/Perso", "emoji": "⚖️" },
+  { "id": "t5", "label": "Gestion de Projet", "emoji": "📅" },
+  { "id": "t6", "label": "Voyages & Exploration", "emoji": "✈️" },
+  { "id": "t7", "label": "Football & Sports", "emoji": "⚽" },
+  { "id": "t8", "label": "Cuisine & Gastronomie", "emoji": "🍳" },
+  { "id": "t9", "label": "Arts & Création", "emoji": "🎨" },
+  { "id": "t10", "label": "Gaming & Tech", "emoji": "🎮" }
 ]

@@ -2,7 +2,7 @@
 
 Nom de fichier : front-end-spec.md
 
-**Version :** 3.0
+**Version :** 3.2
 
 **Confidentialité :** Interne / Strict
 
@@ -12,6 +12,8 @@ Nom de fichier : front-end-spec.md
 | --- | --- | --- | --- |
 | 2.1 | 13/01/2026 | FTR | Version initiale |
 | 3.0 | 15/01/2026 | FTR | Nouvelle version basée sur un nouveau PRD simplifié |
+| 3.1 | 21/01/2026 | James | Mise à jour du texte d'accroche landing page |
+| 3.2 | 21/01/2026 | UX Expert | Nouvelle spécification pour les tuiles du Sélecteur de Thème |
 
 # Section 1 : Introduction & Objectifs UX
 
@@ -151,14 +153,15 @@ Ce flux fidélise l'utilisateur en lui donnant le contrôle (la "Rugosité").
 
 - **Hero Minimaliste :**
     - Titre H1 : "Trouvez votre Voix. Pas celle d'un Robot."
-    - Sous-titre : "Découvrez votre Archétype d'écriture LinkedIn en 2 minutes."
+    - Sous-titre : "Découvrez quel genre d'auteur LinkedIn vous êtes en 2 minutes."
     - **Action Principale :** Un bouton unique, central, massif : **[ DÉTERMINER MON STYLE ]**.
 - **Pas d'input** sur cette page. L'engagement est un simple clic.
 
 **B. Sélecteur de Thème (Pré-Jeu)**
 
 - **Titre :** "Sur quel sujet êtes-vous le plus à l'aise ?"
-- **Grille de Choix :** 10 tuiles sélectionnables (ex: "Management", "Vente", "Tech", "Entrepreneuriat", "Échec", etc.).
+- **Grille de Choix :** 10 tuiles sélectionnables.
+- **Design :** Les tuiles doivent suivre la [Recommandation UX : Refonte du Sélecteur de Thèmes](ux/theme-selector-redefined.md) (Format carré rigide, suppression des emojis, indexation numérique).
 - **Comportement :** Sélection unique. Au clic sur une tuile -> Transition immédiate vers l'écran C.
 
 **C. Consignes & Loading Masqué (Écran Tampon)**
@@ -227,6 +230,7 @@ Cette section définit les briques élémentaires pour le développement. Nous n
     - Hover: bg-zinc-800
     - Active: scale-[0.98] (Feedback mécanique)
     - Dimensions : h-12 (Mobile touch target safe)
+    - Alignment : text-center (Crucial for multi-line text on mobile)
 - **Secondary (Choix/Option) :**
     - bg-white text-black border-2 border-black rounded-none
     - Hover: bg-zinc-100

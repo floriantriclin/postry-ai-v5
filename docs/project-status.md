@@ -1,15 +1,15 @@
 # Project Status
 
 **Current Phase:** Sprint 1 - Core Logic & API
-**Date:** 2026-01-20
-**Milestone:** Story 1.8 - Full Integration
+**Date:** 2026-01-21
+**Milestone:** Epic 2 - Conversion & Identity
 
 ## Epic Status
 
 | Epic | Description | Status |
 | :--- | :--- | :--- |
-| **Epic 1 : Fondation & Tunnel Public** | Setup Next.js, Landing Page, Quiz Engine, Blurred Generation | 🟡 In Progress |
-| **Epic 2 : Conversion & Identité** | Auth Magic Link, DB Schema, Reveal Flow | 🔴 Pending |
+| **Epic 1 : Fondation & Tunnel Public** | Setup Next.js, Landing Page, Quiz Engine, Blurred Generation | [DONE] |
+| **Epic 2 : Conversion & Identité** | Auth Magic Link, DB Schema, Reveal Flow | 🟡 In Progress |
 | **Epic 3 : Dashboard & Personnalisation** | App Shell, Equalizer UI/Logic, History | 🔴 Pending |
 | **Epic 4 : Intelligence d'Expertise** | CV Upload, PDF Parsing, RAG Injection, Stripe | 🔴 Pending |
 
@@ -26,14 +26,15 @@
 | **Story 1.7** | API de Synthèse du Profil Augmenté | [DONE] |
 | **Story 1.8.1** | API Infrastructure - Phase 1 | [DONE] |
 | **Story 1.8.2** | Phase 2 - Augmentation & Affinage | [DONE] |
+| **Story 1.8.3** | Expérience "Tech & Brut" & Robustesse | [DONE] |
 
 ## Next Steps
 
-1.  **UX Hardening:** Robustness & Mobile Polish (Story 1.8.3).
+1.  **Bug Fixes & Fine-tuning:** Polissage final du modèle et correction des bugs identifiés (Transition vers Epic 2).
 
 ## Technical Achievements (Sprint 1)
 
-*   **Responsive Landing Page:** Implemented with Neo-Brutalist design, high performance (LCP < 1s), and mobile-first approach.
+*   **Responsive Landing Page:** Implemented with Neo-Brutalist design, high performance (LCP < 1s). Updated tagline to: "Découvrez quel genre d'auteur LinkedIn vous êtes en 2 minutes."
 *   **ICE Core Logic:** Implemented pure, deterministic library for the ICE Protocol v3.1 with 100% logic coverage (Vitest).
 *   **Theme Selection:** Functional navigation flow from Landing to Quiz with topic propagation.
 *   **Tech Stack:** Next.js 16 + Tailwind 4 + TypeScript verified and operational.
@@ -49,3 +50,8 @@
 *   **Latency:** Generation via Gemini must stay under 15s (current implementation has 15s hard timeout).
 *   **Mobile UX:** The Equalizer and Quiz must be perfectly responsive (Touch targets).
 *   **Privacy:** CVs must be secured with RLS immediately.
+
+## Maintenance et Patch
+
+*   **2026-01-21 : Implémentation de la recommandation UX (Sélecteur de Thèmes)**
+*   **2026-01-21 : Raffinement des valeurs cibles des prompts (15/85) pour réduire la caricature.**

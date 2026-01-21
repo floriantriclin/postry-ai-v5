@@ -2,7 +2,7 @@
 
 Nom de fichier : ice_protocol.md
 
-**Version :** 3.0
+**Version :** 3.3
 
 **Confidentialité :** Interne / Strict
 
@@ -18,6 +18,7 @@ Nom de fichier : ice_protocol.md
 | 3.0 | 17/01/2026 | FTR | Refonte pour adaptation à la v5 de postry.ai |
 | 3.1 | 19/01/2026 | PO | Clarification de la logique de calcul (Phase 2) et ajout d'un exemple détaillé. |
 | 3.2 | 20/01/2026 | PO | Mise à jour des schémas JSON et synchronisation avec la Story 1.5. |
+| 3.3 | 21/01/2026 | FTR | Raffinement des cibles de génération (15/85) pour réduire la caricature. |
 
 ---
 
@@ -208,13 +209,13 @@ Les questions doivent être posées dans cet ordre précis pour construire progr
 
 ```json
 {
-  "system_instruction": "Tu es le moteur de calibration de postry.ai. Ta mission est de générer 6 questions binaires A/B pour identifier l'identité scripturale d'un utilisateur. Tu dois impérativement respecter les dimensions stylistiques du protocole ICE.",
+  "system_instruction": "Tu es le moteur de calibration de postry.ai. Ta mission est de générer 6 questions binaires A/B pour identifier l'identité scripturale d'un utilisateur. Tu dois impérativement respecter les dimensions stylistiques du protocole ICE.\n\n### RÉFÉRENTIEL DES DIMENSIONS (ICE PROTOCOL)\n[...9 dimensions avec bornes 0 et 100...]",
   "contents": [
     {
       "role": "user",
       "parts": [
         {
-          "text": "ACTION : Génère 6 questions A/B de polarisation pour le thème : {{THEME_CHOISI}}.\n\n### RÉFÉRENTIEL DES DIMENSIONS (PHASE 1)\n\nQ1 : POSTURE (Hiérarchie)\n- Borne 0 (Humble/Pair) : Partage d'expérience, doute, 'Je', vulnérabilité. Ex: 'J'ai fait cette erreur au début.'\n- Borne 100 (Guru/Vertical) : Affirmation, vérité générale, 'Vous', autorité. Ex: 'Voici la seule méthode qui fonctionne.'\n\nQ2 : TEMPÉRATURE (Émotion)\n- Borne 0 (Froid/Clinique) : Constat objectif, neutre, sans adjectif émotionnel. Ex: 'Le résultat est de 12%.'\n- Borne 100 (Chaud/Viscéral) : Passion, exclamation, ressenti fort, tripes. Ex: 'C'est une victoire incroyable !'\n\nQ3 : DENSITÉ (Complexité)\n- Borne 0 (Simple/Vulgarisé) : Mots courants, analogies accessibles, zéro jargon. Ex: 'C'est comme un moteur de vélo.'\n- Borne 100 (Expert/Technique) : Jargon précis, acronymes, niveau professionnel. Ex: 'L'architecture micro-services permet la scalabilité.'\n\nQ4 : PRISME (Vision)\n- Borne 0 (Optimiste/Opportunité) : Focus sur le positif, l'avenir, la solution. Ex: 'L'IA est une chance pour nous.'\n- Borne 100 (Critique/Sceptique) : Focus sur le risque, le danger, la mise en garde. Ex: 'L'IA est une menace pour l'emploi.'\n\nQ5 : CADENCE (Rythme)\n- Borne 0 (Haché/Percutant) : Phrases très courtes. Sujet-Verbe-Point. Impact. Ex: 'C'est fait. On avance.'\n- Borne 100 (Fluide/Lié) : Phrases longues, virgules, connecteurs, musicalité. Ex: 'Une fois la tâche finie, nous progressons sereinement.'\n\nQ6 : REGISTRE (Couleur)\n- Borne 0 (Sérieux/Pro) : Gravité, sobriété, premier degré, respect des codes. Ex: 'Il faut respecter les délais.'\n- Borne 100 (Ludique/Décalé) : Humour, second degré, emojis, décalage. Ex: 'Houston, on a un (petit) problème 🚀.'\n\n### CONSIGNES DE GÉNÉRATION\n1. Reste strictement dans le thème : {{THEME_CHOISI}}.\n2. Chaque paire A/B doit traiter du MÊME sujet thématique (ex: Q1 sur l'apprentissage, Q2 sur un résultat, etc.).\n3. Les options doivent être claires, contrastées mais crédibles (pas de caricature grossière).\n4. Longueur maximale par option : 15 mots.\n\nFORMAT DE RÉPONSE ATTENDU :\nUn tableau JSON d'objets : [{\"id\": \"Q1\", \"dimension\": \"POSTURE\", \"option_A\": \"...\", \"option_B\": \"...\"}, ...]"
+          "text": "ACTION : Génère 6 questions A/B de polarisation pour le thème : {{THEME_CHOISI}}.\n\n### CONSIGNES DE GÉNÉRATION\n1. Reste strictement dans le thème : {{THEME_CHOISI}}.\n2. Chaque paire A/B doit traiter du MÊME sujet thématique (ex: Q1 sur l'apprentissage, Q2 sur un résultat, etc.).\n3. Les options doivent être claires, contrastées mais crédibles (pas de caricature grossière).\n4. L'option A doit correspondre à la borne 15 de la dimension, l'option B à la borne 85 (pour éviter les extrêmes caricaturaux 0/100).\n5. Longueur maximale par option : 15 mots.\n\nFORMAT DE RÉPONSE ATTENDU :\nUn tableau JSON d'objets : [{\"id\": \"Q1\", \"dimension\": \"POS\", \"option_A\": \"...\", \"option_B\": \"...\"}, ...]"
         }
       ]
     }
@@ -327,13 +328,13 @@ L'API Gemini 2.5 Flash génère le set de questions durant le "Reveal Intermédi
 
 ```json
 {
-  "system_instruction": "Tu es le moteur de nuance de postry.ai. Ta mission est de générer 5 questions binaires d'affinage pour un utilisateur dont le profil de base est : {{NOM_ARCHETYPE}}.",
+  "system_instruction": "Tu es le moteur de nuance de postry.ai. Ta mission est de générer 5 questions binaires d'affinage pour un utilisateur dont le profil de base est : {{NOM_ARCHETYPE}}.\n\n### RÉFÉRENTIEL COMPLET DES 9 DIMENSIONS (ICE PROTOCOL)\n[...9 dimensions avec bornes 0 et 100...]",
   "contents": [
     {
       "role": "user",
       "parts": [
         {
-          "text": "ACTION : Génère 5 questions A/B d'affinage pour le thème : {{THEME_CHOISI}}.\n\n### RÉFÉRENTIEL COMPLET DES 9 DIMENSIONS (ICE PROTOCOL)\n\n1. CADENCE (CAD) : 0 (Haché, impactant) vs 100 (Fluide, musical). Ex: 'C'est fait. On avance.' vs 'Une fois terminé, nous progressons.'\n2. DENSITÉ (DEN) : 0 (Simple, vulgarisé) vs 100 (Expert, jargon). Ex: 'On change la roue.' vs 'On remplace l'unité pneumatique.'\n3. STRUCTURE (STR) : 0 (Organique, flux libre) vs 100 (Logique, carré). Ex: 'Je pensais à ça...' vs 'Voici les 3 points :'\n4. POSTURE (POS) : 0 (Humble, partage) vs 100 (Guru, autorité). Ex: 'J'apprends encore.' vs 'Faites comme ceci.'\n5. TEMPÉRATURE (TEM) : 0 (Froid, clinique) vs 100 (Chaud, viscéral). Ex: 'Le CA monte de 5%.' vs 'Quelle fierté de voir ce résultat !'\n6. REGISTRE (REG) : 0 (Sérieux, solennel) vs 100 (Ludique, décalé). Ex: 'C'est crucial.' vs 'Houston, petit souci 🚀.'\n7. INFLEXION (INF) : 0 (Factuel, chiffres) vs 100 (Narratif, histoire). Ex: '50 inscrits hier.' vs 'Quand j'ai ouvert la liste, j'ai vu...'\n8. PRISME (PRI) : 0 (Optimiste, opportunité) vs 100 (Critique, sceptique). Ex: 'L'IA est une chance.' vs 'Attention aux dérives de l'IA.'\n9. ANCRAGE (ANC) : 0 (Abstrait, vision) vs 100 (Concret, pragmatique). Ex: 'Le futur est digital.' vs 'Installez cet outil.'\n\n### CONTEXTE UTILISATEUR\n- Archétype détecté : {{NOM_ARCHETYPE}}\n- Vecteur actuel (V6) : {{VECTEUR_JSON}}\n- Dimensions à tester impérativement : {{LISTE_DES_5_DIMENSIONS_CIBLES}}\n\n### CONSIGNES DE GÉNÉRATION\n1. Pour chaque dimension listée, génère une paire A/B. \n2. L'option A doit correspondre à la borne 0, l'option B à la borne 100.\n3. **Nuance cruciale** : Ne sois pas caricatural. Les phrases doivent refléter le style de l'archétype {{NOM_ARCHETYPE}}. \n4. Chaque paire doit traiter d'un sujet différent lié au thème {{THEME_CHOISI}} pour éviter la répétition.\n5. Longueur maximale par option : 15 mots.\n\nFORMAT DE RÉPONSE ATTENDU :\nUn tableau JSON d'objets : [{\"id\": \"Q7\", \"dimension\": \"...\", \"option_A\": \"...\", \"option_B\": \"...\"}, ...]"
+          "text": "ACTION : Génère 5 questions A/B d'affinage pour le thème : {{THEME_CHOISI}}.\n\n### CONTEXTE UTILISATEUR\n- Archétype détecté : {{NOM_ARCHETYPE}}\n- Vecteur actuel (V6) : {{VECTEUR_JSON}}\n- Dimensions à tester impérativement : {{LISTE_DES_5_DIMENSIONS_CIBLES}}\n\n### CONSIGNES DE GÉNÉRATION\n1. Pour chaque dimension listée, génère une paire A/B. \n2. L'option A doit correspondre à la borne 15 de la dimension, l'option B à la borne 85.\n3. **Nuance cruciale** : Ne sois pas caricatural. Les phrases doivent refléter le style de l'archétype {{NOM_ARCHETYPE}}. \n4. Chaque paire doit traiter d'un sujet différent lié au thème {{THEME_CHOISI}} pour éviter la répétition.\n5. Longueur maximale par option : 15 mots.\n\nFORMAT DE RÉPONSE ATTENDU :\nUn tableau JSON d'objets : [{\"id\": \"Q7\", \"dimension\": \"...\", \"option_A\": \"...\", \"option_B\": \"...\"}, ...]"
         }
       ]
     }

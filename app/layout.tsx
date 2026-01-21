@@ -23,7 +23,7 @@ const jetbrainsMono = JetBrains_Mono({
 
 export const metadata: Metadata = {
   title: "Postry AI | Trouvez votre Voix",
-  description: "Découvrez votre Archétype d'écriture LinkedIn en 2 minutes.",
+  description: "Découvrez quel genre d'auteur LinkedIn vous êtes en 2 minutes.",
 };
 
 export default function RootLayout({

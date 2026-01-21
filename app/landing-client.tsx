@@ -11,7 +11,7 @@ export default function LandingClient() {
           <span className="text-zinc-500">Pas celle d'un Robot.</span>
         </h1>
         <p className="text-lg md:text-xl font-medium max-w-lg mx-auto">
-          Découvrez votre Archétype d'écriture LinkedIn en 2 minutes.
+          Découvrez quel genre d'auteur LinkedIn vous êtes en 2 minutes.
         </p>
       </div>
 
