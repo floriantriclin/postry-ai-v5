@@ -16,3 +16,4 @@
 *   **Story 1.6 :** [API de Calcul d'Archétype et d'Affinage](../stories/story-1-6-quiz-logic-api.md) - [IN PROGRESS]
 *   **Story 1.7 :** [API de Synthèse du Profil Augmenté](../stories/story-1-7-augmented-profile-api.md) - [TODO]
 *   **Story 1.8 :** [Intégration Complète du Quiz Dynamique (Frontend)](../stories/story-1-8-full-integration.md) - [TODO]
+*   **Story 1.9 :** [API de Génération du Post Initial (Pivot)](../stories/story-1-9-initial-post-generation.md) - [TODO]

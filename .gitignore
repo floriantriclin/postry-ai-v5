@@ -21,6 +21,7 @@ web-bundles/
 # misc
 .DS_Store
 *.pem
+generate_tree.ps1
 
 # debug
 npm-debug.log*

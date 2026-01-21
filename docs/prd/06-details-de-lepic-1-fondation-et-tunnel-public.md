@@ -76,3 +76,13 @@
 1. Orchestration complète des appels API 1.5 à 1.7.
 2. Gestion des états de chargement et fallbacks.
 3. Expérience fluide de bout en bout.
+
+### Story 1.9 : API de Génération du Post Initial (Pivot)
+**En tant que** Visiteur ayant découvert son profil augmenté,
+**Je veux** générer un premier post LinkedIn concret sur un sujet de mon choix en utilisant mon style unique (ICE),
+**Afin de** valider immédiatement la promesse de valeur (créer du contenu qui me ressemble) avant de m'inscrire.
+
+**Critères d'Acceptation** :
+1. Endpoint `POST /api/quiz/post` fonctionnel et sécurisé.
+2. Génération de texte (Hook, Body, CTA) basée sur le vecteur ICE.
+3. Analyse et feedback du style appliqué.

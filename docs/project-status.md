@@ -8,8 +8,8 @@
 
 | Epic | Description | Status |
 | :--- | :--- | :--- |
-| **Epic 1 : Fondation & Tunnel Public** | Setup Next.js, Landing Page, Quiz Engine, Blurred Generation | [DONE] |
-| **Epic 2 : Conversion & Identité** | Auth Magic Link, DB Schema, Reveal Flow | 🟡 In Progress |
+| **Epic 1 : Fondation & Tunnel Public** | Setup Next.js, Landing Page, Quiz Engine, Blurred Generation | 🟡 In Progress |
+| **Epic 2 : Conversion & Identité** | Auth Magic Link, DB Schema, Reveal Flow | 🔴 Pending |
 | **Epic 3 : Dashboard & Personnalisation** | App Shell, Equalizer UI/Logic, History | 🔴 Pending |
 | **Epic 4 : Intelligence d'Expertise** | CV Upload, PDF Parsing, RAG Injection, Stripe | 🔴 Pending |
 
@@ -27,10 +27,12 @@
 | **Story 1.8.1** | API Infrastructure - Phase 1 | [DONE] |
 | **Story 1.8.2** | Phase 2 - Augmentation & Affinage | [DONE] |
 | **Story 1.8.3** | Expérience "Tech & Brut" & Robustesse | [DONE] |
+| **Story 1.9** | API de Génération du Post Initial (Pivot) | [TODO] |
 
 ## Next Steps
 
-1.  **Bug Fixes & Fine-tuning:** Polissage final du modèle et correction des bugs identifiés (Transition vers Epic 2).
+1.  **Story 1.9 (Pivot):** Implémenter la génération du post initial pour faire le lien avec l'Epic 2.
+2.  **Bug Fixes & Fine-tuning:** Polissage final du modèle et correction des bugs identifiés.
 
 ## Technical Achievements (Sprint 1)
 
