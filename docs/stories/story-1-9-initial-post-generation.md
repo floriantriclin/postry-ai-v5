@@ -97,3 +97,14 @@ Cette story est le **pivot** entre l'Epic 1 (Acquisition) et l'Epic 2 (Conversio
   - `TC-API-02` : Vérification "Whitebox" de la construction du System Prompt.
   - `TC-E2E-01` : Flow complet de génération avec UI Mockée (Playwright).
 - **Focus Manuel :** Validation visuelle du floutage progressif et pertinence du style.
+
+### Résultats de Validation
+| ID | Critère | Statut | Note |
+|---|---|---|---|
+| 1 | Endpoint & Validation | ✅ Validé | Route implémentée, Zod schema actif, Sanitization OK. |
+| 2 | Logique Prompting | ✅ Validé | Prompt système complet, contraintes ICE et Français respectées. |
+| 3 | Format Sortie | ✅ Validé | JSON structuré (hook, content, cta, analysis) retourné. |
+| 4 | Robustesse | ✅ Validé | Timeout, Retry (3x) et Logs implémentés via `lib/gemini.ts`. |
+| 5 | Intégration UI | ✅ Validé | Composant `FinalReveal` fonctionnel, floutage CSS et transition Focus View OK. |
+
+**Conclusion :** La story est validée et prête pour le déploiement. Le flow E2E est stable (passé sur Chromium).

@@ -33,28 +33,28 @@ export async function POST(req: NextRequest) {
 
 
     const systemInstruction = `
-You are a professional LinkedIn ghostwriter mimicking a specific user style defined by the "ICE Model".
-Your goal is to write a high-impact LinkedIn post in FRENCH.
+Tu es un ghostwriter professionnel LinkedIn qui imite le style spécifique d'un utilisateur défini par le "Modèle ICE".
+Ton objectif est d'écrire un post LinkedIn à fort impact en FRANÇAIS.
 
-USER IDENTITY:
-- Archetype: ${archetype} ${profileLabel ? `(${profileLabel})` : ''}
-- Style Vector Analysis:
+IDENTITÉ DE L'UTILISATEUR :
+- Archétype : ${archetype} ${profileLabel ? `(${profileLabel})` : ''}
+- Analyse du Vecteur de Style :
 ${styleContext}
 
-STRICT GUIDELINES:
-1. LANGUAGE: MUST BE FRENCH.
-2. TONE/STYLE: You MUST strictly adhere to the Style Vector values above. 
-   - If Density is high (>70), use technical jargon. If low (<30), be very simple.
-   - If Cadence is low (<30), use short, punchy sentences.
-   - If Posture is high (>70), be authoritative.
-   - Apply the specific nuances of the archetype.
-3. STRUCTURE:
-   - HOOK: 1 impactful sentence to grab attention.
-   - CONTENT: The main body, formatted with line breaks for readability.
-   - CTA: A clear Call to Action or engaging question at the end.
-4. FEEDBACK: Provide a short analysis (1 sentence) on how you applied the style in "style_analysis".
+DIRECTIVES STRICTES :
+1. LANGUE : DOIT ÊTRE EN FRANÇAIS.
+2. TON/STYLE : Tu DOIS strictement adhérer aux valeurs du Vecteur de Style ci-dessus.
+   - Si la Densité est élevée (>70), utilise un jargon technique. Si elle est basse (<30), sois très simple.
+   - Si la Cadence est basse (<30), utilise des phrases courtes et percutantes.
+   - Si la Posture est élevée (>70), sois autoritaire.
+   - Applique les nuances spécifiques de l'archétype.
+3. STRUCTURE :
+   - HOOK : 1 phrase impactante pour capter l'attention.
+   - CONTENT : Le corps principal, formaté avec des sauts de ligne pour la lisibilité.
+   - CTA : Un appel à l'action clair ou une question engageante à la fin.
+4. FEEDBACK : Fournis une courte analyse (1 phrase) sur la façon dont tu as appliqué le style dans "style_analysis".
 
-Respond ONLY with the JSON object matching this structure:
+Réponds UNIQUEMENT avec l'objet JSON correspondant à cette structure :
 {
   "hook": "...",
   "content": "...",
@@ -63,7 +63,7 @@ Respond ONLY with the JSON object matching this structure:
 }
 `;
 
-    const userPrompt = `Subject: "${sanitizedTopic}"\nWrite the post now following the style constraints.`;
+    const userPrompt = `Sujet : "${sanitizedTopic}"\nÉcris le post maintenant en respectant les contraintes de style.`;
 
     console.log(`[${correlationId}] Calling Gemini`);
     const generationResult = await generatePostWithGemini(systemInstruction, userPrompt);
