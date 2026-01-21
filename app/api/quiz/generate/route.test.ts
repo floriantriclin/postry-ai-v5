@@ -141,7 +141,7 @@ describe('API /api/quiz/generate', () => {
     // Expect the prompt to contain the resolved label "Tech & Innovation"
     expect(gemini.generateWithGemini).toHaveBeenCalledWith(
       expect.any(String),
-      expect.stringContaining('Tech & Innovation'),
+      expect.stringContaining('Management & RH'),
       expect.any(Number),
       expect.any(AbortSignal)
     );

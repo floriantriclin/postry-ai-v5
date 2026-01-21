@@ -13,7 +13,7 @@ export function FinalReveal({ profile }: FinalRevealProps) {
   const [topic, setTopic] = useState('');
 
   return (
-    <div className="flex flex-col items-center w-full max-w-4xl mx-auto p-6 min-h-[80vh] animate-in slide-in-from-bottom-8 duration-700">
+    <div data-testid="final-reveal-container" className="flex flex-col items-center w-full max-w-4xl mx-auto p-6 min-h-[80vh] animate-in slide-in-from-bottom-8 duration-700">
       <div className="w-full text-center mb-12">
         <span className="font-mono bg-black text-white px-4 py-1 text-sm uppercase tracking-widest">
           Profil Augmenté

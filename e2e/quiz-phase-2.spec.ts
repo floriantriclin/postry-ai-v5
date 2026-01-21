@@ -90,7 +90,7 @@ test.describe('Quiz Phase 2 & Orchestration', () => {
     // Complete Phase 2 (Zéro Latence)
     for (let i = 0; i < 5; i++) {
       // Check progress update
-      await expect(page.getByText(`Précision: ${50 + i * 10}%`)).toBeVisible();
+      await expect(page.getByText(`PRECISION : ${50 + i * 10}%`)).toBeVisible();
       await page.getByTestId('option-a').click();
     }
 
@@ -129,7 +129,7 @@ test.describe('Quiz Phase 2 & Orchestration', () => {
     await page.getByTestId('continue-refining-btn').click();
 
     // Should see loader
-    await expect(page.getByText('Préparation de l\'affinage...')).toBeVisible();
+    await expect(page.getByText('PREPARATION DE L\'AFFINAGE...')).toBeVisible();
 
     // Eventually Phase 2 starts
     await expect(page.getByTestId('option-a')).toBeVisible({ timeout: 3000 });

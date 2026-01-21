@@ -36,6 +36,7 @@ vi.mock('./question-card', () => ({
 describe('QuizEngine Integration (Orchestration)', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    localStorage.clear();
   });
 
   it('1.8.1-INT-001: should call /generate when entering INSTRUCTIONS step', async () => {
@@ -71,7 +72,8 @@ describe('QuizEngine Integration (Orchestration)', () => {
 
     // Answer 6 questions
     for (let i = 0; i < 6; i++) {
-      expect(screen.getByText(`${i + 1}/6`)).toBeTruthy();
+      const progress = `[ ${(i + 1).toString().padStart(2, '0')} / 06 ]`;
+      expect(screen.getByText(progress)).toBeTruthy();
       fireEvent.click(screen.getByTestId('answer-a'));
     }
 
@@ -99,7 +101,7 @@ describe('QuizEngine Integration (Orchestration)', () => {
     });
     
     // Error notification should be visible
-    expect(screen.getByText(/Mode dégradé activé/)).toBeTruthy();
+    expect(screen.getByText(/MODE DEGRADE ACTIVE/i)).toBeTruthy();
     
     consoleSpy.mockRestore();
   });

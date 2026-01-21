@@ -53,5 +53,5 @@
 
 ## Maintenance et Patch
 
-*   **2026-01-21 : Implémentation de la recommandation UX (Sélecteur de Thèmes)**
-*   **2026-01-21 : Raffinement des valeurs cibles des prompts (15/85) pour réduire la caricature.**
+1.  **[PATCH-001] 2026-01-21 : Implémentation de la recommandation UX (Sélecteur de Thèmes)**
+2.  **[PATCH-002] 2026-01-21 : Raffinement des valeurs cibles des prompts (15/85) pour réduire la caricature.**
