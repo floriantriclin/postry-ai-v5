@@ -232,7 +232,13 @@ export function QuizEngine() {
       
       case 'FINAL_REVEAL':
         // We use state.profileData if available, otherwise fallback is handled in logic
-        return <FinalReveal profile={state.profileData || mockData.augmentedProfile as any} />;
+        return (
+          <FinalReveal
+            profile={state.profileData || mockData.augmentedProfile as any}
+            archetype={state.archetypeData?.archetype || mockData.archetype as any}
+            vector={state.currentVector || mockData.archetype.baseVector as any}
+          />
+        );
       
       default:
         return null;

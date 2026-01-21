@@ -22,6 +22,7 @@ web-bundles/
 .DS_Store
 *.pem
 generate_tree.ps1
+generate_tree.py
 
 # debug
 npm-debug.log*

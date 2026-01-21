@@ -42,7 +42,8 @@
     "name": "Le Stratège",
     "family": "LES RATIONNELS",
     "signature": "Décideur Tranchant",
-    "description": "Leader analytique évaluant les risques avec froideur. Son style est percutant, structuré pour la décision. Il utilise des faits denses pour asseoir une autorité naturelle."
+    "description": "Leader analytique évaluant les risques avec froideur. Son style est percutant, structuré pour la décision. Il utilise des faits denses pour asseoir une autorité naturelle.",
+    "baseVector": [25, 65, 85, 85, 30, 15, 20, 60, 60]
   },
   "phase2": [
     {

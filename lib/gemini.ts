@@ -1,6 +1,6 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { z } from 'zod';
-import { QuizResponseSchema, QuizQuestion } from './types';
+import { QuizResponseSchema, QuizQuestion, PostGenerationResponseSchema, PostGenerationResponse } from './types';
 import { env } from './env';
 
 /**
@@ -109,4 +109,50 @@ export async function generateWithGemini(
   }
 
   throw lastError || new Error('Failed to generate content after retries');
+}
+
+/**
+ * Generates a LinkedIn post based on topic and style vector.
+ */
+export async function generatePostWithGemini(
+  systemInstruction: string,
+  userPrompt: string,
+  retries = 2,
+  signal?: AbortSignal
+): Promise<PostGenerationResponse> {
+  const apiKey = env.GEMINI_API_KEY;
+  if (!apiKey) {
+    throw new Error('GEMINI_API_KEY is not defined');
+  }
+
+  const model = new GoogleGenerativeAI(apiKey).getGenerativeModel({
+    model: 'gemini-2.5-flash',
+    systemInstruction,
+    generationConfig: {
+      responseMimeType: 'application/json',
+    },
+  });
+
+  let lastError: Error | null = null;
+  for (let attempt = 0; attempt <= retries; attempt++) {
+    try {
+      const result = await model.generateContent(userPrompt, { signal });
+      const response = await result.response;
+      const text = response.text();
+      
+      const jsonString = cleanJsonResponse(text);
+      const parsed = JSON.parse(jsonString);
+      
+      return PostGenerationResponseSchema.parse(parsed);
+    } catch (error: unknown) {
+      const err = error as Error;
+      lastError = err;
+      console.error(`Gemini Post Generation call attempt ${attempt + 1} failed:`, error instanceof z.ZodError ? JSON.stringify(error.errors, null, 2) : error instanceof Error ? error.message : String(error));
+      if (attempt < retries) {
+        await new Promise(resolve => setTimeout(resolve, 1000 * (attempt + 1)));
+      }
+    }
+  }
+
+  throw lastError || new Error('Failed to generate post after retries');
 }

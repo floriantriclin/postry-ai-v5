@@ -51,3 +51,22 @@ export interface AugmentedProfile {
   refinedVector: Vstyle;
   confidence: number;
 }
+
+// --- Post Generation Types ---
+
+export const PostGenerationRequestSchema = z.object({
+  topic: z.string().min(3),
+  archetype: z.string(),
+  vector: z.array(z.number().min(0).max(100)).length(9),
+  profileLabel: z.string().optional(),
+});
+
+export const PostGenerationResponseSchema = z.object({
+  hook: z.string(),
+  content: z.string(),
+  cta: z.string(),
+  style_analysis: z.string(),
+});
+
+export type PostGenerationRequest = z.infer<typeof PostGenerationRequestSchema>;
+export type PostGenerationResponse = z.infer<typeof PostGenerationResponseSchema>;
