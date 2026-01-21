@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { Archetype, Vstyle, PostGenerationResponse } from '@/lib/types';
-import { Loader2 } from 'lucide-react';
+import { Loader2, ChevronDown, ChevronUp, X } from 'lucide-react';
 
 interface FinalRevealProps {
   profile: {
@@ -18,6 +18,7 @@ export function FinalReveal({ profile, archetype, vector }: FinalRevealProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [generatedPost, setGeneratedPost] = useState<PostGenerationResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [showAnalysis, setShowAnalysis] = useState(false);
 
   const handleGenerate = async () => {
     if (!topic || topic.length < 3) return;
@@ -51,55 +52,93 @@ export function FinalReveal({ profile, archetype, vector }: FinalRevealProps) {
   if (generatedPost) {
     return (
       <div className="fixed inset-0 z-50 bg-zinc-50 flex flex-col overflow-y-auto animate-in fade-in duration-500">
-        {/* Header */}
-        <div className="bg-white border-b border-zinc-200 p-4 sticky top-0 z-10 flex justify-between items-center shadow-sm">
-          <div>
-            <span className="text-xs font-mono text-zinc-500 uppercase block">Thème: {topic}</span>
-            <span className="text-sm font-bold uppercase tracking-tight">Généré par {profile.label_final}</span>
-          </div>
-          <div className="bg-signal-orange text-black font-mono text-xs px-2 py-1 uppercase font-bold">
-            Draft Mode
-          </div>
+        {/* Minimal Header with Close */}
+        <div className="absolute top-4 right-4 z-50">
+           <button
+             onClick={() => setGeneratedPost(null)}
+             className="bg-white rounded-full p-2 shadow-sm hover:bg-zinc-100 transition-colors border border-zinc-200"
+           >
+             <X size={24} />
+           </button>
         </div>
 
-        <div className="flex-1 max-w-2xl mx-auto w-full p-6 md:p-12">
-           {/* Feedback */}
-           <div className="mb-8 p-4 bg-zinc-100 border-l-4 border-black text-sm italic text-zinc-600">
-              <span className="font-bold not-italic mr-2">💡 Analyse Style :</span>
-              {generatedPost.style_analysis}
+        <div className="flex-1 max-w-2xl mx-auto w-full p-6 md:p-12 flex flex-col items-center pt-20">
+           
+           {/* Meta Info Section */}
+           <div className="w-full text-center mb-8 space-y-4">
+              {/* Profile & Analysis Toggle */}
+              <div className="flex flex-col items-center gap-2">
+                 <span className="text-sm font-medium text-zinc-500 uppercase tracking-wide">
+                    Généré par {profile.label_final}
+                 </span>
+                 
+                 <button 
+                    onClick={() => setShowAnalysis(!showAnalysis)}
+                    className="text-xs font-mono text-zinc-400 hover:text-black flex items-center gap-1 transition-colors border-b border-dashed border-zinc-300 pb-0.5"
+                 >
+                    {showAnalysis ? 'Masquer l\'analyse' : 'Voir l\'analyse de style'}
+                    {showAnalysis ? <ChevronUp size={12} /> : <ChevronDown size={12} />}
+                 </button>
+
+                 {/* Collapsible Analysis Drawer */}
+                 {showAnalysis && (
+                    <div className="mt-4 w-full bg-zinc-100 border-l-2 border-zinc-300 p-4 text-left animate-in slide-in-from-top-2 duration-200">
+                       <p className="text-sm text-zinc-600 italic leading-relaxed">
+                          "{generatedPost.style_analysis}"
+                       </p>
+                    </div>
+                 )}
+              </div>
+
+              {/* Theme Display - Highly Visible */}
+              <h2 className="text-3xl md:text-4xl font-black text-black mt-6 mb-2 leading-tight">
+                 {topic}
+              </h2>
            </div>
 
-           {/* Post Preview */}
-           <div className="bg-white p-8 shadow-lg border border-zinc-200 relative overflow-hidden">
-              <div className="font-serif text-lg leading-relaxed whitespace-pre-wrap text-zinc-900">
-                 <p className="font-bold mb-4">{generatedPost.hook}</p>
-                 
-                 <div className="relative">
-                    {/* Content Masking Logic */}
-                    <div className="relative z-0">
-                       {generatedPost.content}
-                    </div>
+           {/* Post Container with Draft Badge */}
+           <div className="w-full relative">
+              
+              {/* Prominent Draft Badge */}
+              <div className="absolute -top-3 right-4 z-20 bg-signal-orange border-2 border-black px-3 py-1 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transform rotate-2">
+                 <span className="font-mono font-bold text-xs uppercase tracking-wider text-black">
+                    Draft Mode
+                 </span>
+              </div>
+
+              {/* Post Preview Card */}
+              <div className="bg-white p-8 md:p-10 shadow-xl border border-zinc-200 relative overflow-hidden">
+                 <div className="font-serif text-lg leading-relaxed whitespace-pre-wrap text-zinc-900">
+                    <p className="font-bold mb-6 text-xl">{generatedPost.hook}</p>
                     
-                    {/* Blur Gradient Overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/80 to-white z-10 pointer-events-none" 
-                         style={{ background: 'linear-gradient(to bottom, transparent 15%, rgba(255,255,255,0.6) 25%, #ffffff 50%)' }} />
-                    
-                    {/* Call To Action Conversion Overlay */}
-                    <div className="absolute inset-0 z-20 flex flex-col items-center justify-center pt-32">
-                       <div className="bg-white p-8 border-2 border-dashed border-zinc-300 text-center max-w-sm mx-auto shadow-2xl">
-                          <h3 className="font-bold text-xl mb-2 uppercase tracking-tight">Post Complet</h3>
-                          <p className="text-zinc-600 mb-6">Pour voir la suite et copier ce post, finalisez votre compte.</p>
-                          <button 
-                            className="raw-button raw-button-primary w-full"
-                            onClick={() => window.location.href = '#signup'} // Placeholder for Story 2.4
-                          >
-                             Débloquer mon post
-                          </button>
+                    <div className="relative">
+                       {/* Content Masking Logic */}
+                       <div className="relative z-0">
+                          {generatedPost.content}
+                       </div>
+                       
+                       {/* Blur Gradient Overlay */}
+                       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/80 to-white z-10 pointer-events-none" 
+                            style={{ background: 'linear-gradient(to bottom, transparent 15%, rgba(255,255,255,0.6) 25%, #ffffff 50%)' }} />
+                       
+                       {/* Call To Action Conversion Overlay */}
+                       <div className="absolute inset-0 z-20 flex flex-col items-center justify-center pt-32">
+                          <div className="bg-white p-8 border-2 border-dashed border-zinc-300 text-center max-w-sm mx-auto shadow-2xl">
+                             <h3 className="font-bold text-xl mb-2 uppercase tracking-tight">Post Complet</h3>
+                             <p className="text-zinc-600 mb-6">Pour voir la suite et copier ce post, finalisez votre compte.</p>
+                             <button 
+                               className="raw-button raw-button-primary w-full"
+                               onClick={() => window.location.href = '#signup'} // Placeholder for Story 2.4
+                             >
+                                Débloquer mon post
+                             </button>
+                          </div>
                        </div>
                     </div>
                  </div>
               </div>
            </div>
+
         </div>
       </div>
     );

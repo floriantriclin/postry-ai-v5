@@ -55,7 +55,8 @@ test('Story 1.9: Post Generation Flow', async ({ page }) => {
   await page.getByRole('button', { name: 'Générer un post' }).click();
 
   // Validate "Focus View" appearance
-  await expect(page.getByText('Thème: Intelligence Artificielle')).toBeVisible();
+  await expect(page.getByText('Sujet')).toBeVisible();
+  await expect(page.getByText('Intelligence Artificielle')).toBeVisible();
   await expect(page.getByText('Draft Mode')).toBeVisible();
   await expect(page.getByText("L'IA change tout.")).toBeVisible();
   await expect(page.getByText('Style très direct.')).toBeVisible();

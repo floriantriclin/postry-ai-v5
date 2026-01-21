@@ -27,11 +27,11 @@
 | **Story 1.8.1** | API Infrastructure - Phase 1 | [DONE] |
 | **Story 1.8.2** | Phase 2 - Augmentation & Affinage | [DONE] |
 | **Story 1.8.3** | Expérience "Tech & Brut" & Robustesse | [DONE] |
-| **Story 1.9** | API de Génération du Post Initial (Pivot) | [TODO] |
+| **Story 1.9** | API de Génération du Post Initial (Pivot) | [DONE] |
 
 ## Next Steps
 
-1.  **Story 1.9 (Pivot):** Implémenter la génération du post initial pour faire le lien avec l'Epic 2.
+1.  **Transition Epic 2 (Conversion):** Lancer le chantier de l'authentification et de la sauvegarde du profil.
 2.  **Bug Fixes & Fine-tuning:** Polissage final du modèle et correction des bugs identifiés.
 
 ## Technical Achievements (Sprint 1)
@@ -59,3 +59,4 @@
 2.  **[PATCH-002] 2026-01-21 : Raffinement des valeurs cibles des prompts (15/85) pour réduire la caricature.**
 3.  **[PATCH-003] 2026-01-21 : Suppression des valeurs de dimensions dans l'output du Profil Augmenté.**
 4.  **[PATCH-004] 2026-01-21 : Passage du Profil Augmenté à la 2ème personne du pluriel (Vouvoiement) pour une meilleure immersion.**
+5.  **[PATCH-005] 2026-01-21 : Refonte UX Final Reveal (Story 1.9) - Focus View, Draft Mode, Suppression des valeurs numériques.**

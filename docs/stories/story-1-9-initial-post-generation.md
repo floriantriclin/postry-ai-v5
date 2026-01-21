@@ -62,16 +62,19 @@ Cette story est le **pivot** entre l'Epic 1 (Acquisition) et l'Epic 2 (Conversio
 - [ ] Gestion de l'état "Loading" sur le bouton.
 - [ ] **Transition vers une Vue Focus (Page dédiée/Overlay) :**
   - Au succès de la génération, l'interface précédente disparaît pour laisser place à une page épurée (maximise le focus).
-  - **En-tête de validation :**
-    - Rappel du **Thème** choisi.
-    - Mention de l'identité : "Généré par **[Archétype] [Adjectif]**" (ex: "Généré par Le Visionnaire Audacieux").
-  - **Zone du Post (Teaser) :**
-    - **Accroche (Hook) :** Visible en clair.
-    - **Corps (Content) :**
-      - Premiers 15% du contenu : Visible en clair.
-      - 10% suivants : Flou progressif (Blur Gradient).
-      - Reste du post (> 25%) : Totalement illisible / masqué.
-  - **Feedback Style :** Visible (ex: "Ton style 'Analytique' a été appliqué").
+  - **Layout Refined (Patch 2026-01-21) :**
+    - **En-tête :** Minimal (Bouton Close).
+    - **Zone Contextuelle (Haut) :**
+      - "Généré par [Archétype]" (Discret).
+      - "Analyse Style" masquée par défaut (Accordion/Drawer) pour ne pas polluer.
+      - Thème en gros titre (H1/H2) très visible.
+    - **Zone Post (Centre) :**
+      - Carte Post avec Badge "Draft Mode" très visible (Sticker/Badge).
+      - **Accroche (Hook) :** Visible en clair.
+      - **Corps (Content) :**
+        - Premiers 15% du contenu : Visible en clair.
+        - 10% suivants : Flou progressif (Blur Gradient).
+        - Reste du post (> 25%) : Totalement illisible / masqué.
 - [ ] **Call to Action (Conversion) :**
   - Bouton ou Modal pour entrer l'email et débloquer le post complet (Redirection vers Inscription/Epic 2).
 

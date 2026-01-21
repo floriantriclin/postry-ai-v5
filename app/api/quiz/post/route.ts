@@ -52,7 +52,7 @@ DIRECTIVES STRICTES :
    - HOOK : 1 phrase impactante pour capter l'attention.
    - CONTENT : Le corps principal, formaté avec des sauts de ligne pour la lisibilité.
    - CTA : Un appel à l'action clair ou une question engageante à la fin.
-4. FEEDBACK : Fournis une courte analyse (1 phrase) sur la façon dont tu as appliqué le style dans "style_analysis".
+4. FEEDBACK : Fournis une courte analyse (1 phrase) sur la façon dont tu as appliqué le style dans "style_analysis". Ne mentionne PAS les valeurs numériques brutes (ex: "85/100") ni les noms techniques des dimensions. Explique plutôt l'effet stylistique (ex: "J'ai utilisé un vocabulaire très technique pour marquer l'expertise").
 
 Réponds UNIQUEMENT avec l'objet JSON correspondant à cette structure :
 {
