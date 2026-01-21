@@ -67,7 +67,7 @@ export function formatVectorForPrompt(vector: number[]): string {
 export const geminiInternal = {
   getGeminiModel: () => {
     return getGeminiModel({
-      systemInstruction: `Tu es un expert en psychométrie et en personal branding. Ton rôle est de traduire un vecteur de données stylistiques en une identité rédactionnelle prestigieuse et inspirante. Tu parles impérativement en Français.`,
+      systemInstruction: `Tu es un expert en psychométrie et en personal branding. Ton rôle est de traduire un vecteur de données stylistiques en une identité rédactionnelle prestigieuse et inspirante. Tu parles impérativement en Français et tu t'adresses directement à l'utilisateur en utilisant le "vous" (2ème personne du pluriel).`,
       responseMimeType: 'application/json',
     });
   }
@@ -118,11 +118,12 @@ ACTION : Génère le Profil Augmenté de l'utilisateur.
 
 ### MISSIONS DE GÉNÉRATION
 1. **Le Label Final** : Crée un titre composé : [${baseArchetype}] + [Adjectif Qualificatif Flatteur]. L'adjectif doit refléter la dérive la plus marquée du vecteur par rapport à l'archétype standard (Drift Hint). Ex: 'Le Stratège Lumineux', 'L'Ingénieur Intuitif', 'Le Mentor Radical'.
-2. **La Définition** : Rédige une définition de 50 à 60 mots exactement (en Français). Elle doit expliquer la force unique de ce mélange stylistique. Valorise la manière dont l'utilisateur équilibre sa technicité et son humanité pour impacter son audience.
+2. **La Définition** : Rédige une définition immersive de 50 à 60 mots exactement (en Français), adressée directement à l'utilisateur en utilisant le "vous" (vouvoiement). Elle doit expliquer la force unique de ce mélange stylistique. Valorise la manière dont l'utilisateur équilibre sa technicité et son humanité pour impacter son audience.
 
 ### DIRECTIVES DE NUANCE
 - Si une dimension est à l'extrême (<15 or >85), elle doit devenir le cœur de la définition.
 - Le ton doit être prestigieux, profond et révélateur. Évite les platitudes.
+- **IMPORTANT** : Ne cite JAMAIS de valeurs numériques ou de scores dans ta définition. Ne mentionne pas non plus les noms techniques des dimensions (ex: "Cadence", "Densité"). Traduis ces concepts en traits de personnalité ou styles d'écriture fluides. La définition doit être rédigée exclusivement à la 2ème personne du pluriel (ex: "Vous êtes...", "Votre ton...").
 - RÉPONDS EXCLUSIVEMENT EN FRANÇAIS.
 
 ### FORMAT DE SORTIE ATTENDU

@@ -55,3 +55,5 @@
 
 1.  **[PATCH-001] 2026-01-21 : Implémentation de la recommandation UX (Sélecteur de Thèmes)**
 2.  **[PATCH-002] 2026-01-21 : Raffinement des valeurs cibles des prompts (15/85) pour réduire la caricature.**
+3.  **[PATCH-003] 2026-01-21 : Suppression des valeurs de dimensions dans l'output du Profil Augmenté.**
+4.  **[PATCH-004] 2026-01-21 : Passage du Profil Augmenté à la 2ème personne du pluriel (Vouvoiement) pour une meilleure immersion.**

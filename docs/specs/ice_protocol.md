@@ -2,7 +2,7 @@
 
 Nom de fichier : ice_protocol.md
 
-**Version :** 3.3
+**Version :** 3.4
 
 **Confidentialité :** Interne / Strict
 
@@ -19,6 +19,7 @@ Nom de fichier : ice_protocol.md
 | 3.1 | 19/01/2026 | PO | Clarification de la logique de calcul (Phase 2) et ajout d'un exemple détaillé. |
 | 3.2 | 20/01/2026 | PO | Mise à jour des schémas JSON et synchronisation avec la Story 1.5. |
 | 3.3 | 21/01/2026 | FTR | Raffinement des cibles de génération (15/85) pour réduire la caricature. |
+| 3.4 | 21/01/2026 | FTR | Passage de la définition du Profil Augmenté à la 2ème personne du pluriel (Vouvoiement). |
 
 ---
 
@@ -382,13 +383,13 @@ Cette requête est envoyée dès la validation de la 11ème question. Elle inclu
 
 ```json
 {
-  "system_instruction": "Tu es un expert en psychométrie et en personal branding. Ton rôle est de traduire un vecteur de données stylistiques en une identité rédactionnelle prestigieuse et inspirante.",
+  "system_instruction": "Tu es un expert en psychométrie et en personal branding. Ton rôle est de traduire un vecteur de données stylistiques en une identité rédactionnelle prestigieuse et inspirante. Tu parles impérativement en Français et tu t'adresses directement à l'utilisateur en utilisant le \"vous\" (2ème personne du pluriel).",
   "contents": [
     {
       "role": "user",
       "parts": [
         {
-          "text": "ACTION : Génère le Profil Augmenté de l'utilisateur.\n\n### RÉFÉRENTIEL DES 9 DIMENSIONS (POUR ANALYSE)\n1. CADENCE (CAD) : 0 (Haché, percutant) vs 100 (Fluide, musical).\n2. DENSITÉ (DEN) : 0 (Simple, vulgarisé) vs 100 (Expert, jargon).\n3. STRUCTURE (STR) : 0 (Organique, flux libre) vs 100 (Logique, carré).\n4. POSTURE (POS) : 0 (Humble, partage) vs 100 (Guru, autorité).\n5. TEMPÉRATURE (TEM) : 0 (Froid, clinique) vs 100 (Chaud, viscéral).\n6. REGISTRE (REG) : 0 (Sérieux, solennel) vs 100 (Ludique, décalé).\n7. INFLEXION (INF) : 0 (Factuel, chiffres) vs 100 (Narratif, histoire).\n8. PRISME (PRI) : 0 (Optimiste, opportunité) vs 100 (Critique, sceptique).\n9. ANCRAGE (ANC) : 0 (Abstrait, vision) vs 100 (Concret, pragmatique).\n\n### DONNÉES UTILISATEUR\n- Archétype de base détecté : {{NOM_ARCHETYPE}}\n- Vecteur Final V11 : {{VECTEUR_V11_JSON}}\n\n### MISSIONS DE GÉNÉRATION\n1. **Le Label Final** : Crée un titre composé : [{{NOM_ARCHETYPE}}] + [Adjectif Qualificatif Flatteur]. L'adjectif doit refléter la dérive la plus marquée du vecteur par rapport à l'archétype standard (ex: 'Le Stratège Lumineux', 'L'Ingénieur Intuitif', 'Le Mentor Radical').\n2. **La Définition** : Rédige une définition de **50 à 60 mots exactement**. Elle doit expliquer la force unique de ce mélange stylistique. Valorise la manière dont l'utilisateur équilibre sa technicité et son humanité pour impacter son audience.\n\n### DIRECTIVES DE NUANCE\n- Si une dimension est à l'extrême (<15 ou >85), elle doit devenir le cœur de la définition.\n- Le ton doit être prestigieux, profond et révélateur. Évite les platitudes.\n\n### FORMAT DE SORTIE ATTENDU\n{\n  \"label_final\": \"...\",\n  \"definition_longue\": \"...\"\n}"
+          "text": "ACTION : Génère le Profil Augmenté de l'utilisateur.\n\n### RÉFÉRENTIEL DES 9 DIMENSIONS (POUR ANALYSE)\n1. CADENCE (CAD) : 0 (Haché, percutant) vs 100 (Fluide, musical).\n2. DENSITÉ (DEN) : 0 (Simple, vulgarisé) vs 100 (Expert, jargon).\n3. STRUCTURE (STR) : 0 (Organique, flux libre) vs 100 (Logique, carré).\n4. POSTURE (POS) : 0 (Humble, partage) vs 100 (Guru, autorité).\n5. TEMPÉRATURE (TEM) : 0 (Froid, clinique) vs 100 (Chaud, viscéral).\n6. REGISTRE (REG) : 0 (Sérieux, solennel) vs 100 (Ludique, décalé).\n7. INFLEXION (INF) : 0 (Factuel, chiffres) vs 100 (Narratif, histoire).\n8. PRISME (PRI) : 0 (Optimiste, opportunité) vs 100 (Critique, sceptique).\n9. ANCRAGE (ANC) : 0 (Abstrait, vision) vs 100 (Concret, pragmatique).\n\n### DONNÉES UTILISATEUR\n- Archétype de base détecté : {{NOM_ARCHETYPE}}\n- Vecteur Final V11 : {{VECTEUR_V11_JSON}}\n\n### MISSIONS DE GÉNÉRATION\n1. **Le Label Final** : Crée un titre composé : [{{NOM_ARCHETYPE}}] + [Adjectif Qualificatif Flatteur]. L'adjectif doit refléter la dérive la plus marquée du vecteur par rapport à l'archétype standard (ex: 'Le Stratège Lumineux', 'L'Ingénieur Intuitif', 'Le Mentor Radical').\n2. **La Définition** : Rédige une définition immersive de **50 à 60 mots exactement** (en Français), adressée directement à l'utilisateur en utilisant le \"vous\" (vouvoiement). Elle doit expliquer votre force unique issue de ce mélange stylistique. Valorisez la manière dont vous équilibrez votre technicité et votre humanité pour impacter votre audience.\n\n### DIRECTIVES DE NUANCE\n- Si une dimension est à l'extrême (<15 ou >85), elle doit devenir le cœur de la définition.\n- Le ton doit être prestigieux, profond et révélateur. Évite les platitudes. La définition doit être rédigée exclusivement à la 2ème personne du pluriel (ex: \"Vous êtes...\", \"Votre ton...\").\n\n### FORMAT DE SORTIE ATTENDU\n{\n  \"label_final\": \"...\",\n  \"definition_longue\": \"...\"\n}"
         }
       ]
     }
