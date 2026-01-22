@@ -20,8 +20,7 @@ export function FinalReveal({ profile, archetype, vector }: FinalRevealProps) {
   const [generatedPost, setGeneratedPost] = useState<PostGenerationResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [showAnalysis, setShowAnalysis] = useState(false);
-  const [email, setEmail] = useState('');
-  const [showGate, setShowGate] = useState(true);
+  const [showAuthModal, setShowAuthModal] = useState(true); // Temporary: Post is gated by default.
 
   const handleGenerate = async () => {
     if (!topic || topic.length < 3) return;
@@ -65,7 +64,7 @@ export function FinalReveal({ profile, archetype, vector }: FinalRevealProps) {
       <div className="fixed inset-0 z-50 bg-zinc-50 flex flex-col overflow-y-auto animate-in fade-in duration-500">
 
         <div className="flex-1 max-w-2xl mx-auto w-full p-6 md:p-12 flex flex-col items-center pt-20">
-           
+            
            {/* Meta Info Section */}
            <div className="w-full text-center mb-8 space-y-4">
               {/* Profile & Analysis Toggle */}
@@ -119,31 +118,24 @@ export function FinalReveal({ profile, archetype, vector }: FinalRevealProps) {
                           {generatedPost.content}
                        </div>
                        
-                       {/* Blur Gradient Overlay - Only if gated */}
-                       {showGate && (
+                       {/* Blur/Gate Logic (Story 2.3/2.4) */}
+                       {/* The post remains blurred until authenticated. */}
+                       {showAuthModal && (
                          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/80 to-white z-10 pointer-events-none"
                               style={{ background: 'linear-gradient(to bottom, transparent 10%, rgba(255,255,255,0.6) 20%, #ffffff 35%)' }} />
                        )}
                        
-                       {/* Email Gate Overlay */}
-                       {showGate && (
+                       {/* Auth Modal Integration Point (Story 2.3) */}
+                       {/* The new AuthModal (ConversionOverlay) will be implemented and imported here. */}
+                       {showAuthModal && (
                          <div className="absolute inset-0 z-20 flex flex-col items-center justify-center pt-32">
+                            {/* Temporary Placeholder for AuthModal */}
                             <div className="bg-white p-8 border-2 border-dashed border-zinc-300 text-center max-w-sm mx-auto shadow-2xl">
-                               <h3 className="font-bold text-xl mb-2 uppercase tracking-tight">Post Prêt</h3>
-                               <p className="text-zinc-600 mb-6">Entrez votre email pour sauvegarder votre post et le découvrir en entier.</p>
-                               <input
-                                  type="email"
-                                  placeholder="votre@email.com"
-                                  className="raw-input w-full mb-4 text-center"
-                                  value={email}
-                                  onChange={(e) => setEmail(e.target.value)}
-                               />
-                               <button
-                                 className="raw-button raw-button-primary w-full"
-                                 disabled={!email.includes('@')}
-                                 onClick={() => setShowGate(false)}
-                               >
-                                  Voir mon résultat
+                               <p className="text-zinc-600 mb-2">
+                                  [Placeholder: AuthModal will be rendered here in the next steps of Story 2.3]
+                               </p>
+                               <button onClick={() => setShowAuthModal(false)} className="raw-button raw-button-primary">
+                                  Bypass Temp
                                </button>
                             </div>
                          </div>
