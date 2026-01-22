@@ -28,6 +28,7 @@
 | **Story 1.8.2** | Phase 2 - Augmentation & Affinage | [DONE] |
 | **Story 1.8.3** | Expérience "Tech & Brut" & Robustesse | [DONE] |
 | **Story 1.9** | API de Génération du Post Initial (Pivot) | [DONE] |
+| **Story 1.10** | UX Polish & Wording Refinements (Phase 1) | 🔴 Pending |
 
 ## Next Steps
 

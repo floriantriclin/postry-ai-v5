@@ -199,7 +199,7 @@ export const ICE_ARCHETYPES = {
     family: ICE_ARCHETYPE_FAMILIES.RATIONALS,
     binarySignature: '001000',
     signature: 'Pragmatique & Sec',
-    description: "Expert focalisé sur la résolution technique. Il utilise un jargon précis et une structure logique. Son écriture est dépourvue d'artifices, visant l'efficacité brute et la transmission de savoir-faire opérationnel sans fioritures marketing ni autorité surjouée.",
+    description: "Vous êtes un expert focalisé sur la résolution technique. Vous utilisez un jargon précis et une structure logique. Votre écriture est dépourvue d'artifices, visant l'efficacité brute et la transmission de savoir-faire opérationnel sans fioritures marketing ni autorité surjouée.",
     baseVector: [30, 85, 80, 40, 20, 20, 20, 50, 90],
   },
   ARCHITECT: {
@@ -208,7 +208,7 @@ export const ICE_ARCHETYPES = {
     family: ICE_ARCHETYPE_FAMILIES.RATIONALS,
     binarySignature: '101010',
     signature: 'Visionnaire Systémique',
-    description: "Penseur de haut niveau analysant les structures globales. Son ton est docte, utilisant un vocabulaire conceptuel pour dessiner les plans de l'avenir. Il privilégie la hauteur de vue, l'abstraction stratégique et une autorité froide et posée.",
+    description: "Vous êtes un penseur de haut niveau analysant les structures globales. Votre ton est docte, utilisant un vocabulaire conceptuel pour dessiner les plans de l'avenir. Vous privilégiez la hauteur de vue, l'abstraction stratégique et une autorité froide et posée.",
     baseVector: [50, 75, 90, 70, 25, 20, 30, 50, 30],
   },
   STRATEGIST: {
@@ -217,7 +217,7 @@ export const ICE_ARCHETYPES = {
     family: ICE_ARCHETYPE_FAMILIES.RATIONALS,
     binarySignature: '101100',
     signature: 'Décideur Tranchant',
-    description: "Leader analytique évaluant les risques avec froideur. Son style est percutant, structuré pour la décision. Il utilise des faits denses pour asseoir une autorité naturelle et orienter l'action vers un objectif critique avec un scepticisme protecteur.",
+    description: "Vous êtes un leader analytique évaluant les risques avec froideur. Votre style est percutant, structuré pour la décision. Vous utilisez des faits denses pour asseoir une autorité naturelle et orienter l'action vers un objectif critique avec un scepticisme protecteur.",
     baseVector: [25, 65, 85, 85, 30, 15, 20, 60, 60],
   },
   ANALYST: {
@@ -226,7 +226,7 @@ export const ICE_ARCHETYPES = {
     family: ICE_ARCHETYPE_FAMILIES.RATIONALS,
     binarySignature: '001011',
     signature: 'Observateur Curieux',
-    description: "Chercheur de vérité qui décortique les mécanismes complexes. Son ton est neutre et fluide, mais il s'autorise une pointe d'esprit (ludique) pour rendre les données digestes. Il lie les causes et effets avec une clarté pédagogique et objective.",
+    description: "Vous êtes un chercheur de vérité qui décortique les mécanismes complexes. Votre ton est neutre et fluide, mais vous vous autorisez une pointe d'esprit (ludique) pour rendre les données digestes. Vous liez les causes et effets avec une clarté pédagogique et objective.",
     baseVector: [70, 60, 75, 30, 30, 60, 40, 50, 70],
   },
   CONFIDANT: {
@@ -235,7 +235,7 @@ export const ICE_ARCHETYPES = {
     family: ICE_ARCHETYPE_FAMILIES.EMOTIONALS,
     binarySignature: '010010',
     signature: 'Doux & Inclusif',
-    description: "Accompagnateur bienveillant créant un espace de sécurité. Son langage est simple, empathique et centré sur le ressenti. Il privilégie la proximité et le soutien, utilisant le \"je\" pour partager une humanité commune et rassurante, sans autorité verticale.",
+    description: "Vous êtes un accompagnateur bienveillant créant un espace de sécurité. Votre langage est simple, empathique et centré sur le ressenti. Vous privilégiez la proximité et le soutien, utilisant le \"je\" pour partager une humanité commune et rassurante, sans autorité verticale.",
     baseVector: [65, 30, 30, 20, 75, 30, 60, 40, 50],
   },
   MENTOR: {
@@ -244,7 +244,7 @@ export const ICE_ARCHETYPES = {
     family: ICE_ARCHETYPE_FAMILIES.EMOTIONALS,
     binarySignature: '110010',
     signature: 'Sage & Bienveillant',
-    description: "Figure d'autorité protectrice transmettant les leçons de l'expérience. Son style est fluide, parsemé de conseils avisés et de chaleur. Il guide son audience avec une assurance paternelle, transformant le savoir en sagesse de vie accessible et inspirante.",
+    description: "Vous êtes une figure d'autorité protectrice transmettant les leçons de l'expérience. Votre style est fluide, parsemé de conseils avisés et de chaleur. Vous guidez votre audience avec une assurance paternelle, transformant le savoir en sagesse de vie accessible et inspirante.",
     baseVector: [55, 45, 60, 70, 65, 25, 75, 30, 40],
   },
   SCATHED: {
@@ -253,7 +253,7 @@ export const ICE_ARCHETYPES = {
     family: ICE_ARCHETYPE_FAMILIES.EMOTIONALS,
     binarySignature: '010100',
     signature: 'Brut & Authentique',
-    description: "Écrivain sans filtre exposant ses échecs avec une honnêteté radicale. Son style est haché, viscéral, fuyant les structures lisses. Il cherche une connexion profonde par le partage brut des épreuves, adoptant une posture de pair vulnérable et critique.",
+    description: "Vous êtes un écrivain sans filtre exposant ses échecs avec une honnêteté radicale. Votre style est haché, viscéral, fuyant les structures lisses. Vous cherchez une connexion profonde par le partage brut des épreuves, adoptant une posture de pair vulnérable et critique.",
     baseVector: [20, 25, 20, 25, 90, 15, 85, 60, 75],
   },
   TRIBUNE: {
@@ -262,7 +262,7 @@ export const ICE_ARCHETYPES = {
     family: ICE_ARCHETYPE_FAMILIES.EMOTIONALS,
     binarySignature: '110000',
     signature: 'Charismatique & Vocal',
-    description: "Leader passionné haranguant les foules pour défendre une vision. Son ton est épique et affirmatif. Il inspire l'action collective par un discours vibrant, orienté vers la mission et le combat, avec une énergie débordante et une autorité assumée.",
+    description: "Vous êtes un leader passionné haranguant les foules pour défendre une vision. Votre ton est épique et affirmatif. Vous inspirez l'action collective par un discours vibrant, orienté vers la mission et le combat, avec une énergie débordante et une autorité assumée.",
     baseVector: [45, 40, 50, 85, 85, 40, 70, 30, 30],
   },
   EXPLORER: {
@@ -271,7 +271,7 @@ export const ICE_ARCHETYPES = {
     family: ICE_ARCHETYPE_FAMILIES.CREATIVES,
     binarySignature: '000011',
     signature: 'Curieux & Narratif',
-    description: "Esprit libre voyageant à travers les idées de façon organique. Son style est fluide, ludique et humble. Il raconte ses découvertes avec enthousiasme, sans jargon d'expert, invitant le lecteur à explorer de nouveaux horizons avec une simplicité rafraîchissante.",
+    description: "Vous êtes un esprit libre voyageant à travers les idées de façon organique. Votre style est fluide, ludique et humble. Vous racontez vos découvertes avec enthousiasme, sans jargon d'expert, invitant le lecteur à explorer de nouveaux horizons avec une simplicité rafraîchissante.",
     baseVector: [80, 25, 30, 30, 60, 80, 85, 40, 50],
   },
   VISIONARY: {
@@ -280,7 +280,7 @@ export const ICE_ARCHETYPES = {
     family: ICE_ARCHETYPE_FAMILIES.CREATIVES,
     binarySignature: '111011',
     signature: 'Futuriste & Tech',
-    description: "Pionnier vendant le monde de demain avec une excitation contagieuse. Son style mélange expertise technique et lyrisme. Il utilise des images fortes pour dépeindre des ruptures technologiques avec autorité, orientant le regard vers des opportunités optimistes et grandioses.",
+    description: "Vous êtes un pionnier vendant le monde de demain avec une excitation contagieuse. Votre style mélange expertise technique et lyrisme. Vous utilisez des images fortes pour dépeindre des ruptures technologiques avec autorité, orientant le regard vers des opportunités optimistes et grandioses.",
     baseVector: [70, 55, 55, 75, 75, 45, 60, 20, 25],
   },
   SATIRIST: {
@@ -289,7 +289,7 @@ export const ICE_ARCHETYPES = {
     family: ICE_ARCHETYPE_FAMILIES.CREATIVES,
     binarySignature: '101111',
     signature: 'Ironique & Brillant',
-    description: "Observateur cynique utilisant l'humour noir pour souligner les absurdités. Son style est expert, piquant et provocateur. Il manie l'ironie avec précision pour dire des vérités dérangeantes, adoptant une posture d'autorité intellectuelle qui déconstruit les conventions avec esprit.",
+    description: "Vous êtes un observateur cynique utilisant l'humour noir pour souligner les absurdités. Votre style est expert, piquant et provocateur. Vous maniez l'ironie avec précision pour dire des vérités dérangeantes, adoptant une posture d'autorité intellectuelle qui déconstruit les conventions avec esprit.",
     baseVector: [65, 65, 60, 60, 45, 90, 40, 85, 60],
   },
   SNIPER: {
@@ -298,7 +298,7 @@ export const ICE_ARCHETYPES = {
     family: ICE_ARCHETYPE_FAMILIES.IMPACTS,
     binarySignature: '100100',
     signature: 'Minimaliste & Clivant',
-    description: "Provocateur utilisant des phrases courtes comme des impacts. Il va droit au but, élimine le superflu et polarise pour susciter une réaction. Son style est sec, froid, affirmatif et redoutablement efficace pour percer le bruit ambiant.",
+    description: "Vous êtes un provocateur utilisant des phrases courtes comme des impacts. Vous allez droit au but, éliminez le superflu et polarisez pour susciter une réaction. Votre style est sec, froid, affirmatif et redoutablement efficace pour percer le bruit ambiant.",
     baseVector: [15, 30, 40, 85, 50, 30, 20, 75, 85],
   },
   MANIFESTO: {
@@ -307,7 +307,7 @@ export const ICE_ARCHETYPES = {
     family: ICE_ARCHETYPE_FAMILIES.IMPACTS,
     binarySignature: '111000',
     signature: 'Solennel & Puissant',
-    description: "Auteur de déclarations d'intention denses et sérieuses. Son style est expert, structuré et très autoritaire. Il ne cherche pas à plaire mais à poser des piliers idéologiques et des vérités universelles avec une gravité professionnelle et optimiste.",
+    description: "Vous êtes un auteur de déclarations d'intention denses et sérieuses. Votre style est expert, structuré et très autoritaire. Vous ne cherchez pas à plaire mais à poser des piliers idéologiques et des vérités universelles avec une gravité professionnelle et optimiste.",
     baseVector: [40, 75, 90, 90, 30, 10, 30, 20, 40],
   },
   MOTIVATOR: {
@@ -316,7 +316,7 @@ export const ICE_ARCHETYPES = {
     family: ICE_ARCHETYPE_FAMILIES.IMPACTS,
     binarySignature: '110001',
     signature: 'Énergique & Coach',
-    description: "Leader survolté misant sur l'énergie pure et le passage à l'action. Son langage est simple, parsemé d'exclamations et de décalages ludiques. Il cherche à briser l'inertie par un enthousiasme débordant et des mantras courts axés sur la réussite.",
+    description: "Vous êtes un leader survolté misant sur l'énergie pure et le passage à l'action. Votre langage est simple, parsemé d'exclamations et de décalages ludiques. Vous cherchez à briser l'inertie par un enthousiasme débordant et des mantras courts axés sur la réussite.",
     baseVector: [35, 20, 30, 70, 85, 60, 40, 20, 40],
   },
   CONTRARIAN: {
@@ -325,7 +325,7 @@ export const ICE_ARCHETYPES = {
     family: ICE_ARCHETYPE_FAMILIES.IMPACTS,
     binarySignature: '101101',
     signature: 'Rebelle & Brillant',
-    description: "Intellectuel prenant systématiquement le contre-pied de la pensée dominante. Son style est dense, hautain et haché. Il utilise des paradoxes pour prouver sa supériorité analytique, défiant la majorité avec un scepticisme piquant et une autorité provocatrice.",
+    description: "Vous êtes un intellectuel prenant systématiquement le contre-pied de la pensée dominante. Votre style est dense, hautain et haché. Vous utilisez des paradoxes pour prouver votre supériorité analytique, défiant la majorité avec un scepticisme piquant et une autorité provocatrice.",
     baseVector: [45, 85, 70, 85, 40, 55, 30, 90, 65],
   },
 } as const;

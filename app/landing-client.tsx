@@ -11,15 +11,15 @@ export default function LandingClient() {
           <span className="text-zinc-500">Pas celle d'un Robot.</span>
         </h1>
         <p className="text-lg md:text-xl font-medium max-w-lg mx-auto">
-          Découvrez quel genre d'auteur LinkedIn vous êtes en 2 minutes.
+          Découvrez quel genre d’auteur vous êtes en 2 minutes.
         </p>
       </div>
 
-      <Link 
+      <Link
         href="/quiz"
         className="raw-button raw-button-primary text-xl md:text-2xl px-12 h-16"
       >
-        [ DÉTERMINER MON STYLE ]
+        DÉTERMINER MON STYLE
       </Link>
     </section>
   );

@@ -9,35 +9,42 @@ interface LoaderMachineProps {
 
 const BOOT_SEQUENCE = [
   'BOOTING_ICE_PROTOCOL...',
-  'CALIBRATING_VECTORS...',
+  'CALIBRATING_SENSORS...',
   'ANALYZING_PATTERNS...',
   'SYNCING_NEURAL_NET...',
+  'LOADING_ARCHETYPE_DATABASE...',
   'OPTIMIZING_FLUX...',
+  'INITIALIZING_NEURAL_LINK...',
+  'COMPUTING_VECTORS...',
 ];
 
 export function LoaderMachine({ message, className = '' }: LoaderMachineProps) {
-  const [sequenceIndex, setSequenceIndex] = useState(0);
-
+  const [logs, setLogs] = useState<string[]>([]);
+  
   useEffect(() => {
-    // Only cycle if no specific message is provided, or we can just cycle anyway for visual effect if we want multiple lines.
-    // But the requirement implies replacing static messages or cycling them.
-    // If a message is provided, we might want to just show that.
-    // Let's stick to the requirement: "affichant des séquences monospace clignotantes et messages système"
+    // If a specific message is provided, we use it as the "main" status, but we still run background logs
+    // Or we just ignore background logs if message is meant to be the only thing.
+    // Requirement: "Le composant doit faire défiler plusieurs messages de logs système"
     
-    if (message) return; // If a static message is provided, don't cycle (or maybe cycle dots?)
+    // Initial logs
+    setLogs([BOOT_SEQUENCE[0], BOOT_SEQUENCE[1]]);
 
     const interval = setInterval(() => {
-      setSequenceIndex((prev) => (prev + 1) % BOOT_SEQUENCE.length);
-    }, 800);
-    return () => clearInterval(interval);
-  }, [message]);
+      setLogs(prev => {
+        const nextIndex = (BOOT_SEQUENCE.indexOf(prev[prev.length - 1]) + 1) % BOOT_SEQUENCE.length;
+        const newLogs = [...prev, BOOT_SEQUENCE[nextIndex]];
+        if (newLogs.length > 3) newLogs.shift(); // Keep last 3 lines
+        return newLogs;
+      });
+    }, 600);
 
-  const displayText = message || BOOT_SEQUENCE[sequenceIndex];
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <div className={`flex flex-col items-center justify-center font-mono ${className}`} data-testid="loader-machine">
       {/* Glitching Bars */}
-      <div className="flex space-x-1 mb-4">
+      <div className="flex space-x-1 mb-6">
         {[0, 1, 2].map((i) => (
           <div
             key={i}
@@ -48,9 +55,18 @@ export function LoaderMachine({ message, className = '' }: LoaderMachineProps) {
       </div>
       
       {/* Text Output */}
-      <p className="text-sm md:text-base uppercase tracking-widest text-zinc-600 animate-pulse font-bold">
-        {`[ ${displayText} ]`}
-      </p>
+      <div className="flex flex-col items-center space-y-2 h-24 justify-end overflow-hidden">
+         {logs.map((log, i) => (
+           <p key={i} className={`text-xs md:text-sm uppercase tracking-widest font-bold ${i === logs.length - 1 ? 'text-zinc-900' : 'text-zinc-400'}`}>
+             {`> ${log}`}
+           </p>
+         ))}
+         {message && (
+            <p className="text-sm md:text-base uppercase tracking-widest text-signal-orange animate-pulse font-black mt-2">
+              {`[ ${message} ]`}
+            </p>
+         )}
+      </div>
     </div>
   );
 }
