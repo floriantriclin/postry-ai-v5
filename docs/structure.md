@@ -1,5 +1,5 @@
 # Structure du projet
-Généré le : 2026-01-21 18:20:15
+Généré le : 2026-01-22 10:43:36
 
 ```text
 .\.bmad-core\agent-teams\team-all.yaml
@@ -85,6 +85,8 @@ Généré le : 2026-01-21 18:20:15
 .\app\api\quiz\generate\route.test.ts
 .\app\api\quiz\generate\route.ts
 .\app\api\quiz\logic.test.ts
+.\app\api\quiz\post\route.test.ts
+.\app\api\quiz\post\route.ts
 .\app\api\quiz\profile\route.test.ts
 .\app\api\quiz\profile\route.ts
 .\app\api\quiz\refine\route.ts
@@ -103,6 +105,7 @@ Généré le : 2026-01-21 18:20:15
 .\components\feature\quiz-interstitial.tsx
 .\components\feature\theme-selector.tsx
 .\components\ui\loader-machine.tsx
+.\components\ui\progress-bar.tsx
 .\docs\architecture.md
 .\docs\architecture\01-introduction.md
 .\docs\architecture\02-architecture-de-haut-niveau.md
@@ -192,6 +195,8 @@ Généré le : 2026-01-21 18:20:15
 .\docs\specs\ice_data_classification.md
 .\docs\specs\ice_protocol.md
 .\docs\stories\story-1-1-tech-init.md
+.\docs\stories\story-1-10-ux-polish-phase-1.md
+.\docs\stories\story-1-11-final-flow-patch.md
 .\docs\stories\story-1-2-landing-page.md
 .\docs\stories\story-1-3-quiz-ui-foundation.md
 .\docs\stories\story-1-4-ice-core-logic.md
@@ -217,12 +222,12 @@ Généré le : 2026-01-21 18:20:15
 .\docs\stories\story-4-3-generation-rag.md
 .\docs\stories\story-4-4-credits-logic.md
 .\docs\stories\story-4-5-stripe-checkout.md
-.\docs\structure.txt
+.\docs\structure.md
 .\docs\ux\theme-selector-redefined.md
 .\e2e\quiz-phase-2.spec.ts
+.\e2e\quiz-post-generation.spec.ts
 .\e2e\quiz-robustness.spec.ts
 .\e2e\quiz.spec.ts
-.\generate_tree.ps1
 .\generate_tree.py
 .\hooks\use-quiz-persistence.ts
 .\lib\data\mock-quiz.json

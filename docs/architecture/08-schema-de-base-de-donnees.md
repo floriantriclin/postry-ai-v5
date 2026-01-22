@@ -15,6 +15,8 @@ create table public.users (
   credits_count integer default 5,
   is_premium boolean default false,
   profile_context text, -- Texte extrait du CV
+  archetype text, -- L'archétype principal (ex: "ALCHIMISTE")
+  vstyle_vector jsonb, -- Le vecteur de style (9 dimensions)
   created_at timestamptz default now()
 );
 

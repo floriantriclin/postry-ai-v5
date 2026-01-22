@@ -21,7 +21,6 @@ web-bundles/
 # misc
 .DS_Store
 *.pem
-generate_tree.ps1
 generate_tree.py
 
 # debug
