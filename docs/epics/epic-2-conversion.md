@@ -4,7 +4,7 @@
 
 **Valeur :** Transforme les visiteurs curieux en utilisateurs inscrits (Lead Capture) et livre la promesse de valeur.
 
-**Statut :** Pending
+**Statut :** 🟡 In Progress
 
 ## User Stories associées
 

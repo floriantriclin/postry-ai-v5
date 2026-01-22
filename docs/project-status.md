@@ -13,7 +13,17 @@
 | **Epic 3 : Dashboard & Personnalisation** | App Shell, Equalizer UI/Logic, History | 🔴 Pending |
 | **Epic 4 : Intelligence d'Expertise** | CV Upload, PDF Parsing, RAG Injection, Stripe | 🔴 Pending |
 
-## Sprint 1 Progress (Frontend Foundation)
+## Sprint 2 Progress (Conversion & Identity)
+
+| Story | Title | Status |
+| :--- | :--- | :--- |
+| **Story 2.1** | Configuration Base de Données & Schéma Utilisateur | [TODO] |
+| **Story 2.2** | Authentification par Magic Link (Backend & SDK) | [TODO] |
+| **Story 2.3** | Modal de Capture & Déclenchement Auth | [TODO] |
+| **Story 2.4** | Flux de Révélation & Persistance Post-Inscription | [TODO] |
+| **Story 2.5** | Vue "Post Révélé" (Composant d'Affichage) | [TODO] |
+
+## Sprint 1 Progress (Frontend Foundation) - COMPLETED
 
 | Story | Title | Status |
 | :--- | :--- | :--- |
