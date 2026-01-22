@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { Archetype, Vstyle, PostGenerationResponse } from '@/lib/types';
 import { Loader2, ChevronDown, ChevronUp, X } from 'lucide-react';
+import { LoaderMachine } from '../ui/loader-machine';
 
 interface FinalRevealProps {
   profile: {
@@ -19,6 +20,8 @@ export function FinalReveal({ profile, archetype, vector }: FinalRevealProps) {
   const [generatedPost, setGeneratedPost] = useState<PostGenerationResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [showAnalysis, setShowAnalysis] = useState(false);
+  const [email, setEmail] = useState('');
+  const [showGate, setShowGate] = useState(true);
 
   const handleGenerate = async () => {
     if (!topic || topic.length < 3) return;
@@ -49,18 +52,17 @@ export function FinalReveal({ profile, archetype, vector }: FinalRevealProps) {
     }
   };
 
+  if (isLoading) {
+    return (
+      <div className="fixed inset-0 z-50 bg-zinc-50 flex flex-col items-center justify-center animate-in fade-in duration-300">
+        <LoaderMachine message="GENERATION DU POST..." />
+      </div>
+    );
+  }
+
   if (generatedPost) {
     return (
       <div className="fixed inset-0 z-50 bg-zinc-50 flex flex-col overflow-y-auto animate-in fade-in duration-500">
-        {/* Minimal Header with Close */}
-        <div className="absolute top-4 right-4 z-50">
-           <button
-             onClick={() => setGeneratedPost(null)}
-             className="bg-white rounded-full p-2 shadow-sm hover:bg-zinc-100 transition-colors border border-zinc-200"
-           >
-             <X size={24} />
-           </button>
-        </div>
 
         <div className="flex-1 max-w-2xl mx-auto w-full p-6 md:p-12 flex flex-col items-center pt-20">
            
@@ -117,23 +119,35 @@ export function FinalReveal({ profile, archetype, vector }: FinalRevealProps) {
                           {generatedPost.content}
                        </div>
                        
-                       {/* Blur Gradient Overlay */}
-                       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/80 to-white z-10 pointer-events-none" 
-                            style={{ background: 'linear-gradient(to bottom, transparent 15%, rgba(255,255,255,0.6) 25%, #ffffff 50%)' }} />
+                       {/* Blur Gradient Overlay - Only if gated */}
+                       {showGate && (
+                         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/80 to-white z-10 pointer-events-none"
+                              style={{ background: 'linear-gradient(to bottom, transparent 10%, rgba(255,255,255,0.6) 20%, #ffffff 35%)' }} />
+                       )}
                        
-                       {/* Call To Action Conversion Overlay */}
-                       <div className="absolute inset-0 z-20 flex flex-col items-center justify-center pt-32">
-                          <div className="bg-white p-8 border-2 border-dashed border-zinc-300 text-center max-w-sm mx-auto shadow-2xl">
-                             <h3 className="font-bold text-xl mb-2 uppercase tracking-tight">Post Complet</h3>
-                             <p className="text-zinc-600 mb-6">Pour voir la suite et copier ce post, finalisez votre compte.</p>
-                             <button 
-                               className="raw-button raw-button-primary w-full"
-                               onClick={() => window.location.href = '#signup'} // Placeholder for Story 2.4
-                             >
-                                Débloquer mon post
-                             </button>
-                          </div>
-                       </div>
+                       {/* Email Gate Overlay */}
+                       {showGate && (
+                         <div className="absolute inset-0 z-20 flex flex-col items-center justify-center pt-32">
+                            <div className="bg-white p-8 border-2 border-dashed border-zinc-300 text-center max-w-sm mx-auto shadow-2xl">
+                               <h3 className="font-bold text-xl mb-2 uppercase tracking-tight">Post Prêt</h3>
+                               <p className="text-zinc-600 mb-6">Entrez votre email pour sauvegarder votre post et le découvrir en entier.</p>
+                               <input
+                                  type="email"
+                                  placeholder="votre@email.com"
+                                  className="raw-input w-full mb-4 text-center"
+                                  value={email}
+                                  onChange={(e) => setEmail(e.target.value)}
+                               />
+                               <button
+                                 className="raw-button raw-button-primary w-full"
+                                 disabled={!email.includes('@')}
+                                 onClick={() => setShowGate(false)}
+                               >
+                                  Voir mon résultat
+                               </button>
+                            </div>
+                         </div>
+                       )}
                     </div>
                  </div>
               </div>

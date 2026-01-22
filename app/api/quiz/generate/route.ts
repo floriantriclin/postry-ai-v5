@@ -108,19 +108,20 @@ export async function POST(req: NextRequest) {
 
     // 2. Phase 1 Logic
     if (phase === 1) {
-      const systemInstruction = `Tu es le moteur de calibration de postry.ai. Ta mission est de générer 6 questions binaires A/B pour identifier l'identité scripturale d'un utilisateur. Tu dois impérativement respecter les dimensions stylistiques du protocole ICE.
+      const systemInstruction = `Tu es le moteur de calibration de postry.ai. Ta mission est de générer 6 paires d'affirmations stylistiques A/B pour identifier l'identité scripturale d'un utilisateur. Tu dois impérativement respecter les dimensions stylistiques du protocole ICE.
       
 ${ICE_FULL_REFERENTIAL}`;
       
-      const userPrompt = `ACTION : Génère 6 questions A/B de polarisation pour le thème : ${cleanTopic}.
+      const userPrompt = `ACTION : Génère 6 paires d'affirmations A/B de polarisation pour le thème : ${cleanTopic}.
 
 ### CONSIGNES DE GÉNÉRATION
 1. Reste strictement dans le thème : ${cleanTopic}.
-2. Chaque paire A/B doit traiter du MÊME sujet thématique (ex: Q1 sur l'apprentissage, Q2 sur un résultat, etc.).
-3. Les options doivent être claires, contrastées mais crédibles (pas de caricature grossière).
-4. L'option A doit correspondre à la borne 15 de la dimension, l'option B à la borne 85 (pour éviter les extrêmes caricaturaux 0/100).
-5. Longueur maximale par option : 15 mots.
-6. IMPORTANT : Utilise les codes à 3 lettres (POS, TEM, DEN, PRI, CAD, REG) pour le champ "dimension".
+2. Chaque paire A/B doit traiter du MÊME sujet thématique.
+3. Générer des fragments de texte type post LinkedIn sur le thème choisi.
+4. NE JAMAIS générer de questions posées à l'utilisateur. Ce sont des affirmations de style.
+5. L'option A doit correspondre à la borne 15 de la dimension, l'option B à la borne 85.
+6. Longueur maximale par option : 15 mots.
+7. IMPORTANT : Utilise les codes à 3 lettres (POS, TEM, DEN, PRI, CAD, REG) pour le champ "dimension".
 
 FORMAT DE RÉPONSE ATTENDU :
 Un tableau JSON d'objets : [{"id": "Q1", "dimension": "POS", "option_A": "...", "option_B": "..."}, ...]`;
@@ -140,6 +141,12 @@ Un tableau JSON d'objets : [{"id": "Q1", "dimension": "POS", "option_A": "...", 
         throw new Error(`Generated quiz missing dimensions: ${missingDims.join(', ')}`);
       }
 
+      // Sort questions to match the strict order of Phase 1 dimensions
+      // This ensures deterministic behavior for testing (e.g. pattern "BABBBB")
+      questions.sort((a, b) => {
+        return ICE_PHASE1_DIMENSIONS_ORDER.indexOf(a.dimension as any) - ICE_PHASE1_DIMENSIONS_ORDER.indexOf(b.dimension as any);
+      });
+
       return NextResponse.json(questions);
     }
 
@@ -153,11 +160,11 @@ Un tableau JSON d'objets : [{"id": "Q1", "dimension": "POS", "option_A": "...", 
         return acc;
       }, {} as Record<string, number>);
 
-      const systemInstruction = `Tu es le moteur de nuance de postry.ai. Ta mission est de générer 5 questions binaires d'affinage pour un utilisateur dont le profil de base est : ${context.archetypeName}.
+      const systemInstruction = `Tu es le moteur de nuance de postry.ai. Ta mission est de générer 5 paires d'affirmations stylistiques d'affinage pour un utilisateur dont le profil de base est : ${context.archetypeName}.
       
 ${ICE_FULL_REFERENTIAL}`;
       
-      const userPrompt = `ACTION : Génère 5 questions A/B d'affinage pour le thème : ${cleanTopic}.
+      const userPrompt = `ACTION : Génère 5 paires d'affirmations A/B d'affinage pour le thème : ${cleanTopic}.
 
 ### CONTEXTE UTILISATEUR
 - Archétype détecté : ${context.archetypeName}
@@ -166,11 +173,13 @@ ${ICE_FULL_REFERENTIAL}`;
 
 ### CONSIGNES DE GÉNÉRATION
 1. Pour chaque dimension listée, génère une paire A/B.
-2. L'option A doit correspondre à la borne 15 de la dimension, l'option B à la borne 85.
-3. **Nuance cruciale** : Ne sois pas caricatural. Les phrases doivent refléter le style de l'archétype ${context.archetypeName}.
-4. Chaque paire doit traiter d'un sujet différent lié au thème ${cleanTopic} pour éviter la répétition.
-5. Longueur maximale par option : 15 mots.
-6. IMPORTANT : Utilise les codes à 3 lettres indiqués (ex: CAD, DEN) pour le champ "dimension".
+2. Générer des fragments de texte type post LinkedIn sur le thème choisi.
+3. NE JAMAIS générer de questions posées à l'utilisateur.
+4. L'option A doit correspondre à la borne 15 de la dimension, l'option B à la borne 85.
+5. **Nuance cruciale** : Ne sois pas caricatural. Les phrases doivent refléter le style de l'archétype ${context.archetypeName}.
+6. Chaque paire doit traiter d'un sujet différent lié au thème ${cleanTopic} pour éviter la répétition.
+7. Longueur maximale par option : 15 mots.
+8. IMPORTANT : Utilise les codes à 3 lettres indiqués (ex: CAD, DEN) pour le champ "dimension".
 
 FORMAT DE RÉPONSE ATTENDU :
 Un tableau JSON d'objets : [{"id": "Q7", "dimension": "CAD", "option_A": "...", "option_B": "..."}, ...]`;
@@ -189,6 +198,12 @@ Un tableau JSON d'objets : [{"id": "Q7", "dimension": "CAD", "option_A": "...", 
       if (missingDims.length > 0) {
          throw new Error(`Generated quiz missing dimensions: ${missingDims.join(', ')}`);
       }
+
+      // Sort questions to match the order of requested targetDimensions
+      // This ensures deterministic behavior for testing
+      questions.sort((a, b) => {
+        return context.targetDimensions.indexOf(a.dimension as any) - context.targetDimensions.indexOf(b.dimension as any);
+      });
 
       return NextResponse.json(questions);
     }

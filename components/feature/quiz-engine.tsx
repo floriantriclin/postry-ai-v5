@@ -226,7 +226,6 @@ export function QuizEngine() {
         return (
           <div className="flex flex-col items-center justify-center min-h-[80vh]">
             <LoaderMachine message="GENERATION DE VOTRE IDENTITE..." />
-            <p className="font-mono text-zinc-500 mt-4 text-sm">CALIBRATION DES 9 DIMENSIONS</p>
           </div>
         );
       

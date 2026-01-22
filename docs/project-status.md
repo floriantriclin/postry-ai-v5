@@ -39,6 +39,7 @@
 | **Story 1.8.3** | Expérience "Tech & Brut" & Robustesse | [DONE] |
 | **Story 1.9** | API de Génération du Post Initial (Pivot) | [DONE] |
 | **Story 1.10** | UX Polish & Wording Refinements (Phase 1) | [DONE] |
+| **Story 1.11** | Final Flow Patch & Hard Gate | [DONE] |
 
 ## Next Steps
 
@@ -71,3 +72,5 @@
 3.  **[PATCH-003] 2026-01-21 : Suppression des valeurs de dimensions dans l'output du Profil Augmenté.**
 4.  **[PATCH-004] 2026-01-21 : Passage du Profil Augmenté à la 2ème personne du pluriel (Vouvoiement) pour une meilleure immersion.**
 5.  **[PATCH-005] 2026-01-21 : Refonte UX Final Reveal (Story 1.9) - Focus View, Draft Mode, Suppression des valeurs numériques.**
+6.  **[PATCH-006] 2026-01-22 : Final Flow Patch & Hard Gate (Story 1.11) - Affirmations style post LinkedIn, Terminal Loading, Email Hard Gate.**
+7.  **[PATCH-007] 2026-01-22 : Correction de l'ordre des questions (Phase 1 & 2) pour garantir un séquençage déterministe (Fix: Mentor vs Satirique).**
