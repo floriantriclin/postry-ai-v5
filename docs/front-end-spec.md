@@ -2,7 +2,7 @@
 
 Nom de fichier : front-end-spec.md
 
-**Version :** 3.3
+**Version :** 3.4
 
 **Confidentialité :** Interne / Strict
 
@@ -15,6 +15,7 @@ Nom de fichier : front-end-spec.md
 | 3.1 | 21/01/2026 | James | Mise à jour du texte d'accroche landing page |
 | 3.2 | 21/01/2026 | UX Expert | Nouvelle spécification pour les tuiles du Sélecteur de Thème |
 | 3.3 | 22/01/2026 | Dev | UX Polish Phase 1 (Wording, Animations, Progress Bar, Vouvoiement) |
+| 3.4 | 22/01/2026 | Dev | UX Polish: Loader style Terminal |
 
 # Section 1 : Introduction & Objectifs UX
 
@@ -266,10 +267,12 @@ Cette section définit les briques élémentaires pour le développement. Nous n
 
 ### **5.3 Feedback & États**
 
-- **Loading State (Squelette) :**
-    - Pas de "Shimmer" (effet brillant) classique.
-    - Utiliser des blocs clignotants (animate-pulse) noirs ou gris foncé pour un aspect plus "machine".
-    - Ou un curseur clignotant _ en fin de ligne.
+- **Loading State (Terminal Log) :**
+    - Pas de "Shimmer" classique.
+    - Conteneur style "Fenêtre Terminal" avec bordure noire et header "System.log".
+    - Messages de logs défilants (scrolling) alignés à gauche.
+    - Police monospace petite taille (`text-xs` / `text-[10px]`).
+    - Curseur clignotant `_` en fin de flux pour renforcer l'aspect "traitement en temps réel".
 - **Toast / Notifications :**
     - Bandeau noir en bas de l'écran, texte blanc monospace, pas d'animation de glissement douce, apparition sèche (Snap).
 

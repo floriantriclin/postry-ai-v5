@@ -42,30 +42,35 @@ export function LoaderMachine({ message, className = '' }: LoaderMachineProps) {
   }, []);
 
   return (
-    <div className={`flex flex-col items-center justify-center font-mono ${className}`} data-testid="loader-machine">
-      {/* Glitching Bars */}
-      <div className="flex space-x-1 mb-6">
-        {[0, 1, 2].map((i) => (
-          <div
-            key={i}
-            className="w-3 h-12 bg-zinc-900 animate-pulse"
-            style={{ animationDelay: `${i * 150}ms` }}
-          />
-        ))}
-      </div>
-      
-      {/* Text Output */}
-      <div className="flex flex-col items-center space-y-2 h-24 justify-end overflow-hidden">
-         {logs.map((log, i) => (
-           <p key={i} className={`text-xs md:text-sm uppercase tracking-widest font-bold ${i === logs.length - 1 ? 'text-zinc-900' : 'text-zinc-400'}`}>
-             {`> ${log}`}
-           </p>
-         ))}
-         {message && (
-            <p className="text-sm md:text-base uppercase tracking-widest text-signal-orange animate-pulse font-black mt-2">
-              {`[ ${message} ]`}
-            </p>
-         )}
+    <div className={`flex flex-col items-center justify-center font-mono w-full max-w-lg mx-auto ${className}`} data-testid="loader-machine">
+      {/* Terminal Window */}
+      <div className="w-full bg-zinc-50 border-2 border-black p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+        {/* Header */}
+        <div className="flex justify-between items-center mb-4 border-b-2 border-zinc-100 pb-2">
+           <div className="flex gap-2">
+              <div className="w-2 h-2 bg-black"></div>
+              <div className="w-2 h-2 border border-black"></div>
+           </div>
+           <span className="text-[10px] uppercase tracking-widest text-zinc-400 font-bold">System.log</span>
+        </div>
+
+        {/* Text Output */}
+        <div className="flex flex-col items-start space-y-1 h-32 justify-end overflow-hidden">
+           {logs.map((log, i) => (
+             <p key={i} className={`text-xs uppercase tracking-wider font-bold w-full text-left ${i === logs.length - 1 ? 'text-zinc-900' : 'text-zinc-400'}`}>
+               <span className="mr-3 text-zinc-300 select-none">|</span>
+               {`> ${log}`}
+             </p>
+           ))}
+           <div className="flex items-center gap-2 mt-2 w-full pl-0">
+              <span className="text-signal-orange animate-pulse font-black text-sm">_</span>
+              {message && (
+                 <p className="text-xs uppercase tracking-wider text-signal-orange font-bold">
+                   {message}
+                 </p>
+              )}
+           </div>
+        </div>
       </div>
     </div>
   );

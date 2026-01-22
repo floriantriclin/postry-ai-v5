@@ -69,7 +69,7 @@ export function FinalReveal({ profile, archetype, vector }: FinalRevealProps) {
               {/* Profile & Analysis Toggle */}
               <div className="flex flex-col items-center gap-2">
                  <span className="text-sm font-medium text-zinc-500 uppercase tracking-wide">
-                    Généré par {profile.label_final}
+                    ÉCRIT PAR VOTRE BINÔME NUMÉRIQUE
                  </span>
                  
                  <button 
