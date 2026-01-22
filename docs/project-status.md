@@ -18,8 +18,8 @@
 | Story | Title | Status |
 | :--- | :--- | :--- |
 | **Story 2.1** | Configuration Base de Données & Schéma Utilisateur | [DONE] |
-| **Story 2.2** | Authentification par Magic Link (Backend & SDK) | [IN PROGRESS] |
-| **Story 2.3** | Modal de Capture & Déclenchement Auth | [TODO] |
+| **Story 2.2** | Authentification par Magic Link (Backend & SDK) | [COMPLETED] |
+| **Story 2.3** | Modal de Capture & Déclenchement Auth | [IN PROGRESS: Drafting] |
 | **Story 2.4** | Flux de Révélation & Persistance Post-Inscription | [TODO] |
 | **Story 2.5** | Vue "Post Révélé" (Composant d'Affichage) | [TODO] |
 
