@@ -19,11 +19,11 @@
 
 ## Plan d'Implémentation Technique
 
-- [ ] **Dépendances :** Installer `@supabase/supabase-js`.
-- [ ] **Environnement :** Configurer `NEXT_PUBLIC_SUPABASE_URL` et `NEXT_PUBLIC_SUPABASE_ANON_KEY` dans `.env.local` et valider dans `lib/env.ts`.
-- [ ] **Base de Données :** Exécuter le script SQL (Migration 08) via le dashboard Supabase ou CLI.
-- [ ] **Client :** Créer un singleton `lib/supabase.ts` pour l'initialisation du client.
-- [ ] **Vérification :** Tester l'insertion manuelle ou via script pour valider les triggers et RLS.
+- [x] **Dépendances :** Installer `@supabase/supabase-js`.
+- [x] **Environnement :** Configurer `NEXT_PUBLIC_SUPABASE_URL` et `NEXT_PUBLIC_SUPABASE_ANON_KEY` dans `.env.local` et valider dans `lib/env.ts`.
+- [x] **Base de Données :** Exécuter le script SQL (Migration 08) via le dashboard Supabase ou CLI.
+- [x] **Client :** Créer un singleton `lib/supabase.ts` pour l'initialisation du client.
+- [x] **Vérification :** Tester l'insertion manuelle ou via script pour valider les triggers et RLS.
 
 ## QA & Documentation
 

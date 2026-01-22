@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@google/generative-ai": "^0.24.1",
+    "@supabase/supabase-js": "^2.91.0",
     "clsx": "latest",
     "dotenv": "^17.2.3",
     "lucide-react": "latest",
