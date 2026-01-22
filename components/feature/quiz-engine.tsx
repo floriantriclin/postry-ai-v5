@@ -147,6 +147,31 @@ export function QuizEngine() {
     }
   }, [state.step, state.status, state.currentVector, state.archetypeData]);
 
+  // 5. UX Trap: Lock user on Final Reveal
+  useEffect(() => {
+    if (state.step === 'FINAL_REVEAL') {
+      // Add a history entry to "trap" the user on this view
+      window.history.pushState(null, '', window.location.href);
+
+      const handlePopState = () => {
+        // If user hits Back, push them forward again to the same view
+        window.history.pushState(null, '', window.location.href);
+      };
+
+      window.addEventListener('popstate', handlePopState);
+      return () => window.removeEventListener('popstate', handlePopState);
+    }
+  }, [state.step]);
+
+  // GUARD: Prevent flash of "Theme Selector" during hydration
+  // If we have a saved state different from the initial "THEMES" state,
+  // we wait for hydration to complete before rendering anything.
+  const isHydrationGap = isHydrated && persistedState && state.step === 'THEMES' && persistedState.step !== 'THEMES';
+  
+  if (!isHydrated || isHydrationGap) {
+    return <div className="min-h-screen bg-white" />;
+  }
+
   const renderStep = () => {
     switch (state.step) {
       case 'THEMES':
