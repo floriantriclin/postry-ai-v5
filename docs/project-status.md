@@ -8,7 +8,7 @@
 
 | Epic | Description | Status |
 | :--- | :--- | :--- |
-| **Epic 1 : Fondation & Tunnel Public** | Setup Next.js, Landing Page, Quiz Engine, Blurred Generation | ✅ Completed |
+| **Epic 1 : Fondation & Tunnel Public** | Setup Next.js, Landing Page, Quiz Engine, Blurred Generation | ✅ Completed/Prod |
 | **Epic 2 : Conversion & Identité** | Auth Magic Link, DB Schema, Reveal Flow | 🟡 In Progress |
 | **Epic 3 : Dashboard & Personnalisation** | App Shell, Equalizer UI/Logic, History | 🔴 Pending |
 | **Epic 4 : Intelligence d'Expertise** | CV Upload, PDF Parsing, RAG Injection, Stripe | 🔴 Pending |
@@ -17,8 +17,8 @@
 
 | Story | Title | Status |
 | :--- | :--- | :--- |
-| **Story 2.1** | Configuration Base de Données & Schéma Utilisateur | [IN PROGRESS] |
-| **Story 2.2** | Authentification par Magic Link (Backend & SDK) | [TODO] |
+| **Story 2.1** | Configuration Base de Données & Schéma Utilisateur | [DONE] |
+| **Story 2.2** | Authentification par Magic Link (Backend & SDK) | [IN PROGRESS] |
 | **Story 2.3** | Modal de Capture & Déclenchement Auth | [TODO] |
 | **Story 2.4** | Flux de Révélation & Persistance Post-Inscription | [TODO] |
 | **Story 2.5** | Vue "Post Révélé" (Composant d'Affichage) | [TODO] |
