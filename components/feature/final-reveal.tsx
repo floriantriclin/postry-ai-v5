@@ -69,7 +69,7 @@ export function FinalReveal({ profile, archetype, vector }: FinalRevealProps) {
               {/* Profile & Analysis Toggle */}
               <div className="flex flex-col items-center gap-2">
                  <span className="text-sm font-medium text-zinc-500 uppercase tracking-wide">
-                    Généré par {profile.label_final}
+                    ÉCRIT PAR VOTRE BINÔME NUMÉRIQUE
                  </span>
                  
                  <button 
@@ -146,13 +146,16 @@ export function FinalReveal({ profile, archetype, vector }: FinalRevealProps) {
 
   return (
     <div data-testid="final-reveal-container" className="flex flex-col items-center w-full max-w-4xl mx-auto p-6 min-h-[80vh] animate-in slide-in-from-bottom-8 duration-700">
-      <div className="w-full text-center mb-12">
+      <div className="w-full text-center mb-8 md:mb-12">
         <span className="font-mono bg-black text-white px-4 py-1 text-sm uppercase tracking-widest">
-          Profil Augmenté
+          Votre profil augmenté
         </span>
       </div>
 
       <h1 className="text-4xl md:text-7xl font-black mb-8 text-center uppercase tracking-tighter leading-none">
+        <span className="block text-xl md:text-3xl font-bold mb-2 tracking-normal text-zinc-500">
+          Vous êtes...
+        </span>
         {profile.label_final}
       </h1>
 
@@ -165,18 +168,18 @@ export function FinalReveal({ profile, archetype, vector }: FinalRevealProps) {
 
       <div className="w-full max-w-xl border-t-2 border-dashed border-zinc-300 pt-12">
         <h3 className="text-xl font-bold mb-4 uppercase">Testez votre style</h3>
-        <div className="flex gap-2 relative">
-          <input 
-            type="text" 
-            placeholder="De quoi voulez-vous parler ?" 
+        <div className="flex flex-col md:flex-row gap-4 relative">
+          <input
+            type="text"
+            placeholder="De quoi voulez-vous parler ?"
             className="raw-input flex-1 text-lg"
             value={topic}
             onChange={(e) => setTopic(e.target.value)}
             disabled={isLoading}
             onKeyDown={(e) => e.key === 'Enter' && handleGenerate()}
           />
-          <button 
-            className="raw-button raw-button-primary whitespace-nowrap min-w-[140px] flex justify-center items-center"
+          <button
+            className="raw-button raw-button-primary whitespace-nowrap min-w-[140px] flex justify-center items-center py-4 md:py-0"
             onClick={handleGenerate}
             disabled={isLoading || topic.length < 3}
           >

@@ -1,15 +1,15 @@
 # Project Status
 
-**Current Phase:** Sprint 1 - Core Logic & API
-**Date:** 2026-01-21
-**Milestone:** Epic 2 - Conversion & Identity
+**Current Phase:** Sprint 2 - Conversion & Identity
+**Date:** 2026-01-22
+**Milestone:** Epic 3 - Dashboard & Personnalisation
 
 ## Epic Status
 
 | Epic | Description | Status |
 | :--- | :--- | :--- |
-| **Epic 1 : Fondation & Tunnel Public** | Setup Next.js, Landing Page, Quiz Engine, Blurred Generation | 🟡 In Progress |
-| **Epic 2 : Conversion & Identité** | Auth Magic Link, DB Schema, Reveal Flow | 🔴 Pending |
+| **Epic 1 : Fondation & Tunnel Public** | Setup Next.js, Landing Page, Quiz Engine, Blurred Generation | ✅ Completed |
+| **Epic 2 : Conversion & Identité** | Auth Magic Link, DB Schema, Reveal Flow | 🟡 In Progress |
 | **Epic 3 : Dashboard & Personnalisation** | App Shell, Equalizer UI/Logic, History | 🔴 Pending |
 | **Epic 4 : Intelligence d'Expertise** | CV Upload, PDF Parsing, RAG Injection, Stripe | 🔴 Pending |
 
@@ -38,11 +38,12 @@
 | **Story 1.8.2** | Phase 2 - Augmentation & Affinage | [DONE] |
 | **Story 1.8.3** | Expérience "Tech & Brut" & Robustesse | [DONE] |
 | **Story 1.9** | API de Génération du Post Initial (Pivot) | [DONE] |
+| **Story 1.10** | UX Polish & Wording Refinements (Phase 1) | [DONE] |
 
 ## Next Steps
 
-1.  **Transition Epic 2 (Conversion):** Lancer le chantier de l'authentification et de la sauvegarde du profil.
-2.  **Bug Fixes & Fine-tuning:** Polissage final du modèle et correction des bugs identifiés.
+1.  **Lancement Epic 2:** Initialisation de la base de données (Story 2.1).
+2.  **Auth System:** Implémentation du Magic Link (Story 2.2).
 
 ## Technical Achievements (Sprint 1)
 

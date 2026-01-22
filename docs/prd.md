@@ -2,7 +2,7 @@
 
 Nom de fichier : prd.md
 
-**Version :** 3.0
+**Version :** 3.1
 
 **Confidentialité :** Interne / Strict
 

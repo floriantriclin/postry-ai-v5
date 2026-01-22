@@ -177,10 +177,10 @@ export function QuizEngine() {
         return (
           <QuestionCard
             question={currentQuestion}
-            progressLabel={`[ ${(state.questionIndex + 1).toString().padStart(2, '0')} / ${state.questionsP1.length.toString().padStart(2, '0')} ]`}
+            progressValue={((state.questionIndex + 1) / state.questionsP1.length) * 100}
             onAnswer={(choice) => dispatch({
               type: 'ANSWER_PHASE1',
-              payload: { dimension: currentQuestion.dimension as DimensionCode, choice } 
+              payload: { dimension: currentQuestion.dimension as DimensionCode, choice }
             })}
             onBack={() => dispatch({ type: 'PREVIOUS_PHASE1' })}
             canGoBack={true}
@@ -212,7 +212,7 @@ export function QuizEngine() {
         return (
           <QuestionCard
             question={currentQuestionP2}
-            progressLabel={`[ PRECISION : ${50 + (state.questionIndex * 10)}% ]`}
+            progressValue={((state.questionIndex + 1) / state.questionsP2.length) * 100}
             onAnswer={(choice) => dispatch({
               type: 'ANSWER_PHASE2',
               payload: { dimension: currentQuestionP2.dimension as DimensionCode, choice }
