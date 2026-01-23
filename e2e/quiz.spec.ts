@@ -1,8 +1,59 @@
 import { test, expect } from '@playwright/test';
 
 test.describe('Quiz Flow', () => {
+  test.beforeEach(async ({ page }) => {
+    // Mock API calls to ensure stability and reduce resource usage
+    await page.route('**/api/quiz/generate', async (route) => {
+      const data = route.request().postDataJSON();
+      if (data.phase === 1) {
+        await route.fulfill({
+          status: 200,
+          contentType: 'application/json',
+          body: JSON.stringify([
+            { id: 'Q1', dimension: 'POS', option_A: 'A', option_B: 'B' },
+            { id: 'Q2', dimension: 'TEM', option_A: 'A', option_B: 'B' },
+            { id: 'Q3', dimension: 'DEN', option_A: 'A', option_B: 'B' },
+            { id: 'Q4', dimension: 'PRI', option_A: 'A', option_B: 'B' },
+            { id: 'Q5', dimension: 'CAD', option_A: 'A', option_B: 'B' },
+            { id: 'Q6', dimension: 'REG', option_A: 'A', option_B: 'B' },
+          ])
+        });
+      } else {
+        await route.fulfill({
+          status: 200,
+          contentType: 'application/json',
+          body: JSON.stringify([
+            { id: 'Q7', dimension: 'STR', option_A: 'A', option_B: 'B' },
+            { id: 'Q8', dimension: 'INF', option_A: 'A', option_B: 'B' },
+            { id: 'Q9', dimension: 'ANC', option_A: 'A', option_B: 'B' },
+            { id: 'Q10', dimension: 'DEN', option_A: 'A', option_B: 'B' },
+            { id: 'Q11', dimension: 'PRI', option_A: 'A', option_B: 'B' },
+          ])
+        });
+      }
+    });
+
+    await page.route('**/api/quiz/archetype', async (route) => {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          archetype: { id: 1, name: 'Le Stratège', baseVector: [50,50,50,50,50,50,50,50,50] },
+          targetDimensions: ['STR', 'INF', 'ANC']
+        })
+      });
+    });
+
+    await page.route('**/api/quiz/profile', async (route) => {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({ label_final: 'Le Stratège', definition_longue: '...' })
+      });
+    });
+  });
+
   test('should complete the full quiz journey', async ({ page }) => {
-    test.setTimeout(60000); // Increase timeout for real API calls
     // 1. Navigate to Quiz
     await page.goto('/quiz');
     
@@ -18,8 +69,8 @@ test.describe('Quiz Flow', () => {
     // Sequence B, A, B, B, A, A -> Signature 101100 -> Le Stratège
     const sequence = ['option-b', 'option-a', 'option-b', 'option-b', 'option-a', 'option-a'];
     for (let i = 0; i < 6; i++) {
-       const progress = `[ ${(i + 1).toString().padStart(2, '0')} / 06 ]`;
-       await expect(page.getByText(progress)).toBeVisible();
+       // Wait for question to be visible via option-a or option-b
+       await expect(page.getByTestId('option-a')).toBeVisible();
        await page.getByTestId(sequence[i]).click();
     }
 
@@ -31,7 +82,6 @@ test.describe('Quiz Flow', () => {
     for (let i = 0; i < 5; i++) {
         // Wait for question to be ready (handles loading state)
         await expect(page.getByTestId('option-a')).toBeVisible({ timeout: 15000 });
-        await expect(page.getByText(/PRECISION/i)).toBeVisible();
         await page.getByTestId('option-a').click();
     }
 

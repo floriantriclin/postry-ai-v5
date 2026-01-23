@@ -6,7 +6,7 @@ import {
   ICE_ARCHETYPES,
   vstyleSchema
 } from '@/lib/ice-constants';
-import { getGeminiModel, cleanJsonResponse } from '@/lib/gemini';
+import { getGeminiModel, cleanJsonResponse, GEMINI_MODELS } from '@/lib/gemini';
 
 // --- SCHEMAS ---
 
@@ -67,6 +67,7 @@ export function formatVectorForPrompt(vector: number[]): string {
 export const geminiInternal = {
   getGeminiModel: () => {
     return getGeminiModel({
+      model: GEMINI_MODELS.PROFILE,
       systemInstruction: `Tu es un expert en psychométrie et en personal branding. Ton rôle est de traduire un vecteur de données stylistiques en une identité rédactionnelle prestigieuse et inspirante. Tu parles impérativement en Français et tu t'adresses directement à l'utilisateur en utilisant le "vous" (2ème personne du pluriel).`,
       responseMimeType: 'application/json',
     });

@@ -16,7 +16,7 @@ export async function POST(req: NextRequest) {
     if (!result.success) {
       console.warn(`[${correlationId}] Invalid request body`, result.error);
       return NextResponse.json(
-        { error: 'Invalid request body', details: result.error.errors },
+        { error: 'Invalid request body', details: result.error.issues },
         { status: 400 }
       );
     }

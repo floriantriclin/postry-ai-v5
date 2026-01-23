@@ -25,9 +25,9 @@ vi.mock('./quiz-interstitial', () => ({
 }));
 
 vi.mock('./question-card', () => ({
-  QuestionCard: ({ onAnswer, progressLabel }: any) => (
+  QuestionCard: ({ onAnswer, progressValue }: any) => (
     <div>
-      <span>{progressLabel}</span>
+      <span data-testid="progress-val">{progressValue}</span>
       <button onClick={() => onAnswer('A')} data-testid="answer-a">Answer A</button>
     </div>
   ),
@@ -72,8 +72,8 @@ describe('QuizEngine Integration (Orchestration)', () => {
 
     // Answer 6 questions
     for (let i = 0; i < 6; i++) {
-      const progress = `[ ${(i + 1).toString().padStart(2, '0')} / 06 ]`;
-      expect(screen.getByText(progress)).toBeTruthy();
+      const expectedProgress = ((i + 1) / 6) * 100;
+      expect(screen.getByTestId('progress-val').textContent).toBe(expectedProgress.toString());
       fireEvent.click(screen.getByTestId('answer-a'));
     }
 

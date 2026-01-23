@@ -28,7 +28,7 @@ export async function signInWithOtp(email: string, redirectTo: string = '/quiz/r
       success: false,
       error: {
         code: 'INVALID_EMAIL',
-        message: validation.error.errors[0].message,
+        message: validation.error.issues[0]?.message || "Adresse email invalide",
       },
     };
   }
