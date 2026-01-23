@@ -1,10 +1,12 @@
 import { POST, calculateDriftHint, formatVectorForPrompt } from './route';
 import { NextRequest } from 'next/server';
-import { getGeminiModel } from '@/lib/gemini';
+import { GoogleGenerativeAI } from '@google/generative-ai';
 
-vi.mock('@/lib/gemini');
-
-const mockedGetGeminiModel = vi.mocked(getGeminiModel);
+vi.mock('@google/generative-ai', () => {
+  const mGoogleGenerativeAI = vi.fn();
+  mGoogleGenerativeAI.prototype.getGenerativeModel = vi.fn();
+  return { GoogleGenerativeAI: mGoogleGenerativeAI };
+});
 
 describe('API /api/quiz/profile', () => {
   const validPayload = {
@@ -14,6 +16,7 @@ describe('API /api/quiz/profile', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
+    vi.mocked(GoogleGenerativeAI.prototype.getGenerativeModel).mockClear();
   });
 
   it('should return 400 for invalid request body', async () => {
@@ -31,15 +34,16 @@ describe('API /api/quiz/profile', () => {
   it('should return 200 and synthesized profile on success', async () => {
     const mockOutput = {
       label_final: "L'Ingénieur Intuitif",
-      definition_longue: "Ceci est une définition de test qui contient exactement quarante-cinq mots pour passer la validation Zod. Nous espérons que cela fonctionnera enfin. S'il vous plaît, passez ce test maintenant. Nous sommes à court d'idées. Ceci est un test de la dernière chance pour nous tous. Merci."
+      definition_longue: "Vous êtes un architecte de la communication, capable de construire des ponts entre la complexité technique et la clarté narrative. Votre force unique réside dans cet équilibre subtil, transformant le jargon en récits captivants. Vous savez allier la rigueur d'un expert à la chaleur d'un conteur, rendant chaque message à la fois crédible et profondément humain."
     };
     
-    mockedGetGeminiModel.mockReturnValue({
-      generateContent: vi.fn().mockResolvedValue({
-        response: {
-          text: () => JSON.stringify(mockOutput),
-        },
+    const mockGenerateContent = vi.fn().mockResolvedValue({
+      response: Promise.resolve({
+        text: () => JSON.stringify(mockOutput),
       }),
+    });
+    vi.mocked(GoogleGenerativeAI.prototype.getGenerativeModel).mockReturnValue({
+      generateContent: mockGenerateContent,
     } as any);
 
     const req = new NextRequest('http://localhost/api/quiz/profile', {
@@ -56,19 +60,18 @@ describe('API /api/quiz/profile', () => {
   it('should retry if Gemini returns malformed JSON', async () => {
     const mockOutput = {
       label_final: "L'Ingénieur Intuitif",
-      definition_longue: "Ceci est une définition de test qui contient exactement quarante-cinq mots pour passer la validation Zod. Nous espérons que cela fonctionnera enfin. S'il vous plaît, passez ce test maintenant. Nous sommes à court d'idées. Ceci est un test de la dernière chance pour nous tous. Merci."
+      definition_longue: "Vous êtes un architecte de la communication, capable de construire des ponts entre la complexité technique et la clarté narrative. Votre force unique réside dans cet équilibre subtil, transformant le jargon en récits captivants. Vous savez allier la rigueur d'un expert à la chaleur d'un conteur, rendant chaque message à la fois crédible et profondément humain."
     };
 
     const generateContentMock = vi.fn()
       .mockResolvedValueOnce({
-        response: { text: () => "Not a JSON" },
+        response: Promise.resolve({ text: () => "Not a JSON" }),
       })
       .mockResolvedValueOnce({
-        response: { text: () => JSON.stringify(mockOutput) },
+        response: Promise.resolve({ text: () => JSON.stringify(mockOutput) }),
       });
-
-    mockedGetGeminiModel.mockReturnValue({
-      generateContent: generateContentMock
+    vi.mocked(GoogleGenerativeAI.prototype.getGenerativeModel).mockReturnValue({
+      generateContent: generateContentMock,
     } as any);
 
     const req = new NextRequest('http://localhost/api/quiz/profile', {
@@ -84,11 +87,9 @@ describe('API /api/quiz/profile', () => {
   });
 
   it('should return 502 if Gemini fails after 3 retries', async () => {
-    const generateContentMock = vi.fn().mockResolvedValue({
-      response: { text: () => "Invalid" },
-    });
-    mockedGetGeminiModel.mockReturnValue({
-      generateContent: generateContentMock
+    const generateContentMock = vi.fn().mockRejectedValue(new Error('Gemini call failed'));
+    vi.mocked(GoogleGenerativeAI.prototype.getGenerativeModel).mockReturnValue({
+      generateContent: generateContentMock,
     } as any);
 
     const req = new NextRequest('http://localhost/api/quiz/profile', {
@@ -109,12 +110,13 @@ describe('API /api/quiz/profile', () => {
       definition_longue: "Trop court."
     };
     
-    mockedGetGeminiModel.mockReturnValue({
-      generateContent: vi.fn().mockResolvedValue({
-        response: {
-          text: () => JSON.stringify(mockOutput),
-        },
+    const mockGenerateContent = vi.fn().mockResolvedValue({
+      response: Promise.resolve({
+        text: () => JSON.stringify(mockOutput),
       }),
+    });
+    vi.mocked(GoogleGenerativeAI.prototype.getGenerativeModel).mockReturnValue({
+      generateContent: mockGenerateContent,
     } as any);
 
     const req = new NextRequest('http://localhost/api/quiz/profile', {
@@ -132,12 +134,13 @@ describe('API /api/quiz/profile', () => {
       definition_longue: "Cette définition est beaucoup trop longue pour passer le test de validation car elle contient énormément de mots inutiles répétés plusieurs fois afin de dépasser le seuil maximum autorisé de soixante-quinze mots par la spécification technique de la story un point sept qui demande une synthèse concise et percutante pour l'utilisateur final qui vient de terminer son quiz et attend sa récompense émotionnelle immédiate sans avoir à lire un roman entier sur son style rédactionnel. Trop de mots ici."
     };
     
-    mockedGetGeminiModel.mockReturnValue({
-      generateContent: vi.fn().mockResolvedValue({
-        response: {
-          text: () => JSON.stringify(mockOutput),
-        },
+    const mockGenerateContent = vi.fn().mockResolvedValue({
+      response: Promise.resolve({
+        text: () => JSON.stringify(mockOutput),
       }),
+    });
+    vi.mocked(GoogleGenerativeAI.prototype.getGenerativeModel).mockReturnValue({
+      generateContent: mockGenerateContent,
     } as any);
 
     const req = new NextRequest('http://localhost/api/quiz/profile', {
@@ -177,15 +180,16 @@ describe('API /api/quiz/profile', () => {
         finalVector: [100, 85, 80, 40, 20, 20, 20, 50, 90], // Extreme CADENCE
       };
 
-      mockedGetGeminiModel.mockReturnValue({
-        generateContent: vi.fn().mockResolvedValue({
-          response: {
-            text: () => JSON.stringify({
-              label_final: "L'Ingénieur Extrême",
-              definition_longue: "Ceci est une définition de test qui contient exactement quarante-cinq mots pour passer la validation Zod. Nous espérons que cela fonctionnera enfin. S'il vous plaît, passez ce test maintenant. Nous sommes à court d'idées. Ceci est un test de la dernière chance pour nous tous. Merci."
-            }),
-          },
+      const mockGenerateContent = vi.fn().mockResolvedValue({
+        response: Promise.resolve({
+          text: () => JSON.stringify({
+            label_final: "L'Ingénieur Extrême",
+            definition_longue: "Vous êtes un architecte de la communication, capable de construire des ponts entre la complexité technique et la clarté narrative. Votre force unique réside dans cet équilibre subtil, transformant le jargon en récits captivants. Vous savez allier la rigueur d'un expert à la chaleur d'un conteur, rendant chaque message à la fois crédible et profondément humain."
+          }),
         }),
+      });
+      vi.mocked(GoogleGenerativeAI.prototype.getGenerativeModel).mockReturnValue({
+        generateContent: mockGenerateContent,
       } as any);
 
       const req = new NextRequest('http://localhost/api/quiz/profile', {
