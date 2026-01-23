@@ -83,7 +83,8 @@ graph TD
 
 - **Stratégie :** "Zéro Distraction". Aucun menu de navigation global.
 - **Retour :** Uniquement un bouton "Retour" ou "Précédent" dans le Quiz pour modifier une réponse.
-- **Objectif :** Guider l'utilisateur inexorablement vers la génération.
+- **Verrouillage de l'historique (Anti-Re-Génération) :** Une fois le post flouté généré et la modal d'authentification affichée, le retour en arrière via le navigateur doit être bloqué ou redirigé pour empêcher la modification des réponses ou une nouvelle génération gratuite.
+- **Objectif :** Guider l'utilisateur inexorablement vers la génération et la conversion (Email).
 
 **2. Navigation Privée (Dashboard) :**
 
