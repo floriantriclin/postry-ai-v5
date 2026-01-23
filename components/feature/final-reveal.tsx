@@ -143,12 +143,37 @@ export function FinalReveal({ profile, archetype, vector }: FinalRevealProps) {
                        )}
                        
                        {/* Auth Modal Integration Point (Story 2.3) */}
-                       {showAuthModal && !isAuthLoading && (
-                         <div className="absolute inset-0 z-20 flex items-center justify-center">
-                           <AuthModal />
-                         </div>
-                       )}
-                    </div>
+                      {showAuthModal && !isAuthLoading && (
+                        <div className="absolute inset-0 z-20 flex items-center justify-center">
+                          <AuthModal onPreAuth={async (email) => {
+                            if (!generatedPost) return false;
+                            try {
+                              const res = await fetch('/api/quiz/pre-persist', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({
+                                  email,
+                                  stylistic_vector: vector,
+                                  profile: profile,
+                                  archetype: archetype,
+                                  theme: topic,
+                                  post_content: generatedPost.content,
+                                  quiz_answers: []
+                                })
+                              });
+                              if (!res.ok) {
+                                console.error('Failed to pre-persist');
+                                return false;
+                              }
+                              return true;
+                            } catch (e) {
+                              console.error('Pre-persist error:', e);
+                              return false;
+                            }
+                          }} />
+                        </div>
+                      )}
+                   </div>
                  </div>
               </div>
            </div>

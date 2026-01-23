@@ -5,9 +5,10 @@ import { signInWithOtp } from "@/lib/auth";
 import { X } from "lucide-react";
 
 interface AuthModalProps {
+  onPreAuth?: (email: string) => Promise<boolean>;
 }
 
-export function AuthModal({}: AuthModalProps) {
+export function AuthModal({ onPreAuth }: AuthModalProps) {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -52,6 +53,16 @@ export function AuthModal({}: AuthModalProps) {
     setSuccess(false);
 
     setLoading(true);
+
+    if (onPreAuth) {
+      const saved = await onPreAuth(email);
+      if (!saved) {
+        setError("Impossible de sauvegarder votre post. Veuillez réessayer.");
+        setLoading(false);
+        return;
+      }
+    }
+
     const result = await signInWithOtp(email);
     setLoading(false);
 
