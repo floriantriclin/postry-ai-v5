@@ -42,7 +42,7 @@ Ces instructions guident le développement pour assurer la cohérence et la qual
 ## 4. Organisation des Tests (MVP)
 
 *   **Tests Unitaires :** Colocalisés avec le code ou dans `__tests__`. Focus sur `lib/utils.ts`, parsers, et logique de crédits.
-*   **Tests E2E :** Tests manuels du "Happy Path" pour le MVP.
+*   **Tests E2E :** Tests automatisés avec Playwright pour les parcours critiques.
 *   **Outil :** Vitest.
 
 ## 5. Gestion de Git

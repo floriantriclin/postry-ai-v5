@@ -144,8 +144,8 @@ export function FinalReveal({ profile, archetype, vector }: FinalRevealProps) {
                        
                        {/* Auth Modal Integration Point (Story 2.3) */}
                        {showAuthModal && !isAuthLoading && (
-                         <div className="absolute inset-0 z-20 flex items-start justify-center pt-80">
-                           <AuthModal onClose={() => setShowAuthModal(false)} />
+                         <div className="absolute inset-0 z-20 flex items-center justify-center">
+                           <AuthModal />
                          </div>
                        )}
                     </div>

@@ -64,6 +64,6 @@ test('Story 1.9: Post Generation Flow', async ({ page }) => {
   await expect(page.getByText('Style très direct.')).toBeVisible();
   
   // Check masking/blur elements (Check placeholders for now as per code)
-  await expect(page.getByText('[Placeholder: AuthModal')).toBeVisible();
-  await expect(page.getByRole('button', { name: 'Bypass Temp' })).toBeVisible();
+  await expect(page.getByRole('dialog')).toBeVisible();
+  await expect(page.getByText('Sauvegardez votre post')).toBeVisible();
 });

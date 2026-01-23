@@ -5,10 +5,9 @@ import { signInWithOtp } from "@/lib/auth";
 import { X } from "lucide-react";
 
 interface AuthModalProps {
-  onClose: () => void;
 }
 
-export function AuthModal({ onClose }: AuthModalProps) {
+export function AuthModal({}: AuthModalProps) {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -17,7 +16,7 @@ export function AuthModal({ onClose }: AuthModalProps) {
 
   useEffect(() => {
     // This effect is kept to maintain the structure, but the Escape keydown listener is removed.
-  }, [onClose, success]);
+  }, [success]);
 
   useEffect(() => {
     const focusableElements = modalRef.current?.querySelectorAll<HTMLElement>(
@@ -52,17 +51,6 @@ export function AuthModal({ onClose }: AuthModalProps) {
     setError(null);
     setSuccess(false);
 
-    if (!email) {
-      setError("Email address is required.");
-      return;
-    }
-
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      setError("Adresse email invalide");
-      return;
-    }
-
     setLoading(true);
     const result = await signInWithOtp(email);
     setLoading(false);
@@ -84,10 +72,10 @@ export function AuthModal({ onClose }: AuthModalProps) {
       >
         <div className="bg-white p-6 rounded-none w-full max-w-xs text-center border border-black">
           <h2 id="auth-modal-title" className="text-xl font-bold mb-4">
-            Link Sent!
+            Lien envoyé !
           </h2>
           <p className="text-sm">
-            A connection link has been sent to your email address. Please check your inbox.
+            Un lien de connexion a été envoyé à votre adresse email. Veuillez consulter votre boîte de réception.
           </p>
         </div>
       </div>
@@ -125,7 +113,7 @@ export function AuthModal({ onClose }: AuthModalProps) {
               className="w-full min-h-[44px] font-mono px-3 py-2 border-b-2 border-black focus:outline-none focus:border-blue-500"
               disabled={loading}
             />
-             {error && <p className="text-red-600 text-sm mt-2">{error}</p>}
+             {error && <p role="alert" className="text-red-600 text-sm mt-2">{error}</p>}
           </div>
           <button
             type="submit"
