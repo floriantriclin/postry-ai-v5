@@ -33,6 +33,10 @@ vi.mock('./question-card', () => ({
   ),
 }));
 
+vi.mock('./final-reveal', () => ({
+  FinalReveal: () => <div>Final Reveal</div>,
+}));
+
 describe('QuizEngine Integration (Orchestration)', () => {
   beforeEach(() => {
     vi.clearAllMocks();

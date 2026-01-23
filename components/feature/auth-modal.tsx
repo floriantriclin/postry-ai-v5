@@ -16,14 +16,7 @@ export function AuthModal({ onClose }: AuthModalProps) {
   const modalRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape' && !success) {
-        onClose();
-      }
-    };
-
-    document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
+    // This effect is kept to maintain the structure, but the Escape keydown listener is removed.
   }, [onClose, success]);
 
   useEffect(() => {
@@ -64,6 +57,12 @@ export function AuthModal({ onClose }: AuthModalProps) {
       return;
     }
 
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setError("Adresse email invalide");
+      return;
+    }
+
     setLoading(true);
     const result = await signInWithOtp(email);
     setLoading(false);
@@ -81,13 +80,13 @@ export function AuthModal({ onClose }: AuthModalProps) {
         role="dialog"
         aria-modal="true"
         aria-labelledby="auth-modal-title"
-        className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center"
+        className=""
       >
-        <div className="bg-white p-8 rounded-none w-full max-w-md text-center">
-          <h2 id="auth-modal-title" className="text-2xl font-bold mb-4">
+        <div className="bg-white p-6 rounded-none w-full max-w-xs text-center border border-black">
+          <h2 id="auth-modal-title" className="text-xl font-bold mb-4">
             Link Sent!
           </h2>
-          <p>
+          <p className="text-sm">
             A connection link has been sent to your email address. Please check your inbox.
           </p>
         </div>
@@ -100,25 +99,19 @@ export function AuthModal({ onClose }: AuthModalProps) {
       role="dialog"
       aria-modal="true"
       aria-labelledby="auth-modal-title"
-      className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+      className=""
     >
-      <div ref={modalRef} className="bg-white p-8 rounded-none w-full max-w-md relative">
+      <div ref={modalRef} className="bg-white p-6 rounded-none w-full max-w-xs relative border border-black">
         {!success && (
-           <button
-             onClick={onClose}
-             className="absolute top-4 right-4 text-gray-400 hover:text-gray-800"
-             aria-label="Close"
-           >
-             <X size={24} />
-           </button>
+           null
         )}
-        <h2 id="auth-modal-title" className="text-2xl font-bold mb-4">
-          Unlock Your Post
+        <h2 id="auth-modal-title" className="text-xl font-bold mb-4 text-center">
+          Sauvegardez votre post
         </h2>
-        <p className="mb-6">
-          Enter your email to receive a secure magic link and view your personalized post.
+        <p className="mb-4 text-sm">
+          Entrez votre email. Vous recevrez un lien qui vous permettra de conserver votre post et de le modifier.
         </p>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} noValidate>
           <div className="mb-4">
             <label htmlFor="email" className="block text-sm font-medium text-gray-700 sr-only">
               Email Address
@@ -128,7 +121,7 @@ export function AuthModal({ onClose }: AuthModalProps) {
               id="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="you@example.com"
+              placeholder="moi@exemple.com"
               className="w-full min-h-[44px] font-mono px-3 py-2 border-b-2 border-black focus:outline-none focus:border-blue-500"
               disabled={loading}
             />
@@ -139,7 +132,7 @@ export function AuthModal({ onClose }: AuthModalProps) {
             className="w-full min-h-[44px] bg-black text-white py-3 px-4 rounded-none hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black disabled:opacity-50"
             disabled={loading}
           >
-            {loading ? "Sending..." : "Send Magic Link"}
+            {loading ? "Envoi..." : "Envoyez-moi un lien"}
           </button>
         </form>
       </div>

@@ -20,6 +20,7 @@ export function FinalReveal({ profile, archetype, vector }: FinalRevealProps) {
   const [topic, setTopic] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [generatedPost, setGeneratedPost] = useState<PostGenerationResponse | null>(null);
+  const [isPostGenerated, setIsPostGenerated] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [showAnalysis, setShowAnalysis] = useState(false);
   const [showAuthModal, setShowAuthModal] = useState(false);
@@ -58,6 +59,7 @@ export function FinalReveal({ profile, archetype, vector }: FinalRevealProps) {
 
       const data = await res.json();
       setGeneratedPost(data);
+      setIsPostGenerated(true);
     } catch (err) {
       setError('Impossible de générer le post. Veuillez réessayer.');
       console.error(err);
@@ -137,11 +139,15 @@ export function FinalReveal({ profile, archetype, vector }: FinalRevealProps) {
                        {/* The post remains blurred until authenticated. */}
                        {showAuthModal && !isAuthLoading && (
                          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/80 to-white z-10 pointer-events-none"
-                              style={{ background: 'linear-gradient(to bottom, transparent 10%, rgba(255,255,255,0.6) 20%, #ffffff 35%)' }} />
+                              style={{ background: 'linear-gradient(to bottom, transparent 5%, rgba(255,255,255,0.6) 15%, #ffffff 45%)' }} />
                        )}
                        
                        {/* Auth Modal Integration Point (Story 2.3) */}
-                       {showAuthModal && !isAuthLoading && <AuthModal onClose={() => setShowAuthModal(false)} />}
+                       {showAuthModal && !isAuthLoading && (
+                         <div className="absolute inset-0 z-20 flex items-start justify-center pt-80">
+                           <AuthModal onClose={() => setShowAuthModal(false)} />
+                         </div>
+                       )}
                     </div>
                  </div>
               </div>
@@ -189,7 +195,7 @@ export function FinalReveal({ profile, archetype, vector }: FinalRevealProps) {
           <button
             className="raw-button raw-button-primary whitespace-nowrap min-w-[140px] flex justify-center items-center py-4 md:py-0"
             onClick={handleGenerate}
-            disabled={isLoading || topic.length < 3}
+            disabled={isLoading || topic.length < 3 || isPostGenerated}
           >
             {isLoading ? <Loader2 className="animate-spin" /> : 'Générer un post'}
           </button>

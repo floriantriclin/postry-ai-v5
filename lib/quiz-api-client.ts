@@ -38,11 +38,30 @@ export interface ProfileResponse {
 
 class QuizApiClient {
   private async handleResponse<T>(response: Response): Promise<T> {
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
+    if (response.ok) {
+      return response.json();
+    } else {
+      let errorMessage = `HTTP error! status: ${response.status}`;
+      try {
+        const errorData = await response.json();
+        if (errorData.error) {
+          errorMessage = typeof errorData.error === 'object' ? JSON.stringify(errorData.error) : errorData.error;
+        } else if (errorData.message) {
+          errorMessage = errorData.message;
+        }
+      } catch (e) {
+        // Not a JSON response, try to get text
+        try {
+          const textError = await response.text();
+          if (textError) {
+            errorMessage = textError.substring(0, 500); // Truncate long HTML responses
+          }
+        } catch (textE) {
+          // Ignore if text() also fails
+        }
+      }
+      throw new Error(errorMessage);
     }
-    return response.json();
   }
 
   async generateQuestions(request: GenerateRequest): Promise<QuizQuestion[]> {

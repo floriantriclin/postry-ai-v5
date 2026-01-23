@@ -210,7 +210,7 @@ Ce flux fidélise l'utilisateur en lui donnant le contrôle (la "Rugosité").
 **H. Vue "Preuve Floutée" (Génération Finale)**
 
 - **Similaire à la version précédente :** Post généré, structure visible, texte flouté.
-- **Overlay Conversion :** "Pour révéler votre post 'Pragmatique Bienveillant', créez votre compte."
+- **Overlay Conversion :** "Pour révéler votre post 'Pragmatique Bienveillant', créez votre compte."
 
 # Section 5 : Bibliothèque de Composants / Design System
 

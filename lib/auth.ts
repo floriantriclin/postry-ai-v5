@@ -1,8 +1,6 @@
-import { z } from 'zod';
 import { supabase } from '@/lib/supabase';
 import { env } from '@/lib/env';
-
-export const emailSchema = z.string().email({ message: "Adresse email invalide" });
+import { emailSchema } from './auth-schema';
 
 export type AuthErrorType = 'RATE_LIMIT' | 'INVALID_EMAIL' | 'UNKNOWN';
 
@@ -55,7 +53,7 @@ export async function signInWithOtp(email: string, redirectTo: string = '/quiz/r
         success: false,
         error: {
           code,
-          message: error.message,
+          message: "Trop de demandes. Veuillez réessayer plus tard.",
         },
       };
     }

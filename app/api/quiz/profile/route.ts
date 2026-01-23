@@ -64,15 +64,8 @@ export function formatVectorForPrompt(vector: number[]): string {
 }
 
 // Factorize model creation for easier mocking
-export const geminiInternal = {
-  getGeminiModel: () => {
-    return getGeminiModel({
-      model: GEMINI_MODELS.PROFILE,
-      systemInstruction: `Tu es un expert en psychométrie et en personal branding. Ton rôle est de traduire un vecteur de données stylistiques en une identité rédactionnelle prestigieuse et inspirante. Tu parles impérativement en Français et tu t'adresses directement à l'utilisateur en utilisant le "vous" (2ème personne du pluriel).`,
-      responseMimeType: 'application/json',
-    });
-  }
-};
+// NOTE: This was refactored to be more easily mockable in tests.
+// The object `geminiInternal` was removed.
 
 // --- ROUTE HANDLER ---
 
@@ -135,7 +128,11 @@ ACTION : Génère le Profil Augmenté de l'utilisateur.
     `.trim();
 
     // 3. Appel Gemini avec Retry Strategy
-    const model = geminiInternal.getGeminiModel();
+    const model = getGeminiModel({
+      model: GEMINI_MODELS.PROFILE,
+      systemInstruction: `Tu es un expert en psychométrie et en personal branding. Ton rôle est de traduire un vecteur de données stylistiques en une identité rédactionnelle prestigieuse et inspirante. Tu parles impératively en Français et tu t'adresses directement à l'utilisateur en utilisant le "vous" (2ème personne du pluriel).`,
+      responseMimeType: 'application/json',
+    });
 
     let lastError: Error | null = null;
     for (let attempt = 1; attempt <= 3; attempt++) {

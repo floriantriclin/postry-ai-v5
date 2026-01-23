@@ -20,19 +20,29 @@ Cette modal doit s'afficher par-dessus la vue du Post Flouté et servir de point
 - [x] **Story 2.2 : Authentification par Magic Link (Backend & SDK)** : Le point d'API pour l'envoi du Magic Link doit être fonctionnel.
 - [ ] **Story 2.4 : Flux de Révélation & Persistance Post-Inscription** : Dépend de cette modal pour le déclenchement initial de l'auth.
 
+## Développements Effectués
+
+Un composant `AuthModal.tsx` a été créé et implémenté. Il gère l'ensemble du processus de capture d'email et de connexion :
+
+- **UI & États :** Le modal gère les états `initial`, `loading`, `success` et `error`.
+- **Validation :** La validation de l'email est effectuée côté client via une regex simple.
+- **API :** Il s'intègre avec `signInWithOtp` de `lib/auth.ts` pour envoyer le lien magique.
+- **Accessibilité :** Un "focus trap" basique a été implémenté pour la navigation au clavier.
+- **Intégration :** Le modal est déclenché dans `FinalReveal.tsx` lorsque l'utilisateur n'est pas authentifié, superposé au-dessus du contenu flouté.
+
 ## Implémentation Technique
 
 ### 1. Composant (UI)
-*   Créer un nouveau composant `AuthModal.tsx` (ou `ConversionOverlay.tsx`) dans [`components/feature`](components/feature) pour encapsuler la logique du formulaire.
-*   **Design System:** Le composant doit respecter les spécifications de style "Raw UI" pour les `Inputs & Formulaires` et les `Boutons` (voir [Section 5.2](docs/front-end-spec.md#section-5--biblioth%C3%A8que-de-composants--design-system)).
+*   [x] Créer un nouveau composant `AuthModal.tsx` (ou `ConversionOverlay.tsx`) dans [`components/feature`](components/feature) pour encapsuler la logique du formulaire.
+*   [x] **Design System:** Le composant doit respecter les spécifications de style "Raw UI" pour les `Inputs & Formulaires` et les `Boutons` (voir [Section 5.2](docs/front-end-spec.md#section-5--biblioth%C3%A8que-de-composants--design-system)).
 
 ### 2. Intégration (Flow)
-*   Intégrer le composant `AuthModal` dans la vue du Post Flouté (probablement [`components/feature/FinalReveal.tsx`](components/feature/FinalReveal.tsx) ou `app/quiz/page.tsx`).
-*   Le modal doit s'ouvrir lorsque l'utilisateur atteint la vue du post généré (H. Vue "Preuve Floutée").
+*   [x] Intégrer le composant `AuthModal` dans la vue du Post Flouté (probablement [`components/feature/FinalReveal.tsx`](components/feature/FinalReveal.tsx) ou `app/quiz/page.tsx`).
+*   [x] Le modal doit s'ouvrir lorsque l'utilisateur atteint la vue du post généré (H. Vue "Preuve Floutée").
 
 ### 3. Logique (API)
-*   Utiliser la fonction `signInWithEmail()` du SDK Supabase (couche d'abstraction dans [`lib/auth.ts`](lib/auth.ts)) pour soumettre l'email à l'API.
-*   L'email soumis doit être validé côté client (regex simple) pour améliorer l'UX avant l'appel API.
+*   [x] Utiliser la fonction `signInWithEmail()` du SDK Supabase (couche d'abstraction dans [`lib/auth.ts`](lib/auth.ts)) pour soumettre l'email à l'API.
+*   [x] L'email soumis doit être validé côté client (regex simple) pour améliorer l'UX avant l'appel API.
 
 ## Critères d'Acceptation (Testable)
 
