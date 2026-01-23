@@ -31,6 +31,11 @@
 - **Navigation** : Utiliser l'API History de Next.js (`pushState` ou interception de route) pour verrouiller le tunnel.
 - **API** : Créer un endpoint `/api/quiz/pre-persist` pour sauvegarder les données temporaires.
 
+## QA & Risques
+
+- **Analyse des Risques** : [`docs/qa/assessments/2.4-risk-20260123.md`](../qa/assessments/2.4-risk-20260123.md)
+- **Plan de Test** : [`docs/qa/assessments/2.4-test-design-20260123.md`](../qa/assessments/2.4-test-design-20260123.md)
+
 ## Plan d'Action SM
 
 - **[Scoping]** Analyse des exigences et des dépendances (DB, API, Front).
