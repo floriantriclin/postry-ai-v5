@@ -21,7 +21,8 @@
 | **Story 2.2** | Authentification par Magic Link (Backend & SDK) | [COMPLETED] |
 | **Story 2.3** | Modal de Capture & Déclenchement Auth | [DONE] |
 | **Story 2.4** | Flux de Révélation & Persistance Post-Inscription | [DONE] |
-| **Story 2.5** | Vue "Post Révélé" & Dashboard Initial | [READY] |
+| **Story 2.5** | Vue "Post Révélé" & Dashboard Initial | [DONE*] |
+| **Story 2.6** | Stabilisation, Refactoring & Fiabilisation | [STARTED] |
 
 ## Sprint 1 Progress (Frontend Foundation) - COMPLETED
 
@@ -43,8 +44,8 @@
 
 ## Next Steps
 
-1.  **Lancement Epic 2:** Initialisation de la base de données (Story 2.1).
-2.  **Auth System:** Implémentation du Magic Link (Story 2.2).
+1.  **Stabilisation (Story 2.6):** Fiabilisation de la persistance, destruction des données locales et gestion des cas limites.
+2.  **Dashboard (Epic 3):** Préparation du démarrage de l'App Shell et de l'historique (Story 3.1).
 
 ## Technical Achievements (Sprint 1)
 
@@ -61,6 +62,7 @@
 ## Known Risks
 
 *   **[*] Observability (Story 1.5):** Missing `correlationId` and structured logs for API failures. Must be addressed before production (Story 1.8).
+*   **[*] Data Persistence (Story 2.5):** Consistency between pre-auth reveal and post-auth dashboard view requires stabilization (addressed in Story 2.6).
 *   **Latency:** Generation via Gemini must stay under 15s (current implementation has 15s hard timeout).
 *   **Mobile UX:** The Equalizer and Quiz must be perfectly responsive (Touch targets).
 *   **Privacy:** CVs must be secured with RLS immediately.
