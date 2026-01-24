@@ -6,6 +6,9 @@
 
 **Statut :** Pending
 
+### Notes d'Amélioration (Feedback PO - 2026-01-24)
+- **Point d'entrée "Connexion"** : Il est impératif d'ajouter un bouton ou un lien "Connexion" (Sign In) visible sur la page d'accueil (`LandingClient`) pour permettre aux utilisateurs existants d'accéder directement à leur Dashboard (via Magic Link) sans avoir à refaire le Quiz.
+
 ## User Stories associées
 
 *   **Story 3.1 :** Shell Applicatif & Layout Dashboard
