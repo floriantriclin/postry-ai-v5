@@ -1,5 +1,7 @@
 import { test, expect } from '@playwright/test';
 
+test.use({ storageState: { cookies: [], origins: [] } });
+
 test('Story 2.4: Reveal Flow', async ({ page }) => {
   // Inject completed quiz state
   await page.addInitScript(() => {

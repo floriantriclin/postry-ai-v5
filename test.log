@@ -1,264 +1,89 @@
 
-Running 16 tests using 2 workers
+Running 49 tests using 2 workers
 
-[1A[2K[1/16] [setup] › e2e\auth.setup.ts:12:6 › authenticate
+[1A[2K[1/49] [setup] › e2e\auth.setup.ts:12:6 › authenticate
 [1A[2K[setup] › e2e\auth.setup.ts:12:6 › authenticate
-User session found, skipping authentication.
-
-[1A[2K[2/16] [chromium] › e2e\dashboard.spec.ts:11:9 › Dashboard › Authenticated › should display the post reveal view if authenticated
-[1A[2K[3/16] [chromium] › e2e\dashboard.spec.ts:21:9 › Dashboard › Authenticated › should copy the post content to clipboard
-[1A[2K  1) [chromium] › e2e\dashboard.spec.ts:11:9 › Dashboard › Authenticated › should display the post reveal view if authenticated 
-
-    [31mTest timeout of 30000ms exceeded.[39m
-
-    Error: page.waitForSelector: Test timeout of 30000ms exceeded.
-    Call log:
-    [2m  - waiting for locator('.blur-sm') to be visible[22m
-
-
-      12 |       page,
-      13 |     }) => {
-    > 14 |       await page.waitForSelector(".blur-sm");
-         |                  ^
-      15 |       await expect(page.locator(".blur-sm")).toBeVisible();
-      16 |       await page.waitForTimeout(1500);
-      17 |       await expect(page.locator(".blur-0")).toBeVisible();
-        at c:\dev\postry-ai-v5\e2e\dashboard.spec.ts:14:18
-
-    Error Context: test-results\dashboard-Dashboard-Authen-cf1d1-eveal-view-if-authenticated-chromium\error-context.md
-
-
-[1A[2K  2) [chromium] › e2e\dashboard.spec.ts:21:9 › Dashboard › Authenticated › should copy the post content to clipboard 
-
-    [31mTest timeout of 30000ms exceeded.[39m
-
-    Error: locator.click: Test timeout of 30000ms exceeded.
-    Call log:
-    [2m  - waiting for locator('text=[ COPIER LE TEXTE ]')[22m
-
-
-      20 |
-      21 |     test("should copy the post content to clipboard", async ({ page }) => {
-    > 22 |       await page.locator("text=[ COPIER LE TEXTE ]").click();
-         |                                                      ^
-      23 |       await expect(page.locator("text=COPIÉ !")).toBeVisible();
-      24 |       await page.waitForTimeout(3000);
-      25 |       await expect(page.locator("text=[ COPIER LE TEXTE ]")).toBeVisible();
-        at c:\dev\postry-ai-v5\e2e\dashboard.spec.ts:22:54
-
-    Error Context: test-results\dashboard-Dashboard-Authen-addd7-e-post-content-to-clipboard-chromium\error-context.md
-
-
-[1A[2K[4/16] [chromium] › e2e\dashboard.spec.ts:28:9 › Dashboard › Authenticated › should logout the user
-[1A[2K[5/16] [chromium] › e2e\dashboard.spec.ts:33:9 › Dashboard › Authenticated › should match the visual snapshot
-[1A[2K  3) [chromium] › e2e\dashboard.spec.ts:33:9 › Dashboard › Authenticated › should match the visual snapshot 
-
-    Error: [2mexpect([22m[31mpage[39m[2m).[22mtoHaveScreenshot[2m([22m[32mexpected[39m[2m)[22m failed
-
-      912 pixels (ratio 0.01 of all image pixels) are different.
-
-    Call log:
-    [2m  - Expect "toHaveScreenshot" with timeout 5000ms[22m
-    [2m    - verifying given screenshot expectation[22m
-    [2m  - taking page screenshot[22m
-    [2m    - disabled all CSS animations[22m
-    [2m  - waiting for fonts to load...[22m
-    [2m  - fonts loaded[22m
-    [2m  - 912 pixels (ratio 0.01 of all image pixels) are different.[22m
-    [2m  - waiting 100ms before taking screenshot[22m
-    [2m  - taking page screenshot[22m
-    [2m    - disabled all CSS animations[22m
-    [2m  - waiting for fonts to load...[22m
-    [2m  - fonts loaded[22m
-    [2m  - captured a stable screenshot[22m
-    [2m  - 912 pixels (ratio 0.01 of all image pixels) are different.[22m
-
-
-      32 |
-      33 |     test("should match the visual snapshot", async ({ page }) => {
-    > 34 |       await expect(page).toHaveScreenshot();
-         |                          ^
-      35 |     });
-      36 |   });
-      37 |
-        at c:\dev\postry-ai-v5\e2e\dashboard.spec.ts:34:26
-
-    attachment #1: Dashboard-Authenticated-should-match-the-visual-snapshot-1 (image/png) ──────────
-    Expected: e2e\dashboard.spec.ts-snapshots\Dashboard-Authenticated-should-match-the-visual-snapshot-1-chromium-win32.png
-    Received: test-results\dashboard-Dashboard-Authen-9cd79-d-match-the-visual-snapshot-chromium\Dashboard-Authenticated-should-match-the-visual-snapshot-1-actual.png
-    Diff:     test-results\dashboard-Dashboard-Authen-9cd79-d-match-the-visual-snapshot-chromium\Dashboard-Authenticated-should-match-the-visual-snapshot-1-diff.png
-    ────────────────────────────────────────────────────────────────────────────────────────────────
-
-    Error Context: test-results\dashboard-Dashboard-Authen-9cd79-d-match-the-visual-snapshot-chromium\error-context.md
-
-
-[1A[2K[6/16] [chromium] › e2e\dashboard.spec.ts:40:9 › Dashboard › Unauthenticated › should redirect to login if not authenticated
-[1A[2K[7/16] [firefox] › e2e\dashboard.spec.ts:11:9 › Dashboard › Authenticated › should display the post reveal view if authenticated
-[1A[2K  4) [chromium] › e2e\dashboard.spec.ts:28:9 › Dashboard › Authenticated › should logout the user ──
-
-    [31mTest timeout of 30000ms exceeded.[39m
-
-    Error: locator.click: Test timeout of 30000ms exceeded.
-    Call log:
-    [2m  - waiting for locator('text=Déconnexion')[22m
-
-
-      27 |
-      28 |     test("should logout the user", async ({ page }) => {
-    > 29 |       await page.locator("text=Déconnexion").click();
-         |                                              ^
-      30 |       await expect(page).toHaveURL("/");
-      31 |     });
-      32 |
-        at c:\dev\postry-ai-v5\e2e\dashboard.spec.ts:29:46
-
-    Error Context: test-results\dashboard-Dashboard-Authenticated-should-logout-the-user-chromium\error-context.md
-
-
-[1A[2K[8/16] [firefox] › e2e\dashboard.spec.ts:21:9 › Dashboard › Authenticated › should copy the post content to clipboard
-[1A[2K  5) [firefox] › e2e\dashboard.spec.ts:11:9 › Dashboard › Authenticated › should display the post reveal view if authenticated 
-
-    [31mTest timeout of 30000ms exceeded.[39m
-
-    Error: page.waitForSelector: Test timeout of 30000ms exceeded.
-    Call log:
-    [2m  - waiting for locator('.blur-sm') to be visible[22m
-
-
-      12 |       page,
-      13 |     }) => {
-    > 14 |       await page.waitForSelector(".blur-sm");
-         |                  ^
-      15 |       await expect(page.locator(".blur-sm")).toBeVisible();
-      16 |       await page.waitForTimeout(1500);
-      17 |       await expect(page.locator(".blur-0")).toBeVisible();
-        at c:\dev\postry-ai-v5\e2e\dashboard.spec.ts:14:18
-
-    Error Context: test-results\dashboard-Dashboard-Authen-cf1d1-eveal-view-if-authenticated-firefox\error-context.md
-
-
-[1A[2K[9/16] [firefox] › e2e\dashboard.spec.ts:28:9 › Dashboard › Authenticated › should logout the user
-[1A[2K  6) [firefox] › e2e\dashboard.spec.ts:21:9 › Dashboard › Authenticated › should copy the post content to clipboard 
-
-    [31mTest timeout of 30000ms exceeded.[39m
-
-    Error: locator.click: Test timeout of 30000ms exceeded.
-    Call log:
-    [2m  - waiting for locator('text=[ COPIER LE TEXTE ]')[22m
-
-
-      20 |
-      21 |     test("should copy the post content to clipboard", async ({ page }) => {
-    > 22 |       await page.locator("text=[ COPIER LE TEXTE ]").click();
-         |                                                      ^
-      23 |       await expect(page.locator("text=COPIÉ !")).toBeVisible();
-      24 |       await page.waitForTimeout(3000);
-      25 |       await expect(page.locator("text=[ COPIER LE TEXTE ]")).toBeVisible();
-        at c:\dev\postry-ai-v5\e2e\dashboard.spec.ts:22:54
-
-    Error Context: test-results\dashboard-Dashboard-Authen-addd7-e-post-content-to-clipboard-firefox\error-context.md
-
-
-[1A[2K[10/16] [firefox] › e2e\dashboard.spec.ts:33:9 › Dashboard › Authenticated › should match the visual snapshot
-[1A[2K[11/16] [firefox] › e2e\dashboard.spec.ts:40:9 › Dashboard › Unauthenticated › should redirect to login if not authenticated
-[1A[2K  7) [firefox] › e2e\dashboard.spec.ts:28:9 › Dashboard › Authenticated › should logout the user ───
-
-    [31mTest timeout of 30000ms exceeded.[39m
-
-    Error: locator.click: Test timeout of 30000ms exceeded.
-    Call log:
-    [2m  - waiting for locator('text=Déconnexion')[22m
-
-
-      27 |
-      28 |     test("should logout the user", async ({ page }) => {
-    > 29 |       await page.locator("text=Déconnexion").click();
-         |                                              ^
-      30 |       await expect(page).toHaveURL("/");
-      31 |     });
-      32 |
-        at c:\dev\postry-ai-v5\e2e\dashboard.spec.ts:29:46
-
-    Error Context: test-results\dashboard-Dashboard-Authenticated-should-logout-the-user-firefox\error-context.md
-
-
-[1A[2K[12/16] [webkit] › e2e\dashboard.spec.ts:21:9 › Dashboard › Authenticated › should copy the post content to clipboard
-[1A[2K[13/16] [webkit] › e2e\dashboard.spec.ts:11:9 › Dashboard › Authenticated › should display the post reveal view if authenticated
-[1A[2K  8) [webkit] › e2e\dashboard.spec.ts:21:9 › Dashboard › Authenticated › should copy the post content to clipboard 
-
-    [31mTest timeout of 30000ms exceeded.[39m
-
-    Error: locator.click: Test timeout of 30000ms exceeded.
-    Call log:
-    [2m  - waiting for locator('text=[ COPIER LE TEXTE ]')[22m
-
-
-      20 |
-      21 |     test("should copy the post content to clipboard", async ({ page }) => {
-    > 22 |       await page.locator("text=[ COPIER LE TEXTE ]").click();
-         |                                                      ^
-      23 |       await expect(page.locator("text=COPIÉ !")).toBeVisible();
-      24 |       await page.waitForTimeout(3000);
-      25 |       await expect(page.locator("text=[ COPIER LE TEXTE ]")).toBeVisible();
-        at c:\dev\postry-ai-v5\e2e\dashboard.spec.ts:22:54
-
-    Error Context: test-results\dashboard-Dashboard-Authen-addd7-e-post-content-to-clipboard-webkit\error-context.md
-
-
-[1A[2K  9) [webkit] › e2e\dashboard.spec.ts:11:9 › Dashboard › Authenticated › should display the post reveal view if authenticated 
-
-    [31mTest timeout of 30000ms exceeded.[39m
-
-    Error: page.waitForSelector: Test timeout of 30000ms exceeded.
-    Call log:
-    [2m  - waiting for locator('.blur-sm') to be visible[22m
-
-
-      12 |       page,
-      13 |     }) => {
-    > 14 |       await page.waitForSelector(".blur-sm");
-         |                  ^
-      15 |       await expect(page.locator(".blur-sm")).toBeVisible();
-      16 |       await page.waitForTimeout(1500);
-      17 |       await expect(page.locator(".blur-0")).toBeVisible();
-        at c:\dev\postry-ai-v5\e2e\dashboard.spec.ts:14:18
-
-    Error Context: test-results\dashboard-Dashboard-Authen-cf1d1-eveal-view-if-authenticated-webkit\error-context.md
-
-
-[1A[2K[14/16] [webkit] › e2e\dashboard.spec.ts:28:9 › Dashboard › Authenticated › should logout the user
-[1A[2K[15/16] [webkit] › e2e\dashboard.spec.ts:33:9 › Dashboard › Authenticated › should match the visual snapshot
-[1A[2K[16/16] [webkit] › e2e\dashboard.spec.ts:40:9 › Dashboard › Unauthenticated › should redirect to login if not authenticated
-[1A[2K  10) [webkit] › e2e\dashboard.spec.ts:28:9 › Dashboard › Authenticated › should logout the user ───
-
-    [31mTest timeout of 30000ms exceeded.[39m
-
-    Error: locator.click: Test timeout of 30000ms exceeded.
-    Call log:
-    [2m  - waiting for locator('text=Déconnexion')[22m
-
-
-      27 |
-      28 |     test("should logout the user", async ({ page }) => {
-    > 29 |       await page.locator("text=Déconnexion").click();
-         |                                              ^
-      30 |       await expect(page).toHaveURL("/");
-      31 |     });
-      32 |
-        at c:\dev\postry-ai-v5\e2e\dashboard.spec.ts:29:46
-
-    Error Context: test-results\dashboard-Dashboard-Authenticated-should-logout-the-user-webkit\error-context.md
-
-
-[1A[2K  10 failed
-    [chromium] › e2e\dashboard.spec.ts:11:9 › Dashboard › Authenticated › should display the post reveal view if authenticated 
-    [chromium] › e2e\dashboard.spec.ts:21:9 › Dashboard › Authenticated › should copy the post content to clipboard 
-    [chromium] › e2e\dashboard.spec.ts:28:9 › Dashboard › Authenticated › should logout the user ───
-    [chromium] › e2e\dashboard.spec.ts:33:9 › Dashboard › Authenticated › should match the visual snapshot 
-    [firefox] › e2e\dashboard.spec.ts:11:9 › Dashboard › Authenticated › should display the post reveal view if authenticated 
-    [firefox] › e2e\dashboard.spec.ts:21:9 › Dashboard › Authenticated › should copy the post content to clipboard 
-    [firefox] › e2e\dashboard.spec.ts:28:9 › Dashboard › Authenticated › should logout the user ────
-    [webkit] › e2e\dashboard.spec.ts:11:9 › Dashboard › Authenticated › should display the post reveal view if authenticated 
-    [webkit] › e2e\dashboard.spec.ts:21:9 › Dashboard › Authenticated › should copy the post content to clipboard 
-    [webkit] › e2e\dashboard.spec.ts:28:9 › Dashboard › Authenticated › should logout the user ─────
-  6 passed (2.7m)
+⚠️ Session invalid or expired.
+
+[1A[2K🔄 Performing full authentication...
+
+[1A[2K🛠️ Ensuring data consistency...
+
+[1A[2K✅ Seed post already exists.
+
+[1A[2K[2m[WebServer] [22mUsing the user object as returned from supabase.auth.getSession() or from some supabase.auth.onAuthStateChange() events could be insecure! This value comes directly from the storage medium (usually cookies on the server) and may not be authentic. Use supabase.auth.getUser() instead which authenticates the data by contacting the Supabase Auth server.
+
+[1A[2K[2/49] [chromium] › e2e\auth-modal.spec.ts:68:7 › Authentication Modal Flow › should display and handle the auth modal correctly
+[1A[2K[3/49] [chromium] › e2e\auth-modal.spec.ts:110:9 › Authentication Modal Flow › on Mobile › should display correctly on mobile
+[1A[2K[4/49] [chromium] › e2e\dashboard.spec.ts:11:9 › Dashboard › Authenticated › should display the post reveal view if authenticated
+[1A[2K[2m[WebServer] [22mUsing the user object as returned from supabase.auth.getSession() or from some supabase.auth.onAuthStateChange() events could be insecure! This value comes directly from the storage medium (usually cookies on the server) and may not be authentic. Use supabase.auth.getUser() instead which authenticates the data by contacting the Supabase Auth server.
+
+[1A[2K[5/49] [chromium] › e2e\dashboard.spec.ts:34:9 › Dashboard › Authenticated › should copy the post content to clipboard
+[1A[2K[6/49] [chromium] › e2e\dashboard.spec.ts:46:9 › Dashboard › Authenticated › should logout the user
+[1A[2K[2m[WebServer] [22mUsing the user object as returned from supabase.auth.getSession() or from some supabase.auth.onAuthStateChange() events could be insecure! This value comes directly from the storage medium (usually cookies on the server) and may not be authentic. Use supabase.auth.getUser() instead which authenticates the data by contacting the Supabase Auth server.
+
+[1A[2K[2m[WebServer] [22mUsing the user object as returned from supabase.auth.getSession() or from some supabase.auth.onAuthStateChange() events could be insecure! This value comes directly from the storage medium (usually cookies on the server) and may not be authentic. Use supabase.auth.getUser() instead which authenticates the data by contacting the Supabase Auth server.
+
+[1A[2K[7/49] [chromium] › e2e\dashboard.spec.ts:51:9 › Dashboard › Authenticated › should match the visual snapshot
+[1A[2K[2m[WebServer] [22mUsing the user object as returned from supabase.auth.getSession() or from some supabase.auth.onAuthStateChange() events could be insecure! This value comes directly from the storage medium (usually cookies on the server) and may not be authentic. Use supabase.auth.getUser() instead which authenticates the data by contacting the Supabase Auth server.
+
+[1A[2K[8/49] [chromium] › e2e\dashboard.spec.ts:58:9 › Dashboard › Unauthenticated › should redirect to login if not authenticated
+[1A[2K[9/49] [chromium] › e2e\quiz-phase-2.spec.ts:70:7 › Quiz Phase 2 & Orchestration › E2E-1.8.2-01: Full flow with Phase 2 and Profile Reveal
+[1A[2K[10/49] [chromium] › e2e\quiz-phase-2.spec.ts:105:7 › Quiz Phase 2 & Orchestration › E2E-1.8.2-02: Loader handling when Phase 2 is slow
+[1A[2K[11/49] [chromium] › e2e\quiz-post-generation.spec.ts:5:5 › Story 1.9: Post Generation Flow
+[1A[2K[12/49] [chromium] › e2e\quiz-reveal.spec.ts:5:5 › Story 2.4: Reveal Flow
+[1A[2K[13/49] [chromium] › e2e\quiz-reveal.spec.ts:98:5 › Story 2.4: Reveal Flow - Error Handling
+[1A[2K[14/49] [chromium] › e2e\quiz-reveal.spec.ts:165:5 › Story 2.4: Reveal Flow - Magic Link Return (Rehydration)
+[1A[2K[15/49] [chromium] › e2e\quiz-robustness.spec.ts:31:7 › Quiz Robustness & Persistence › E2E-1.8.3-01: Should persist progress after page reload
+[1A[2K[16/49] [chromium] › e2e\quiz-robustness.spec.ts:62:7 › Quiz Robustness & Persistence › E2E-1.8.3-02: Should display Tech Error Toast on API failure
+[1A[2K[17/49] [chromium] › e2e\quiz.spec.ts:56:7 › Quiz Flow › should complete the full quiz journey
+[1A[2K[18/49] [firefox] › e2e\auth-modal.spec.ts:68:7 › Authentication Modal Flow › should display and handle the auth modal correctly
+[1A[2K[19/49] [firefox] › e2e\auth-modal.spec.ts:110:9 › Authentication Modal Flow › on Mobile › should display correctly on mobile
+[1A[2K[20/49] [firefox] › e2e\dashboard.spec.ts:11:9 › Dashboard › Authenticated › should display the post reveal view if authenticated
+[1A[2K[2m[WebServer] [22mUsing the user object as returned from supabase.auth.getSession() or from some supabase.auth.onAuthStateChange() events could be insecure! This value comes directly from the storage medium (usually cookies on the server) and may not be authentic. Use supabase.auth.getUser() instead which authenticates the data by contacting the Supabase Auth server.
+
+[1A[2K[21/49] [firefox] › e2e\dashboard.spec.ts:34:9 › Dashboard › Authenticated › should copy the post content to clipboard
+[1A[2K[2m[WebServer] [22mUsing the user object as returned from supabase.auth.getSession() or from some supabase.auth.onAuthStateChange() events could be insecure! This value comes directly from the storage medium (usually cookies on the server) and may not be authentic. Use supabase.auth.getUser() instead which authenticates the data by contacting the Supabase Auth server.
+
+[1A[2K[22/49] [firefox] › e2e\dashboard.spec.ts:46:9 › Dashboard › Authenticated › should logout the user
+[1A[2K[2m[WebServer] [22mUsing the user object as returned from supabase.auth.getSession() or from some supabase.auth.onAuthStateChange() events could be insecure! This value comes directly from the storage medium (usually cookies on the server) and may not be authentic. Use supabase.auth.getUser() instead which authenticates the data by contacting the Supabase Auth server.
+
+[1A[2K[23/49] [firefox] › e2e\dashboard.spec.ts:51:9 › Dashboard › Authenticated › should match the visual snapshot
+[1A[2K[2m[WebServer] [22mUsing the user object as returned from supabase.auth.getSession() or from some supabase.auth.onAuthStateChange() events could be insecure! This value comes directly from the storage medium (usually cookies on the server) and may not be authentic. Use supabase.auth.getUser() instead which authenticates the data by contacting the Supabase Auth server.
+
+[1A[2K[24/49] [firefox] › e2e\dashboard.spec.ts:58:9 › Dashboard › Unauthenticated › should redirect to login if not authenticated
+[1A[2K[25/49] [firefox] › e2e\quiz-phase-2.spec.ts:70:7 › Quiz Phase 2 & Orchestration › E2E-1.8.2-01: Full flow with Phase 2 and Profile Reveal
+[1A[2K[26/49] [firefox] › e2e\quiz-phase-2.spec.ts:105:7 › Quiz Phase 2 & Orchestration › E2E-1.8.2-02: Loader handling when Phase 2 is slow
+[1A[2K[27/49] [firefox] › e2e\quiz-post-generation.spec.ts:5:5 › Story 1.9: Post Generation Flow
+[1A[2K[28/49] [firefox] › e2e\quiz-reveal.spec.ts:5:5 › Story 2.4: Reveal Flow
+[1A[2K[29/49] [firefox] › e2e\quiz-reveal.spec.ts:98:5 › Story 2.4: Reveal Flow - Error Handling
+[1A[2K[30/49] [firefox] › e2e\quiz-reveal.spec.ts:165:5 › Story 2.4: Reveal Flow - Magic Link Return (Rehydration)
+[1A[2K[31/49] [firefox] › e2e\quiz-robustness.spec.ts:31:7 › Quiz Robustness & Persistence › E2E-1.8.3-01: Should persist progress after page reload
+[1A[2K[32/49] [firefox] › e2e\quiz-robustness.spec.ts:62:7 › Quiz Robustness & Persistence › E2E-1.8.3-02: Should display Tech Error Toast on API failure
+[1A[2K[33/49] [firefox] › e2e\quiz.spec.ts:56:7 › Quiz Flow › should complete the full quiz journey
+[1A[2K[34/49] [webkit] › e2e\auth-modal.spec.ts:68:7 › Authentication Modal Flow › should display and handle the auth modal correctly
+[1A[2K[35/49] [webkit] › e2e\auth-modal.spec.ts:110:9 › Authentication Modal Flow › on Mobile › should display correctly on mobile
+[1A[2K[36/49] [webkit] › e2e\dashboard.spec.ts:11:9 › Dashboard › Authenticated › should display the post reveal view if authenticated
+[1A[2K[2m[WebServer] [22mUsing the user object as returned from supabase.auth.getSession() or from some supabase.auth.onAuthStateChange() events could be insecure! This value comes directly from the storage medium (usually cookies on the server) and may not be authentic. Use supabase.auth.getUser() instead which authenticates the data by contacting the Supabase Auth server.
+
+[1A[2K[37/49] [webkit] › e2e\dashboard.spec.ts:46:9 › Dashboard › Authenticated › should logout the user
+[1A[2K[2m[WebServer] [22mUsing the user object as returned from supabase.auth.getSession() or from some supabase.auth.onAuthStateChange() events could be insecure! This value comes directly from the storage medium (usually cookies on the server) and may not be authentic. Use supabase.auth.getUser() instead which authenticates the data by contacting the Supabase Auth server.
+
+[1A[2K[38/49] [webkit] › e2e\dashboard.spec.ts:34:9 › Dashboard › Authenticated › should copy the post content to clipboard
+[1A[2K[2m[WebServer] [22mUsing the user object as returned from supabase.auth.getSession() or from some supabase.auth.onAuthStateChange() events could be insecure! This value comes directly from the storage medium (usually cookies on the server) and may not be authentic. Use supabase.auth.getUser() instead which authenticates the data by contacting the Supabase Auth server.
+
+[1A[2K[39/49] [webkit] › e2e\dashboard.spec.ts:51:9 › Dashboard › Authenticated › should match the visual snapshot
+[1A[2K[40/49] [webkit] › e2e\dashboard.spec.ts:58:9 › Dashboard › Unauthenticated › should redirect to login if not authenticated
+[1A[2K[2m[WebServer] [22mUsing the user object as returned from supabase.auth.getSession() or from some supabase.auth.onAuthStateChange() events could be insecure! This value comes directly from the storage medium (usually cookies on the server) and may not be authentic. Use supabase.auth.getUser() instead which authenticates the data by contacting the Supabase Auth server.
+
+[1A[2K[41/49] [webkit] › e2e\quiz-phase-2.spec.ts:70:7 › Quiz Phase 2 & Orchestration › E2E-1.8.2-01: Full flow with Phase 2 and Profile Reveal
+[1A[2K[42/49] [webkit] › e2e\quiz-phase-2.spec.ts:105:7 › Quiz Phase 2 & Orchestration › E2E-1.8.2-02: Loader handling when Phase 2 is slow
+[1A[2K[43/49] [webkit] › e2e\quiz-post-generation.spec.ts:5:5 › Story 1.9: Post Generation Flow
+[1A[2K[44/49] [webkit] › e2e\quiz-reveal.spec.ts:5:5 › Story 2.4: Reveal Flow
+[1A[2K[45/49] [webkit] › e2e\quiz-reveal.spec.ts:98:5 › Story 2.4: Reveal Flow - Error Handling
+[1A[2K[46/49] [webkit] › e2e\quiz-reveal.spec.ts:165:5 › Story 2.4: Reveal Flow - Magic Link Return (Rehydration)
+[1A[2K[47/49] [webkit] › e2e\quiz-robustness.spec.ts:31:7 › Quiz Robustness & Persistence › E2E-1.8.3-01: Should persist progress after page reload
+[1A[2K[48/49] [webkit] › e2e\quiz-robustness.spec.ts:62:7 › Quiz Robustness & Persistence › E2E-1.8.3-02: Should display Tech Error Toast on API failure
+[1A[2K[49/49] [webkit] › e2e\quiz.spec.ts:56:7 › Quiz Flow › should complete the full quiz journey
+[1A[2K  2 skipped
+  47 passed (52.6s)

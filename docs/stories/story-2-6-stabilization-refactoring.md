@@ -38,38 +38,38 @@
 ## Notes Techniques / Tâches Détaillées
 
 ### 1. Data Persistence & Schema (Critique)
-- **Tâche 2.6.1 :** Vérifier et compléter la sauvegarde dans `public.posts` conformément à `docs/architecture/04-modeles-de-donnees.md`.
+- [x] **Tâche 2.6.1 :** Vérifier et compléter la sauvegarde dans `public.posts` conformément à `docs/architecture/04-modeles-de-donnees.md`.
     - S'assurer que `quiz_answers`, `theme`, et `content` sont correctement mappés.
     - **Documentation :** Mettre à jour [`docs/data-dictionary.md`](../data-dictionary.md) si de nouveaux champs ou statuts sont introduits.
-- **Tâche 2.6.2 :** Implémenter la destruction des données locales (localStorage `quiz-storage`, etc.) après confirmation de la sauvegarde en DB (succès de l'appel API `pre-persist` ou hook post-auth).
+- [x] **Tâche 2.6.2 :** Implémenter la destruction des données locales (localStorage `quiz-storage`, etc.) après confirmation de la sauvegarde en DB (succès de l'appel API `pre-persist` ou hook post-auth).
 
 ### 2. Flux d'Authentification & Doublons
-- **Tâche 2.6.3 :** Gérer le cas "Email déjà existant".
+- [x] **Tâche 2.6.3 :** Gérer le cas "Email déjà existant".
     - Si l'email existe dans `auth.users`, permettre le login via Magic Link mais s'assurer que le *nouveau* post généré est bien rattaché à cet utilisateur existant (via la logique de `pre-persist` ou un merge).
     - **Note UX :** Le flux utilisateur attendu est le suivant :
         1. L'utilisateur saisit un email existant.
         2. Le Magic Link est envoyé.
         3. Après clic, l'utilisateur est authentifié et redirigé vers le Dashboard.
         4. Le nouveau post généré est automatiquement rattaché à son compte et visible dans le Dashboard, sans étape de confirmation explicite.
-- **Tâche 2.6.4 :** Bloquer la navigation retour (History API) après la soumission réussie de l'email pour empêcher la régénération abusive ou les états incohérents.
-- **Tâche 2.6.5 :** Vérifier l'état d'authentification immédiatement après le retour du Magic Link pour éviter les redirections intempestives.
+- [x] **Tâche 2.6.4 :** Bloquer la navigation retour (History API) après la soumission réussie de l'email pour empêcher la régénération abusive ou les états incohérents.
+- [x] **Tâche 2.6.5 :** Vérifier l'état d'authentification immédiatement après le retour du Magic Link pour éviter les redirections intempestives.
 
 ### 3. Refactoring Sémantique
-- **Tâche 2.6.6 :** Renommer/Clarifier les variables dans le code Front et Back.
+- [x] **Tâche 2.6.6 :** Renommer/Clarifier les variables dans le code Front et Back.
     - `quizTheme` -> Le thème sélectionné au début (acquisition).
     - `postTopic` (ou similaire) -> Le sujet spécifique du post généré (valeur produit).
-- **Tâche 2.6.7 :** Corriger le bug d'affichage "Sujet non disponible" en s'assurant que le sujet est bien extrait/généré et passé au composant de vue.
+- [x] **Tâche 2.6.7 :** Corriger le bug d'affichage "Sujet non disponible" en s'assurant que le sujet est bien extrait/généré et passé au composant de vue.
 
 ### 4. Révélation (UI Fix)
-- **Tâche 2.6.8 :** Ajuster l'animation CSS/Framer Motion pour le défloutage.
+- [x] **Tâche 2.6.8 :** Ajuster l'animation CSS/Framer Motion pour le défloutage.
     - Assurer que le post est chargé *flouté* (SSR ou état initial) puis animé vers *net* uniquement après montage et vérification, sans flash de contenu net au préalable.
 
 ### 5. Infrastructure de Test (QA Report Implementation)
 *Basé sur `docs/qa/reports/failure-analysis-story-2-6-prep.md`*
-- **Tâche 2.6.9 (Smart Auth Setup) :** Refondre `e2e/auth.setup.ts` pour vérifier la validité du token session et forcer le login si nécessaire.
-- **Tâche 2.6.10 (Data Seeding) :** Modifier le setup pour garantir qu'un post existe toujours pour l'utilisateur de test (insert via Admin API si manquant).
-- **Tâche 2.6.11 (Robust Locators & Fail Fast) :** Remplacer les sélecteurs fragiles par des `data-testid`. Ajouter une vérification d'URL explicite au début des tests Dashboard pour échouer immédiatement si la redirection login a eu lieu.
-- **Tâche 2.6.12 (Snapshots) :** Mettre à jour les snapshots visuels une fois la stabilisation des données effectuée (Action 5 du rapport QA).
+- [x] **Tâche 2.6.9 (Smart Auth Setup) :** Refondre `e2e/auth.setup.ts` pour vérifier la validité du token session et forcer le login si nécessaire.
+- [x] **Tâche 2.6.10 (Data Seeding) :** Modifier le setup pour garantir qu'un post existe toujours pour l'utilisateur de test (insert via Admin API si manquant).
+- [x] **Tâche 2.6.11 (Robust Locators & Fail Fast) :** Remplacer les sélecteurs fragiles par des `data-testid`. Ajouter une vérification d'URL explicite au début des tests Dashboard pour échouer immédiatement si la redirection login a eu lieu.
+- [x] **Tâche 2.6.12 (Snapshots) :** Mettre à jour les snapshots visuels une fois la stabilisation des données effectuée (Action 5 du rapport QA).
 
 ## Assurance Qualité
 

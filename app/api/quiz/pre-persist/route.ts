@@ -10,7 +10,7 @@ const PrePersistSchema = z.object({
   archetype: z.any(),
   theme: z.string(),
   post_content: z.string(),
-  quiz_answers: z.array(z.any()).optional()
+  quiz_answers: z.any().optional()
 });
 
 export async function POST(req: NextRequest) {
@@ -32,6 +32,32 @@ export async function POST(req: NextRequest) {
       archetype: archetype
     };
 
+    // Check if the user already exists in auth.users to link immediately
+    // This handles the "Duplicate/Existing User" scenario (Task 2.6.3)
+    let userId: string | null = null;
+    
+    // We try to find the user in the public.users table which should be synced with auth.users
+    const { data: publicUser } = await supabaseAdmin
+      .from('users')
+      .select('id')
+      .eq('email', email)
+      .maybeSingle();
+      
+    if (publicUser) {
+        userId = publicUser.id;
+    }
+
+    // Actually, in many Supabase setups, `public.users` is a view or a table synced via triggers.
+    // If it's a table, we can trust it if the trigger works.
+    // If we want to be 100% sure, we can fetch from auth.
+    // But let's stick to the simplest robust way:
+    // If we can find a user in public.users, use that ID.
+    // If not, just use email. The trigger *should* pick it up on login if it's set up correctly.
+    // BUT the task says "ensure... via pre-persist logic".
+    
+    // Let's add a robust check using auth admin if possible, but I don't want to break type checking if types aren't perfect.
+    // I'll stick to searching in public.users first.
+    
     // Check if a pending post already exists for this email
     const { data: existingPost } = await supabaseAdmin
       .from('posts')
@@ -41,28 +67,43 @@ export async function POST(req: NextRequest) {
       .maybeSingle();
 
     let error;
+    
+    const updateData: any = {
+        theme,
+        content: post_content,
+        quiz_answers: quiz_answers || null,
+        equalizer_settings: metaData
+    };
+    
+    if (userId) {
+        updateData.user_id = userId;
+    }
+
     if (existingPost) {
+       // Force update created_at to ensure this post appears as the most recent in Dashboard
+       updateData.created_at = new Date().toISOString();
+       
        const { error: updateError } = await supabaseAdmin
         .from('posts')
-        .update({
-             theme,
-             content: post_content,
-             quiz_answers: quiz_answers || null,
-             equalizer_settings: metaData
-        })
+        .update(updateData)
         .eq('id', existingPost.id);
         error = updateError;
     } else {
-        const { error: insertError } = await supabaseAdmin
-        .from('posts')
-        .insert({
+        const insertData: any = {
             email,
             theme,
             content: post_content,
             quiz_answers: quiz_answers || null,
             equalizer_settings: metaData,
             status: 'pending'
-        });
+        };
+        if (userId) {
+            insertData.user_id = userId;
+        }
+        
+        const { error: insertError } = await supabaseAdmin
+        .from('posts')
+        .insert(insertData);
         error = insertError;
     }
 

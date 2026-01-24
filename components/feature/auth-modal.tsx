@@ -77,6 +77,13 @@ export function AuthModal({ onPreAuth }: AuthModalProps) {
 
     if (result.success) {
       setSuccess(true);
+      
+      // Task 2.6.4: Block back navigation (History API) to prevent abusive regeneration
+      // This pushes a new state and traps the user if they try to go back
+      window.history.pushState(null, "", window.location.href);
+      window.onpopstate = function () {
+        window.history.pushState(null, "", window.location.href);
+      };
     } else {
       setError(result.error?.message || "An unknown error occurred.");
     }

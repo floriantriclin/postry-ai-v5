@@ -265,6 +265,8 @@ export function QuizEngine() {
             initialPost={state.generatedPost}
             onPostGenerated={(post, topic) => dispatch({ type: 'POST_GENERATED', payload: { post, topic } })}
             topic={state.postTopic || ''}
+            acquisitionTheme={state.themeId || ''}
+            quizAnswers={{ p1: state.answersP1, p2: state.answersP2 }}
           />
         );
       

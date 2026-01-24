@@ -17,9 +17,20 @@ interface FinalRevealProps {
   initialPost?: PostGenerationResponse | null;
   onPostGenerated?: (post: PostGenerationResponse, topic: string) => void;
   topic?: string;
+  acquisitionTheme?: string;
+  quizAnswers?: any;
 }
 
-export function FinalReveal({ profile, archetype, vector, initialPost, onPostGenerated, topic: initialTopic }: FinalRevealProps) {
+export function FinalReveal({
+  profile,
+  archetype,
+  vector,
+  initialPost,
+  onPostGenerated,
+  topic: initialTopic,
+  acquisitionTheme,
+  quizAnswers
+}: FinalRevealProps) {
   const [topic, setTopic] = useState(initialTopic || '');
   const [isLoading, setIsLoading] = useState(false);
   const [generatedPost, setGeneratedPost] = useState<PostGenerationResponse | null>(initialPost || null);
@@ -164,20 +175,23 @@ export function FinalReveal({ profile, archetype, vector, initialPost, onPostGen
                     
                     <div className="relative">
                        {/* Content Masking Logic */}
-                       <div className="relative z-0">
+                       <div
+                         className={`relative z-0 transition-all duration-1000 ease-out ${(showAuthModal || isAuthLoading) ? 'blur-md select-none opacity-50' : 'blur-0 opacity-100'}`}
+                         data-testid="post-content"
+                       >
                           {generatedPost.content}
                        </div>
-                       
+                        
                        {/* Blur/Gate Logic (Story 2.3/2.4) */}
                        {/* The post remains blurred until authenticated. */}
-                       {showAuthModal && !isAuthLoading && (
+                       {(showAuthModal || isAuthLoading) && (
                          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/80 to-white z-10 pointer-events-none"
                               style={{ background: 'linear-gradient(to bottom, transparent 5%, rgba(255,255,255,0.6) 15%, #ffffff 45%)' }} />
                        )}
-                       
+                        
                        {/* Auth Modal Integration Point (Story 2.3) */}
-                      {showAuthModal && !isAuthLoading && (
-                        <div className="absolute inset-0 z-20 flex items-center justify-center">
+                       {showAuthModal && !isAuthLoading && (
+                         <div className="absolute inset-0 z-20 flex items-center justify-center">
                           <AuthModal onPreAuth={async (email) => {
                             if (!generatedPost) return false;
                             try {
@@ -189,15 +203,21 @@ export function FinalReveal({ profile, archetype, vector, initialPost, onPostGen
                                   stylistic_vector: vector,
                                   profile: profile,
                                   archetype: archetype,
-                                  theme: topic,
+                                  theme: topic, // Post Subject
                                   post_content: generatedPost.content,
-                                  quiz_answers: []
+                                  quiz_answers: {
+                                    acquisition_theme: acquisitionTheme,
+                                    ...quizAnswers
+                                  }
                                 })
                               });
                               if (!res.ok) {
                                 console.error('Failed to pre-persist');
                                 return false;
                               }
+
+                              // Clean up local storage on success
+                              localStorage.removeItem('ice_quiz_state_v1');
                               return true;
                             } catch (e) {
                               console.error('Pre-persist error:', e);

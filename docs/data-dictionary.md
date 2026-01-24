@@ -1,5 +1,11 @@
 # Dictionnaire des Données
 
+**Version :** 1.1.0
+**Dernière mise à jour :** 24/01/2026
+**Changements récents :**
+*   Clarification de la colonne `theme` (Post Topic).
+*   Détail de la structure JSONB de `quiz_answers` incluant `acquisition_theme`.
+
 Ce document fournit une description détaillée des tables de la base de données, des colonnes et de leurs objectifs.
 
 ## Table `users`
@@ -26,9 +32,9 @@ Cette table stocke tous les contenus générés par les utilisateurs.
 | **id** | `UUID` | **Clé Primaire**. Générée automatiquement. |
 | user_id | `UUID` | **Clé Étrangère**. Référence `public.users.id`. Peut être `NULL` initialement. |
 | email | `TEXT` | Utilisé pour lier un post à un utilisateur avant la confirmation de l'authentification complète. |
-| theme | `TEXT` | Le sujet ou le thème du post saisi par l'utilisateur. |
+| theme | `TEXT` | Le sujet ou le thème du post saisi par l'utilisateur (ex: "L'échec"). Correspond au "Post Topic". |
 | content | `TEXT` | Le contenu Markdown final du post généré. |
-| quiz_answers | `JSONB` | Stocke les réponses de l'utilisateur au quiz de profilage. |
+| quiz_answers | `JSONB` | Stocke les réponses de l'utilisateur. Structure: `{ "acquisition_theme": "...", "p1": {...}, "p2": {...} }`. |
 | equalizer_settings | `JSONB` | Stocke les réglages de l'égaliseur (ton, longueur) utilisés pour la génération. |
 | is_revealed | `BOOLEAN` | Indique si le post a été "révélé" après l'authentification. La valeur par défaut est `FALSE`. |
 | status | `TEXT` | L'état actuel du post (par exemple, `pending`, `revealed`). La valeur par défaut est `'pending'`. |

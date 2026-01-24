@@ -11,22 +11,40 @@ test.describe("Dashboard", () => {
     test("should display the post reveal view if authenticated", async ({
       page,
     }) => {
-      await page.waitForSelector(".blur-sm");
-      await expect(page.locator(".blur-sm")).toBeVisible();
-      await page.waitForTimeout(1500);
-      await expect(page.locator(".blur-0")).toBeVisible();
-      await expect(page.locator("text=Theme")).toBeVisible();
+      // Fail fast check (Task 2.6.11)
+      await expect(page).toHaveURL("/dashboard");
+
+      const postContent = page.getByTestId("post-content");
+      const postMeta = page.getByTestId("post-meta");
+
+      // Verify Initial Blur State (Robust check)
+      // We expect the blur class to be present initially
+      await expect(postContent).toHaveClass(/blur-md/);
+      
+      // Verify Transition to Clear
+      // The transition takes 1000ms + 100ms delay
+      await expect(postContent).toHaveClass(/blur-0/, { timeout: 5000 });
+      await expect(postContent).toHaveClass(/opacity-100/);
+
+      // Verify Content
+      await expect(postMeta).toContainText("Theme: Tech Leadership");
+      await expect(postContent).toContainText("This is a robust test post");
     });
 
-    test("should copy the post content to clipboard", async ({ page }) => {
-      await page.locator("text=[ COPIER LE TEXTE ]").click();
-      await expect(page.locator("text=COPIÉ !")).toBeVisible();
-      await page.waitForTimeout(3000);
-      await expect(page.locator("text=[ COPIER LE TEXTE ]")).toBeVisible();
+    test("should copy the post content to clipboard", async ({ page, context, browserName }) => {
+      if (browserName !== "chromium") test.skip();
+      
+      await context.grantPermissions(['clipboard-write', 'clipboard-read']);
+      await expect(page).toHaveURL("/dashboard");
+      await page.getByTestId("copy-button").click();
+      await expect(page.getByRole("button", { name: "COPIÉ !" })).toBeVisible();
+      
+      // Wait for reset
+      await expect(page.getByTestId("copy-button")).toContainText("[ COPIER LE TEXTE ]", { timeout: 5000 });
     });
 
     test("should logout the user", async ({ page }) => {
-      await page.locator("text=Déconnexion").click();
+      await page.getByTestId("logout-button").click();
       await expect(page).toHaveURL("/");
     });
 

@@ -46,12 +46,13 @@ export default function PostRevealView({ post }: { post: Post | null | undefined
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-4">
       <div
-        className={`bg-white border-2 border-black rounded-none shadow-[4px_4px_0px_#000] p-6 w-full max-w-2xl transition-all duration-1000 ${
-          isRevealed ? "blur-0" : "blur-sm"
+        className={`bg-white border-2 border-black rounded-none shadow-[4px_4px_0px_#000] p-6 w-full max-w-2xl transition-all duration-1000 ease-out ${
+          isRevealed ? "blur-0 opacity-100" : "blur-md opacity-50 select-none"
         }`}
+        data-testid="post-content"
       >
         <div className="flex justify-between items-center mb-4">
-          <div className="font-mono text-sm">
+          <div className="font-mono text-sm" data-testid="post-meta">
             <p>Theme: {post.theme}</p>
             <p>Archetype: {post.archetype}</p>
           </div>
@@ -61,6 +62,7 @@ export default function PostRevealView({ post }: { post: Post | null | undefined
           <button
             onClick={() => copy(post.content)}
             className="bg-black text-white rounded-none h-12 w-full"
+            data-testid="copy-button"
           >
             {copied ? "COPIÉ !" : "[ COPIER LE TEXTE ]"}
           </button>

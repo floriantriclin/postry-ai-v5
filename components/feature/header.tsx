@@ -25,6 +25,7 @@ export default function Header() {
       <button
         onClick={handleSignOut}
         className="bg-black text-white rounded-none h-12 px-4"
+        data-testid="logout-button"
       >
         Déconnexion
       </button>

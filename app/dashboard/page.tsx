@@ -48,8 +48,6 @@ export default async function DashboardPage() {
 
   return (
       <div>
-        <pre>Session: {JSON.stringify(session, null, 2)}</pre>
-        <pre>Post: {JSON.stringify(post, null, 2)}</pre>
         <PostRevealView post={post} />
       </div>
     );

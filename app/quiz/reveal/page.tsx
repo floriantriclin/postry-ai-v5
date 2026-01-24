@@ -34,28 +34,34 @@ export default function RevealPage() {
 
           if (post && !postError) {
             const meta = post.equalizer_settings as any;
+            const quizAnswers = post.quiz_answers as any;
             
             if (!meta || !meta.profile || !meta.archetype) {
                 setError('Données du post corrompues.');
                 return;
             }
 
+            // Extract acquisition theme from quiz_answers if available, otherwise fallback to post.theme (legacy behavior)
+            const acquisitionTheme = quizAnswers?.acquisition_theme || post.theme;
+
             const restoredState: QuizState = {
                 step: 'FINAL_REVEAL',
                 status: 'idle',
-                themeId: post.theme,
+                themeId: acquisitionTheme,
                 questionsP1: [],
                 questionIndex: 0,
-                answersP1: {},
+                answersP1: quizAnswers?.p1 || {},
                 archetypeData: {
                     archetype: meta.archetype,
                     targetDimensions: []
                 },
                 questionsP2: [],
-                answersP2: {},
+                answersP2: quizAnswers?.p2 || {},
                 currentVector: meta.vector,
                 profileData: meta.profile,
-                postTopic: meta.topic || 'Sujet non disponible',
+                // The 'theme' column in DB now stores the Post Topic (subject)
+                // We use post.theme as the authoritative source for postTopic
+                postTopic: post.theme || meta.topic || 'Sujet non disponible',
                 generatedPost: {
                     hook: post.content.split('\n')[0].substring(0, 50) + "...",
                     content: post.content,

@@ -1,5 +1,7 @@
 import { test, expect } from '@playwright/test';
 
+test.use({ storageState: { cookies: [], origins: [] } });
+
 test('Story 1.9: Post Generation Flow', async ({ page }) => {
   // Inject completed quiz state
   await page.addInitScript(() => {

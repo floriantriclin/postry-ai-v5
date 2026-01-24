@@ -1,6 +1,8 @@
 import { test, expect } from '@playwright/test';
 
 test.describe('Authentication Modal Flow', () => {
+  // Ensure we start unauthenticated so the modal appears
+  test.use({ storageState: { cookies: [], origins: [] } });
 
   let setCompletedQuizState: (page: any) => Promise<void>;
 
@@ -16,6 +18,11 @@ test.describe('Authentication Modal Flow', () => {
           style_analysis: 'The Analysis',
         }),
       });
+    });
+
+    // Mock Pre-Persist to avoid polluting the DB
+    await page.route('**/api/quiz/pre-persist', async (route) => {
+      await route.fulfill({ status: 200, json: { success: true } });
     });
 
     setCompletedQuizState = async (page: any) => {
@@ -82,7 +89,8 @@ test.describe('Authentication Modal Flow', () => {
 
     // 5. Test Case: Valid Email & Success
     // The Supabase fetch call is mocked via addInitScript in beforeEach
-    await page.getByPlaceholder('moi@exemple.com').fill('test@example.com');
+    // We use a different email to avoid polluting the main test user's dashboard
+    await page.getByPlaceholder('moi@exemple.com').fill('modal-test@example.com');
     await page.getByRole('button', { name: 'Envoyez-moi un lien' }).click();
 
     // Check for loading state, then success message
