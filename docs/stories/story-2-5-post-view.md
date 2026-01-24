@@ -33,17 +33,31 @@
     - **Loading** : Utiliser le `LoaderMachine` (style terminal) pendant la récupération des données.
     - **Empty State** : Si aucun post n'est trouvé, afficher un message "Aucun post généré" avec un bouton pour retourner au quiz.
 
-## Notes Techniques / Tâches
+## Notes Techniques / Tâches Détaillées
 
-- **Auth** : S'assurer que le `user_id` est correctement récupéré via la session Supabase/NextAuth.
-- **Data Fetching** : Requête Supabase sur la table `posts` : `.select('*').eq('user_id', userId).order('created_at', { ascending: false }).limit(1)`.
-- **Composant `PostDisplay`** :
-    - Gérer la transition de flou via un état local `isRevealed` (déclenché au `useEffect` de montage).
-- **Clipboard API** : Utiliser `navigator.clipboard.writeText`.
-- **Navigation** : Préparer la structure pour accueillir l'Equalizer (Story 3.1) sans tout casser.
+- **Middleware d'Authentification** :
+  - Appliquer le middleware Next.js sur la route `/dashboard` (ou la route choisie) pour valider la session utilisateur.
+  - Utiliser le client Supabase côté serveur pour vérifier la session.
+- **Data Fetching (Server-Side)** :
+  - Créer une fonction `async` dans le `page.tsx` pour récupérer le dernier post de l'utilisateur.
+  - Requête Supabase : `select('*').eq('user_id', userId).order('created_at', { ascending: false }).limit(1)`.
+  - Gérer le cas où aucun post n'est trouvé et passer cette information au composant client.
+- **Composant Client `PostRevealView`** :
+  - **Gestion de l'animation** :
+    - Recevoir les données du post en props.
+    - Utiliser un état local `isRevealed`, initialisé à `false`.
+    - Utiliser `useEffect` pour passer `isRevealed` à `true` après un court délai (`setTimeout` de ~100ms) pour garantir le rendu initial flouté.
+    - Appliquer les classes CSS conditionnelles : `blur-sm` si `isRevealed` est `false`, `blur-0` si `true`. Ajouter une classe `transition-all duration-1000` pour l'animation.
+  - **Implémentation du "Copy to Clipboard"** :
+    - Créer un hook custom `useCopyToClipboard` pour encapsuler la logique `navigator.clipboard.writeText`.
+    - Le hook doit gérer un état "copied" qui revient à `false` après quelques secondes.
+    - Le bouton affichera "COPIÉ !" quand l'état est `true`.
+  - **Styling (Tailwind)** :
+    - `Card` : `bg-white border-2 border-black rounded-none shadow-[4px_4px_0px_#000]`
+    - `Bouton Primaire` : `bg-black text-white rounded-none h-12`
+    - `Header` : Mettre en place un layout simple avec le logo et le bouton de déconnexion.
 
-## QA & Risques
+## Assurance Qualité
 
-- **Risque** : Flash de contenu non flouté avant l'animation.
-- **Solution** : Initialiser l'état local `isRevealed` à `false`.
-- **Test** : Vérifier que le bouton "Copier" fonctionne sur mobile (Permissions API).
+- **Plan de Test** : La validation de cette story doit suivre scrupuleusement le plan de test défini dans le document de QA Gate.
+- **Document de Référence** : [QA Gate: Story 2.5 - Vue "Post Révélé"](../qa/gates/2.5-post-view.md)
