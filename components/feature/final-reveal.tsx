@@ -14,17 +14,49 @@ interface FinalRevealProps {
   };
   archetype: Archetype;
   vector: Vstyle;
+  initialPost?: PostGenerationResponse | null;
+  onPostGenerated?: (post: PostGenerationResponse, topic: string) => void;
+  topic?: string;
 }
 
-export function FinalReveal({ profile, archetype, vector }: FinalRevealProps) {
-  const [topic, setTopic] = useState('');
+export function FinalReveal({ profile, archetype, vector, initialPost, onPostGenerated, topic: initialTopic }: FinalRevealProps) {
+  const [topic, setTopic] = useState(initialTopic || '');
   const [isLoading, setIsLoading] = useState(false);
-  const [generatedPost, setGeneratedPost] = useState<PostGenerationResponse | null>(null);
-  const [isPostGenerated, setIsPostGenerated] = useState(false);
+  const [generatedPost, setGeneratedPost] = useState<PostGenerationResponse | null>(initialPost || null);
+  const [isPostGenerated, setIsPostGenerated] = useState(!!initialPost);
   const [error, setError] = useState<string | null>(null);
   const [showAnalysis, setShowAnalysis] = useState(false);
+
+  useEffect(() => {
+    if (initialPost) {
+      setGeneratedPost(initialPost);
+      setIsPostGenerated(true);
+    }
+  }, [initialPost]);
+
+  useEffect(() => {
+    if (initialTopic) {
+      setTopic(initialTopic);
+    }
+  }, [initialTopic]);
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [isAuthLoading, setIsAuthLoading] = useState(true);
+
+  // Lock navigation when post is generated to prevent back button usage
+  useEffect(() => {
+    if (isPostGenerated) {
+      // Push current state to stack
+      window.history.pushState(null, "", window.location.href);
+      
+      const handlePopState = () => {
+        // If user tries to go back, push state again to stay here
+        window.history.pushState(null, "", window.location.href);
+      };
+
+      window.addEventListener("popstate", handlePopState);
+      return () => window.removeEventListener("popstate", handlePopState);
+    }
+  }, [isPostGenerated]);
 
   useEffect(() => {
     const checkSession = async () => {
@@ -60,6 +92,7 @@ export function FinalReveal({ profile, archetype, vector }: FinalRevealProps) {
       const data = await res.json();
       setGeneratedPost(data);
       setIsPostGenerated(true);
+      if (onPostGenerated) onPostGenerated(data, topic);
     } catch (err) {
       setError('Impossible de générer le post. Veuillez réessayer.');
       console.error(err);

@@ -35,6 +35,7 @@
 
 - **Analyse des Risques** : [`docs/qa/assessments/2.4-risk-20260123.md`](../qa/assessments/2.4-risk-20260123.md)
 - **Plan de Test** : [`docs/qa/assessments/2.4-test-design-20260123.md`](../qa/assessments/2.4-test-design-20260123.md)
+- **Quality Gate** : [`docs/qa/gates/2.4-reveal-flow.md`](../qa/gates/2.4-reveal-flow.md)
 
 ## Plan d'Action SM
 
@@ -51,14 +52,14 @@
 ## Tâches Techniques
 
 ### 1. Base de Données (Migration & Triggers)
-- [ ] **Tâche 2.4.1 :** Exécuter la migration [`20260123-update-posts-schema.md`](docs/architecture/migrations/20260123-update-posts-schema.md).
-- [ ] **Tâche 2.4.2 :** Créer un Trigger SQL `on_auth_user_created` (ou modifier l'existant) pour :
+- [x] **Tâche 2.4.1 :** Exécuter la migration [`20260123-update-posts-schema.md`](docs/architecture/migrations/20260123-update-posts-schema.md).
+- [x] **Tâche 2.4.2 :** Créer un Trigger SQL `on_auth_user_created` (ou modifier l'existant) pour :
     - Rechercher les posts dans `public.posts` où `email = new.email` AND `status = 'pending'`.
     - Mettre à jour ces posts avec `user_id = new.id` et `status = 'revealed'`.
     - *Note:* Cette approche garantit que dès que l'utilisateur est confirmé, ses données sont liées atomiquement.
 
 ### 2. Backend (API Pre-Persist)
-- [ ] **Tâche 2.4.3 :** Implémenter l'endpoint API `POST /api/quiz/pre-persist`.
+- [x] **Tâche 2.4.3 :** Implémenter l'endpoint API `POST /api/quiz/pre-persist`.
     - **Input:** `{ email, stylistic_vector, profile, theme, post_content, quiz_answers }` + Validation Zod.
     - **Logic:**
         - Vérifier si un user existe déjà (optionnel, sinon insert direct).
@@ -67,10 +68,10 @@
     - **Security:** Rate Limiting (si possible via Middleware ou simple check).
 
 ### 3. Frontend (Intégration & Sécurisation)
-- [ ] **Tâche 2.4.4 :** Mettre à jour `components/feature/auth-modal.tsx` (ou le hook `useQuizPersistence`) pour appeler `/api/quiz/pre-persist` lors de la soumission du formulaire, *avant* d'appeler `signInWithOtp`.
-- [ ] **Tâche 2.4.5 :** Implémenter le verrouillage de navigation ("Soft Lock").
+- [x] **Tâche 2.4.4 :** Mettre à jour `components/feature/auth-modal.tsx` (ou le hook `useQuizPersistence`) pour appeler `/api/quiz/pre-persist` lors de la soumission du formulaire, *avant* d'appeler `signInWithOtp`.
+- [x] **Tâche 2.4.5 :** Implémenter le verrouillage de navigation ("Soft Lock").
     - Utiliser `window.history.pushState` pour empêcher le retour arrière après l'affichage de l'écran "Check your email".
-- [ ] **Tâche 2.4.6 :** Créer la page de redirection post-login (`/quiz/reveal` ou similaire) qui affiche le loader puis redirige vers le dashboard ou affiche le post (selon Story 2.5). *Note: Pour cette story, une simple page de succès suffit.*
+- [x] **Tâche 2.4.6 :** Créer la page de redirection post-login (`/quiz/reveal` ou similaire) qui affiche le loader puis redirige vers le dashboard ou affiche le post (selon Story 2.5). *Note: Pour cette story, une simple page de succès suffit.*
 
 ### 4. Tests
-- [ ] **Tâche 2.4.7 :** Test E2E couvrant le flux complet (Génération -> Pre-persist -> Auth -> Reveal).
+- [x] **Tâche 2.4.7 :** Test E2E couvrant le flux complet (Génération -> Pre-persist -> Auth -> Reveal).

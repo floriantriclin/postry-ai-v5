@@ -117,11 +117,12 @@ describe('MyComponent', () => {
 
 ## 7. Gabarit de Nouveau Fichier (Boilerplate)
 
-Copiez-collez ceci pour démarrer un nouveau test :
+Copiez-collez ceci pour démarrer un nouveau test.
+**Note :** Avec `globals: true`, il est recommandé de NE PAS importer explicitement `describe`, `it`, `expect` pour éviter des conflits dans certains environnements.
 
 ```typescript
 // [nom].test.ts
-import { describe, it, expect } from 'vitest'; // Optionnel car globals: true
+/// <reference types="vitest/globals" />
 
 describe('NomDuModule', () => {
   it('devrait [comportement attendu]', () => {
@@ -135,4 +136,23 @@ describe('NomDuModule', () => {
     expect(result).toBe('TEST');
   });
 });
+```
+
+## 8. Problèmes Courants et Solutions
+
+### Crash lors de l'import (Next.js / Env Vars)
+Si vous testez du code qui utilise `lib/env.ts` ou `lib/supabase-admin.ts`, le test peut échouer avec "No test suite found" car la validation Zod des variables d'environnement échoue au chargement du module.
+
+**Solution :** Mockez le module d'environnement ou les variables AVANT les imports qui les utilisent.
+
+```typescript
+// Exemple de mock pour éviter le crash
+vi.mock("@/lib/env", () => ({
+  env: {
+    NEXT_PUBLIC_SUPABASE_URL: "http://localhost",
+    SUPABASE_SERVICE_ROLE_KEY: "mock-key",
+  },
+}));
+
+import { maFonction } from './mon-fichier-qui-utilise-env';
 ```

@@ -2,6 +2,7 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import { signInWithOtp } from "@/lib/auth";
+import { z } from "zod";
 import { X } from "lucide-react";
 
 interface AuthModalProps {
@@ -51,6 +52,14 @@ export function AuthModal({ onPreAuth }: AuthModalProps) {
     e.preventDefault();
     setError(null);
     setSuccess(false);
+
+    const emailSchema = z.string().email({ message: "Adresse email invalide" });
+    const validation = emailSchema.safeParse(email);
+
+    if (!validation.success) {
+      setError(validation.error.issues[0].message);
+      return;
+    }
 
     setLoading(true);
 
