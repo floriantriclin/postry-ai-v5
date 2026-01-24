@@ -20,7 +20,7 @@ BEGIN
   UPDATE public.posts
   SET user_id = NEW.id,
       status = 'revealed'
-  WHERE email = NEW.email
+  WHERE LOWER(email) = LOWER(NEW.email)
     AND status = 'pending';
   RETURN NEW;
 END;

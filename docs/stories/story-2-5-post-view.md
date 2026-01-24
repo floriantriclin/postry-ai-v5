@@ -59,5 +59,6 @@
 
 ## Assurance Qualité
 
-- **Plan de Test** : La validation de cette story doit suivre scrupuleusement le plan de test défini dans le document de QA Gate.
+- **Analyse des Risques** : [Risk Profile for Story 2.5](../qa/assessments/2.5-risk-profile.md)
+- **Plan de Test** : [Test Design for Story 2.5](../qa/assessments/2.5-test-design.md)
 - **Document de Référence** : [QA Gate: Story 2.5 - Vue "Post Révélé"](../qa/gates/2.5-post-view.md)

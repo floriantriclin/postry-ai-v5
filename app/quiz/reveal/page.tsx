@@ -12,71 +12,77 @@ export default function RevealPage() {
 
   useEffect(() => {
     const restoreSession = async () => {
-      try {
-        const { data: { session } } = await supabase.auth.getSession();
-        
-        if (!session) {
-          router.push('/');
-          return;
-        }
+      const MAX_RETRIES = 5;
+      const RETRY_DELAY = 1000; // 1 second
 
-        // Fetch the user's revealed post
-        const { data: post, error: postError } = await supabase
-          .from('posts')
-          .select('*')
-          .eq('user_id', session.user.id)
-          // We look for the most recent post
-          .order('created_at', { ascending: false })
-          .limit(1)
-          .single();
+      for (let i = 0; i < MAX_RETRIES; i++) {
+        try {
+          const { data: { session } } = await supabase.auth.getSession();
+          
+          if (!session) {
+            router.push('/');
+            return;
+          }
 
-        if (postError || !post) {
-            console.error('No post found', postError);
+          const { data: post, error: postError } = await supabase
+            .from('posts')
+            .select('*')
+            .eq('user_id', session.user.id)
+            .order('created_at', { ascending: false })
+            .limit(1)
+            .single();
+
+          if (post && !postError) {
+            const meta = post.equalizer_settings as any;
+            
+            if (!meta || !meta.profile || !meta.archetype) {
+                setError('Données du post corrompues.');
+                return;
+            }
+
+            const restoredState: QuizState = {
+                step: 'FINAL_REVEAL',
+                status: 'idle',
+                themeId: post.theme,
+                questionsP1: [],
+                questionIndex: 0,
+                answersP1: {},
+                archetypeData: {
+                    archetype: meta.archetype,
+                    targetDimensions: []
+                },
+                questionsP2: [],
+                answersP2: {},
+                currentVector: meta.vector,
+                profileData: meta.profile,
+                postTopic: meta.topic || 'Sujet non disponible',
+                generatedPost: {
+                    hook: post.content.split('\n')[0].substring(0, 50) + "...",
+                    content: post.content,
+                    cta: "En savoir plus",
+                    style_analysis: "Analyse retrouvée depuis votre sauvegarde."
+                },
+                error: null
+            };
+            
+            localStorage.setItem('ice_quiz_state_v1', JSON.stringify(restoredState));
+            router.push('/quiz');
+            return; // Success, exit the loop
+          }
+
+          // If post not found, wait and retry
+          if (i < MAX_RETRIES - 1) {
+            await new Promise(resolve => setTimeout(resolve, RETRY_DELAY));
+          } else {
+            console.error('No post found after multiple retries', postError);
             setError('Post introuvable. Veuillez réessayer de générer un post.');
             return;
+          }
+        } catch (e) {
+          console.error('Error restoring session', e);
+          setError('Une erreur est survenue lors de la récupération de votre post.');
+          return; // Exit on other errors
         }
-
-        const meta = post.equalizer_settings as any;
-        
-        if (!meta || !meta.profile || !meta.archetype) {
-            setError('Données du post corrompues.');
-            return;
-        }
-
-        // Reconstruct State
-        // Note: Since we only persisted the 'content' string, we reconstruct the object best-effort.
-        const restoredState: QuizState = {
-            step: 'FINAL_REVEAL',
-            status: 'idle',
-            themeId: post.theme,
-            questionsP1: [],
-            questionIndex: 0,
-            answersP1: {},
-            archetypeData: {
-                archetype: meta.archetype,
-                targetDimensions: []
-            },
-            questionsP2: [],
-            answersP2: {},
-            currentVector: meta.vector,
-            profileData: meta.profile,
-            generatedPost: {
-                hook: post.content.split('\n')[0].substring(0, 50) + "...", // Approximate hook
-                content: post.content,
-                cta: "En savoir plus", // Default CTA
-                style_analysis: "Analyse retrouvée depuis votre sauvegarde."
-            },
-            error: null
-        };
-        
-        localStorage.setItem('ice_quiz_state_v1', JSON.stringify(restoredState));
-        
-        // Redirect to Quiz Engine which will pick up the state
-        router.push('/quiz');
-
-      } catch (e) {
-        console.error('Error restoring session', e);
-        setError('Une erreur est survenue lors de la récupération de votre post.');
       }
     };
 

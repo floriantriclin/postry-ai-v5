@@ -36,7 +36,7 @@ export async function signInWithOtp(email: string, redirectTo: string = '/quiz/r
     const { error } = await supabase.auth.signInWithOtp({
       email,
       options: {
-        emailRedirectTo: `${env.NEXT_PUBLIC_BASE_URL}/auth/callback?next=${encodeURIComponent(redirectTo)}`,
+        emailRedirectTo: `${env.NEXT_PUBLIC_BASE_URL}/auth/confirm?next=${encodeURIComponent(redirectTo)}`,
       },
     });
 

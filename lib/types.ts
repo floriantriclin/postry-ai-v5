@@ -88,6 +88,7 @@ export interface Post {
   id: string; // uuid
   user_id: string; // uuid
   theme: string;
+  archetype: string | null;
   content: string;
   quiz_answers: z.infer<typeof QuizResponseSchema> | null; // jsonb
   equalizer_settings: unknown | null; // jsonb

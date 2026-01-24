@@ -49,3 +49,11 @@ Ces instructions guident le développement pour assurer la cohérence et la qual
 
 *   **Commits :** Conventionnels (ex: `feat: add quiz engine`, `fix: typo in prompt`).
 *   **Branches :** `main` (Prod), `dev` (Dev). Feature branches : `feat/nom-feature`.
+
+## 6. Gestion des Cookies (Server Components & Actions)
+
+*   **Accès :** `const cookieStore = await cookies()`
+*   **Lecture :** `const theme = cookieStore.get('theme')` (Retourne `{ name, value }`)
+*   **Écriture :** `cookieStore.set('theme', 'dark')`
+
+**Important :** L'API `cookies()` est disponible dans les Server Components, Server Actions, et Route Handlers. Il est impératif d'utiliser `await cookies()` pour y accéder.
