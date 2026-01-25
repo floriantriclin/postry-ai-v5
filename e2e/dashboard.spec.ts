@@ -19,7 +19,7 @@ test.describe("Dashboard", () => {
 
       // Verify Initial Blur State (Robust check)
       // We expect the blur class to be present initially
-      await expect(postContent).toHaveClass(/blur-md/);
+      await expect(postContent).toHaveClass(/blur-sm/);
       
       // Verify Transition to Clear
       // The transition takes 1000ms + 100ms delay
@@ -37,10 +37,10 @@ test.describe("Dashboard", () => {
       await context.grantPermissions(['clipboard-write', 'clipboard-read']);
       await expect(page).toHaveURL("/dashboard");
       await page.getByTestId("copy-button").click();
-      await expect(page.getByRole("button", { name: "COPIÉ !" })).toBeVisible();
+      await expect(page.getByTestId("copy-button")).toHaveText("Texte copié !");
       
       // Wait for reset
-      await expect(page.getByTestId("copy-button")).toContainText("[ COPIER LE TEXTE ]", { timeout: 5000 });
+      await expect(page.getByTestId("copy-button")).toHaveText("Copier le texte", { timeout: 5000 });
     });
 
     test("should logout the user", async ({ page }) => {
@@ -59,7 +59,7 @@ test.describe("Dashboard", () => {
       const context = await browser.newContext({ storageState: undefined });
       const page = await context.newPage();
       await page.goto("/dashboard");
-      await expect(page).toHaveURL("/");
+      await expect(page).toHaveURL(/\/\?redirectedFrom=%2Fdashboard/);
     });
   });
 });

@@ -96,6 +96,13 @@ setup("authenticate", async ({ page }) => {
       }
       userId = user.id;
 
+      // Ensure public user exists (Trigger fallback)
+      const { data: publicUser } = await supabaseAdmin.from('users').select('id').eq('id', userId).single();
+      if (!publicUser) {
+          console.log("⚠️ Public user missing (trigger failed?), inserting manually...");
+          await supabaseAdmin.from('users').insert({ id: userId, email: testUser.email });
+      }
+
       // Sign In
       const { data: { session }, error: loginError } = await supabaseClient.auth.signInWithPassword(testUser);
       if (loginError) throw loginError;
@@ -130,8 +137,10 @@ setup("authenticate", async ({ page }) => {
   
   if (!existingPosts || existingPosts.length === 0) {
       console.log("📝 Creating seed post...");
-      await supabaseAdmin.from('posts').insert({
+      const { error: insertError } = await supabaseAdmin.from('posts').insert({
           user_id: userId,
+          email: testUser.email,
+          status: 'revealed',
           theme: "Tech Leadership",
           content: "This is a robust test post content used for E2E testing.\n\nIt serves to verify the dashboard display.",
           created_at: new Date().toISOString(),
@@ -147,6 +156,11 @@ setup("authenticate", async ({ page }) => {
               vector: [1,2,3,4,5,6]
           }
       });
+
+      if (insertError) {
+        console.error("❌ Failed to insert seed post:", insertError);
+        throw insertError;
+      }
   } else {
       console.log("✅ Seed post already exists.");
   }

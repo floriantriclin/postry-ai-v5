@@ -19,8 +19,8 @@ describe("PostRevealView", () => {
   it("should render the post content", () => {
     render(<PostRevealView post={mockPost} />);
 
-    expect(screen.getByText("Theme: test-theme")).toBeInTheDocument();
-    expect(screen.getByText("Archetype: test-archetype")).toBeInTheDocument();
+    expect(screen.getByRole("heading", { level: 2, name: "test-theme" })).toBeInTheDocument();
+    expect(screen.getByText("Tone: test-archetype")).toBeInTheDocument();
     expect(screen.getByText("test-content")).toBeInTheDocument();
   });
 

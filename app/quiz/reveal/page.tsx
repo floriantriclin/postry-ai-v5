@@ -35,6 +35,7 @@ export default function RevealPage() {
           if (post && !postError) {
             const meta = post.equalizer_settings as any;
             const quizAnswers = post.quiz_answers as any;
+            const components = meta.generated_components || {};
             
             if (!meta || !meta.profile || !meta.archetype) {
                 setError('Données du post corrompues.');
@@ -63,16 +64,17 @@ export default function RevealPage() {
                 // We use post.theme as the authoritative source for postTopic
                 postTopic: post.theme || meta.topic || 'Sujet non disponible',
                 generatedPost: {
-                    hook: post.content.split('\n')[0].substring(0, 50) + "...",
-                    content: post.content,
-                    cta: "En savoir plus",
-                    style_analysis: "Analyse retrouvée depuis votre sauvegarde."
+                    hook: components.hook || post.content.split('\n')[0].substring(0, 50) + "...",
+                    content: components.content || post.content,
+                    cta: components.cta || "En savoir plus",
+                    style_analysis: components.style_analysis || "Analyse retrouvée depuis votre sauvegarde."
                 },
                 error: null
             };
             
             localStorage.setItem('ice_quiz_state_v1', JSON.stringify(restoredState));
-            router.push('/quiz');
+            // Correctif 2.6.C: Redirect to dashboard to avoid white page on /quiz and ensure data persistence usage
+            router.push('/dashboard');
             return; // Success, exit the loop
           }
 

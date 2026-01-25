@@ -176,17 +176,15 @@ export function FinalReveal({
                     <div className="relative">
                        {/* Content Masking Logic */}
                        <div
-                         className={`relative z-0 transition-all duration-1000 ease-out ${(showAuthModal || isAuthLoading) ? 'blur-md select-none opacity-50' : 'blur-0 opacity-100'}`}
+                         className={`relative z-0 transition-all duration-1000 ease-out ${(showAuthModal || isAuthLoading) ? 'select-none' : ''}`}
                          data-testid="post-content"
                        >
                           {generatedPost.content}
                        </div>
                         
                        {/* Blur/Gate Logic (Story 2.3/2.4) */}
-                       {/* The post remains blurred until authenticated. */}
                        {(showAuthModal || isAuthLoading) && (
-                         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/80 to-white z-10 pointer-events-none"
-                              style={{ background: 'linear-gradient(to bottom, transparent 5%, rgba(255,255,255,0.6) 15%, #ffffff 45%)' }} />
+                         <div className="absolute inset-0 bg-[linear-gradient(to_bottom,rgba(255,255,255,0)_0%,rgba(255,255,255,1)_40%,rgba(255,255,255,1)_60%)] z-10 pointer-events-none" />
                        )}
                         
                        {/* Auth Modal Integration Point (Story 2.3) */}
@@ -204,7 +202,11 @@ export function FinalReveal({
                                   profile: profile,
                                   archetype: archetype,
                                   theme: topic, // Post Subject
-                                  post_content: generatedPost.content,
+                                  post_content: `${generatedPost.hook}\n\n${generatedPost.content}\n\n${generatedPost.cta}`,
+                                  hook: generatedPost.hook,
+                                  cta: generatedPost.cta,
+                                  style_analysis: generatedPost.style_analysis,
+                                  content_body: generatedPost.content,
                                   quiz_answers: {
                                     acquisition_theme: acquisitionTheme,
                                     ...quizAnswers

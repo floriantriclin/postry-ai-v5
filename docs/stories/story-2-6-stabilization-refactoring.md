@@ -77,3 +77,27 @@
 - **Validation** :
     - Tous les tests E2E (Dashboard, Quiz, Auth) doivent passer (vert) de manière stable (3 runs consécutifs sans flake).
     - Vérification manuelle du flux "Nouvel utilisateur" et "Utilisateur existant".
+
+## Intégration Feedback Utilisateur (Critique - 24/01/2026)
+
+Suite aux tests manuels, les correctifs suivants sont **PRIORITAIRES** :
+
+### A. Data Integrity (CRITIQUE) - Confusion "Hook" vs "Content"
+**Constat :** Le champ `Hook` est tronqué ou inexistant dans le Post final. La variable `post.content` en base ne stocke que le corps du texte, perdant la structure générée par l'IA (Hook, CTA, Analyse).
+**Correctif Technique :**
+- [x] **Schema Update :** Modifier `app/api/quiz/pre-persist/route.ts` pour accepter un objet structuré (`hook`, `content`, `cta`, `style_analysis`) au lieu de juste `post_content`.
+- [x] **Database :** Stocker ce contenu structuré. Option recommandée : JSONB dans une nouvelle colonne `structured_content` OU sérialisation JSON dans la colonne `content` existante (moins propre mais rapide).
+- [x] **Front-End :** Mettre à jour `app/quiz/reveal/page.tsx` et `app/dashboard/post-reveal-view.tsx` pour lire et afficher ces champs distincts.
+
+### B. UI/UX - Blur & Reveal
+**Constat :** Le flou est trop fort ("illisible" au lieu de "devinable") et le reveal est trop rapide/instantané.
+**Correctif Technique :**
+- [x] **Blur :** Passer de `blur-md` à `blur-sm` (ou custom 4px) dans `app/dashboard/post-reveal-view.tsx`.
+- [x] **Transition :** Augmenter la durée de transition de `1000ms` à `2500ms` (2.5s).
+- [x] **Timing :** Ajouter un délai initial avant le déclenchement du reveal (ex: 500ms) pour laisser le temps à l'utilisateur de "voir" l'état flouté avant l'animation.
+
+### C. Gestion Utilisateur Existant (White Page)
+**Constat :** Risque de page blanche sur `/quiz` après Magic Link pour un utilisateur existant.
+**Correctif Technique :**
+- [x] **Redirection :** Si `app/quiz/reveal/page.tsx` détecte un utilisateur authentifié AVEC un post déjà révélé/sauvegardé, rediriger vers `/dashboard` au lieu de `/quiz`.
+- [x] **QuizEngine :** S'assurer que `QuizEngine` gère gracieusement le chargement depuis le `localStorage` si l'utilisateur est renvoyé sur `/quiz`.

@@ -10,7 +10,11 @@ const PrePersistSchema = z.object({
   archetype: z.any(),
   theme: z.string(),
   post_content: z.string(),
-  quiz_answers: z.any().optional()
+  quiz_answers: z.any().optional(),
+  hook: z.string().optional(),
+  cta: z.string().optional(),
+  style_analysis: z.string().optional(),
+  content_body: z.string().optional()
 });
 
 export async function POST(req: NextRequest) {
@@ -22,14 +26,32 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: validation.error }, { status: 400 });
     }
 
-    const { email, stylistic_vector, profile, archetype, theme, post_content, quiz_answers } = validation.data;
+    const {
+      email,
+      stylistic_vector,
+      profile,
+      archetype,
+      theme,
+      post_content,
+      quiz_answers,
+      hook,
+      cta,
+      style_analysis,
+      content_body
+    } = validation.data;
 
     // Store vector/profile in equalizer_settings as temporary storage
     // This allows retrieval of context even if the user isn't fully set up yet
     const metaData = {
       vector: stylistic_vector,
       profile: profile,
-      archetype: archetype
+      archetype: archetype,
+      generated_components: {
+        hook,
+        cta,
+        style_analysis,
+        content: content_body
+      }
     };
 
     // Check if the user already exists in auth.users to link immediately
