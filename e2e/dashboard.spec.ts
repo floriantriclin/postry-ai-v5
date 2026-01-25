@@ -15,7 +15,7 @@ test.describe("Dashboard", () => {
       await expect(page).toHaveURL("/dashboard");
 
       const postContent = page.getByTestId("post-content");
-      const postMeta = page.getByTestId("post-meta");
+      // const postMeta = page.getByTestId("post-meta"); // Element removed in new UI
 
       // Verify Initial Blur State (Robust check)
       // We expect the blur class to be present initially
@@ -27,7 +27,8 @@ test.describe("Dashboard", () => {
       await expect(postContent).toHaveClass(/opacity-100/);
 
       // Verify Content
-      await expect(postMeta).toContainText("Theme: Tech Leadership");
+      // Theme is displayed directly without prefix in new UI
+      await expect(postContent).toContainText("Tech Leadership");
       await expect(postContent).toContainText("This is a robust test post");
     });
 
