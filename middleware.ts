@@ -71,6 +71,11 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL("/dashboard", request.url));
   }
 
+  // Story 2.7: Redirect /quiz/reveal to /dashboard
+  if (request.nextUrl.pathname === '/quiz/reveal') {
+    console.log('Redirecting /quiz/reveal to /dashboard (Story 2.7)');
+    return NextResponse.redirect(new URL('/dashboard', request.url));
+  }
 
   return response;
 }

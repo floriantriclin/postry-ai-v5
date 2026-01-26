@@ -15,9 +15,9 @@ export interface AuthResult {
 /**
  * Initiates the Magic Link login flow.
  * @param email User's email address
- * @param redirectTo Path to redirect to after successful login (default: /quiz/reveal)
+ * @param redirectTo Path to redirect to after successful login (default: /dashboard)
  */
-export async function signInWithOtp(email: string, redirectTo: string = '/quiz/reveal'): Promise<AuthResult> {
+export async function signInWithOtp(email: string, redirectTo: string = '/dashboard'): Promise<AuthResult> {
   // 1. Validate Email
   const validation = emailSchema.safeParse(email);
 

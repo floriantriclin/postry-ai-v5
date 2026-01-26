@@ -165,45 +165,6 @@ it("should trap focus within the modal", async () => {
   expect(submitButton).toHaveFocus();
 });
 
-// C2.3.12: Pre-Auth Hook Execution
-it("should execute onPreAuth before authentication if provided", async () => {
-  const user = userEvent.setup();
-  const onPreAuthMock = vi.fn().mockResolvedValue(true);
-  signInWithOtpMock.mockResolvedValue({ success: true });
-
-  render(<AuthModal onPreAuth={onPreAuthMock} />);
-  const emailInput = screen.getByLabelText("Email Address");
-  const submitButton = screen.getByRole("button", { name: "Envoyez-moi un lien" });
-
-  await user.type(emailInput, "test@example.com");
-  await user.click(submitButton);
-
-  await waitFor(() => {
-    expect(onPreAuthMock).toHaveBeenCalledWith("test@example.com");
-    expect(signInWithOtpMock).toHaveBeenCalledWith("test@example.com");
-  });
-});
-
-// C2.3.13: Pre-Auth Hook Failure
-it("should stop and show error if onPreAuth fails", async () => {
-  const user = userEvent.setup();
-  const onPreAuthMock = vi.fn().mockResolvedValue(false);
-  signInWithOtpMock.mockResolvedValue({ success: true }); // Should not be called
-
-  render(<AuthModal onPreAuth={onPreAuthMock} />);
-  const emailInput = screen.getByLabelText("Email Address");
-  const submitButton = screen.getByRole("button", { name: "Envoyez-moi un lien" });
-
-  await user.type(emailInput, "test@example.com");
-  await user.click(submitButton);
-
-  await waitFor(() => {
-    expect(onPreAuthMock).toHaveBeenCalledWith("test@example.com");
-  });
-  
-  expect(signInWithOtpMock).not.toHaveBeenCalled();
-  expect(await screen.findByText("Impossible de sauvegarder votre post. Veuillez réessayer.")).toBeInTheDocument();
-});
-
 // C2.3.10 is not applicable as title and description are not props
+// C2.3.12 & C2.3.13: Pre-Auth Hook tests removed (Story 2.7 - onPreAuth deprecated)
 });

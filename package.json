@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "test": "vitest --no-color",
+    "test:coverage": "vitest --no-color --coverage",
     "test:e2e": "cross-env DOTENV_CONFIG_PATH=.env playwright test > test.log 2>&1"
   },
   "dependencies": {
@@ -33,6 +34,7 @@
     "@types/react": "latest",
     "@types/react-dom": "latest",
     "@vitejs/plugin-react": "^5.1.2",
+    "@vitest/coverage-v8": "^4.0.18",
     "autoprefixer": "^10.0.0",
     "cross-env": "^10.1.0",
     "jsdom": "^27.4.0",

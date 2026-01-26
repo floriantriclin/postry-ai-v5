@@ -190,42 +190,7 @@ export function FinalReveal({
                        {/* Auth Modal Integration Point (Story 2.3) */}
                        {showAuthModal && !isAuthLoading && (
                          <div className="absolute inset-0 z-20 flex items-center justify-center">
-                          <AuthModal onPreAuth={async (email) => {
-                            if (!generatedPost) return false;
-                            try {
-                              const res = await fetch('/api/quiz/pre-persist', {
-                                method: 'POST',
-                                headers: { 'Content-Type': 'application/json' },
-                                body: JSON.stringify({
-                                  email,
-                                  stylistic_vector: vector,
-                                  profile: profile,
-                                  archetype: archetype,
-                                  theme: topic, // Post Subject
-                                  post_content: `${generatedPost.hook}\n\n${generatedPost.content}\n\n${generatedPost.cta}`,
-                                  hook: generatedPost.hook,
-                                  cta: generatedPost.cta,
-                                  style_analysis: generatedPost.style_analysis,
-                                  content_body: generatedPost.content,
-                                  quiz_answers: {
-                                    acquisition_theme: acquisitionTheme,
-                                    ...quizAnswers
-                                  }
-                                })
-                              });
-                              if (!res.ok) {
-                                console.error('Failed to pre-persist');
-                                return false;
-                              }
-
-                              // Clean up local storage on success
-                              localStorage.removeItem('ice_quiz_state_v1');
-                              return true;
-                            } catch (e) {
-                              console.error('Pre-persist error:', e);
-                              return false;
-                            }
-                          }} />
+                          <AuthModal />
                         </div>
                       )}
                    </div>

@@ -87,13 +87,6 @@ test.describe('Critical User Journeys', () => {
         });
       });
 
-      await page.route('**/api/quiz/pre-persist', async (route) => {
-        await route.fulfill({
-          status: 200,
-          json: { success: true }
-        });
-      });
-
       // Mock Supabase auth
       await page.addInitScript(() => {
         const originalFetch = window.fetch;
@@ -304,7 +297,7 @@ test.describe('Critical User Journeys', () => {
       await expect(page.getByTestId('start-quiz-btn')).toBeVisible();
     });
 
-    test('E2E-ERROR-02: Pre-persist failure handling', async ({ page }) => {
+    test('E2E-ERROR-02: Auth flow handles errors gracefully', async ({ page }) => {
       // Set up completed quiz state
       await page.addInitScript(() => {
         const state = {
@@ -335,21 +328,14 @@ test.describe('Critical User Journeys', () => {
         });
       });
 
-      // Mock pre-persist failure
-      await page.route('**/api/quiz/pre-persist', async (route) => {
-        await route.fulfill({
-          status: 500,
-          body: JSON.stringify({ error: 'Database error' })
-        });
-      });
-
+      // Mock auth failure
       await page.addInitScript(() => {
         const originalFetch = window.fetch;
         window.fetch = async (url, options) => {
           if (typeof url === 'string' && url.includes('/auth/v1/otp')) {
             return new Response(
-              JSON.stringify({ data: { user: null, session: null }, error: null }),
-              { status: 200, headers: { 'Content-Type': 'application/json' } }
+              JSON.stringify({ error: { message: 'Rate limit exceeded' } }),
+              { status: 429, headers: { 'Content-Type': 'application/json' } }
             );
           }
           return originalFetch(url, options);
@@ -367,8 +353,8 @@ test.describe('Critical User Journeys', () => {
       await page.getByLabel('Email Address').fill('test@example.com');
       await page.getByRole('button', { name: 'Envoyez-moi un lien' }).click();
 
-      // Verify error message
-      await expect(page.getByText('Impossible de sauvegarder votre post. Veuillez réessayer.')).toBeVisible({ timeout: 10000 });
+      // Verify error message for rate limit
+      await expect(page.getByText('Trop de demandes. Veuillez réessayer plus tard.')).toBeVisible({ timeout: 10000 });
     });
   });
 

@@ -44,10 +44,55 @@ function AuthConfirmContent() {
         if (!response.ok) {
           console.error('Failed to set server session');
           setErrorMsg('Erreur serveur lors de la synchronisation de la session.');
-        } else {
-          const next = searchParams.get('next') || '/dashboard';
-          router.replace(next);
+          setSessionResolved(true);
+          return;
         }
+
+        // Persist quiz data from localStorage if it exists
+        const quizStateRaw = localStorage.getItem('ice_quiz_state_v1');
+        if (quizStateRaw) {
+          try {
+            const quizState = JSON.parse(quizStateRaw);
+            
+            // Only persist if we have a generated post
+            if (quizState.generatedPost && quizState.profileData && quizState.currentVector) {
+              const persistResponse = await fetch('/api/auth/persist-on-login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  email: session.user.email,
+                  stylistic_vector: quizState.currentVector,
+                  profile: quizState.profileData,
+                  archetype: quizState.archetypeData?.archetype,
+                  theme: quizState.postTopic || 'Sujet non disponible',
+                  post_content: `${quizState.generatedPost.hook}\n\n${quizState.generatedPost.content}\n\n${quizState.generatedPost.cta}`,
+                  hook: quizState.generatedPost.hook,
+                  cta: quizState.generatedPost.cta,
+                  style_analysis: quizState.generatedPost.style_analysis,
+                  content_body: quizState.generatedPost.content,
+                  quiz_answers: {
+                    acquisition_theme: quizState.themeId,
+                    p1: quizState.answersP1,
+                    p2: quizState.answersP2
+                  }
+                })
+              });
+
+              if (persistResponse.ok) {
+                console.log('Quiz data persisted successfully');
+                // Clean up localStorage after successful persist
+                localStorage.removeItem('ice_quiz_state_v1');
+              } else {
+                console.error('Failed to persist quiz data');
+              }
+            }
+          } catch (e) {
+            console.error('Error persisting quiz data:', e);
+          }
+        }
+
+        // Redirect directly to dashboard (no intermediate /quiz/reveal)
+        router.replace('/dashboard');
         setSessionResolved(true);
       }
     };

@@ -1,8 +1,8 @@
 # Project Status
 
 **Current Phase:** Sprint 2 - Conversion & Identity
-**Date:** 2026-01-22
-**Milestone:** Epic 3 - Dashboard & Personnalisation
+**Date:** 2026-01-26
+**Milestone:** Epic 2 - Conversion & Identity (Finalisation)
 
 ## Epic Status
 
@@ -17,12 +17,13 @@
 
 | Story | Title | Status |
 | :--- | :--- | :--- |
-| **Story 2.1** | Configuration Base de Données & Schéma Utilisateur | [DONE] |
-| **Story 2.2** | Authentification par Magic Link (Backend & SDK) | [COMPLETED] |
-| **Story 2.3** | Modal de Capture & Déclenchement Auth | [DONE] |
-| **Story 2.4** | Flux de Révélation & Persistance Post-Inscription | [DONE] |
-| **Story 2.5** | Vue "Post Révélé" & Dashboard Initial | [DONE*] |
-| **Story 2.6** | Stabilisation, Refactoring & Fiabilisation | [STARTED] |
+| **Story 2.1** | Configuration Base de Données & Schéma Utilisateur | ✅ [DONE] |
+| **Story 2.2** | Authentification par Magic Link (Backend & SDK) | ✅ [COMPLETED] |
+| **Story 2.3** | Modal de Capture & Déclenchement Auth | ✅ [DONE] |
+| **Story 2.4** | Flux de Révélation & Persistance Post-Inscription | ✅ [DONE] |
+| **Story 2.5** | Vue "Post Révélé" & Dashboard Initial | ✅ [DONE] |
+| **Story 2.6** | Stabilisation, Refactoring & Fiabilisation | ✅ [COMPLETED] |
+| **Story 2.7** | Simplification Architecture Auth & Persistance | 🟡 [READY] |
 
 ## Sprint 1 Progress (Frontend Foundation) - COMPLETED
 
@@ -44,8 +45,12 @@
 
 ## Next Steps
 
-1.  **Stabilisation (Story 2.6):** Fiabilisation de la persistance, destruction des données locales et gestion des cas limites.
-2.  **Dashboard (Epic 3):** Préparation du démarrage de l'App Shell et de l'historique (Story 3.1).
+1.  **Story 2.7 (Architecture Simplification):** Migration vers architecture simplifiée (8-10h, ROI 1,318%)
+    - Créer endpoint `persist-on-login`
+    - Supprimer `pre-persist` API et `/quiz/reveal` page
+    - Adapter tests E2E (3 navigateurs)
+    - Déploiement progressif (staging → prod)
+2.  **Epic 3 (Dashboard):** Préparation du démarrage de l'App Shell et de l'historique (Story 3.1)
 
 ## Technical Achievements (Sprint 1)
 
@@ -58,6 +63,8 @@
 *   **Quiz Logic API:** Implemented `POST /api/quiz/archetype` and `POST /api/quiz/refine` with 100% logic coverage and Zod validation.
 *   **Profile Synthesis API:** Implemented `POST /api/quiz/profile` with Gemini, Drift Hint calculation, and strict 45-75 word count validation.
 *   **Zero-Latency Augmentation:** Implemented Client-Side vector refinement for Phase 2, eliminating network latency for Q7-Q11.
+*   **E2E Test Suite:** Comprehensive cross-browser testing (Chromium, Firefox, WebKit) with auth setup and critical user journeys validation.
+*   **Architecture Analysis:** Complete auth & persistence architecture analysis with migration decision (42% code reduction, 33% API calls reduction).
 
 ## Known Risks
 
@@ -76,3 +83,19 @@
 5.  **[PATCH-005] 2026-01-21 : Refonte UX Final Reveal (Story 1.9) - Focus View, Draft Mode, Suppression des valeurs numériques.**
 6.  **[PATCH-006] 2026-01-22 : Final Flow Patch & Hard Gate (Story 1.11) - Affirmations style post LinkedIn, Terminal Loading, Email Hard Gate.**
 7.  **[PATCH-007] 2026-01-22 : Correction de l'ordre des questions (Phase 1 & 2) pour garantir un séquençage déterministe (Fix: Mentor vs Satirique).**
+8.  **[PATCH-008] 2026-01-26 : E2E Cross-Browser Implementation - Auth setup pour Chromium, Firefox, WebKit avec gestion des spécificités navigateurs.**
+9.  **[DECISION-001] 2026-01-26 : Migration Architecture Auth & Persistance - Simplification approuvée (Story 2.7) avec ROI 1,318%.**
+
+## Recent Achievements (2026-01-26)
+
+### Story 2.6 Completion
+- ✅ Data persistence stabilized (structured content in DB)
+- ✅ Auth flow secured (navigation lock, localStorage cleanup)
+- ✅ E2E tests refactored (smart auth setup, data seeding, robust locators)
+- ✅ Cross-browser validation (Chromium, Firefox, WebKit)
+
+### Architecture Decision
+- ✅ Complete analysis of auth & persistence architecture
+- ✅ Migration decision approved (Story 2.7)
+- ✅ Expected benefits: -42% code, -33% API calls, -60% auth time
+- ✅ Risk mitigation plan documented
