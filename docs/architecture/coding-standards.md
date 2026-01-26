@@ -42,10 +42,18 @@ Ces instructions guident le développement pour assurer la cohérence et la qual
 ## 4. Organisation des Tests (MVP)
 
 *   **Tests Unitaires :** Colocalisés avec le code ou dans `__tests__`. Focus sur `lib/utils.ts`, parsers, et logique de crédits.
-*   **Tests E2E :** Tests manuels du "Happy Path" pour le MVP.
+*   **Tests E2E :** Tests automatisés avec Playwright pour les parcours critiques.
 *   **Outil :** Vitest.
 
 ## 5. Gestion de Git
 
 *   **Commits :** Conventionnels (ex: `feat: add quiz engine`, `fix: typo in prompt`).
 *   **Branches :** `main` (Prod), `dev` (Dev). Feature branches : `feat/nom-feature`.
+
+## 6. Gestion des Cookies (Server Components & Actions)
+
+*   **Accès :** `const cookieStore = await cookies()`
+*   **Lecture :** `const theme = cookieStore.get('theme')` (Retourne `{ name, value }`)
+*   **Écriture :** `cookieStore.set('theme', 'dark')`
+
+**Important :** L'API `cookies()` est disponible dans les Server Components, Server Actions, et Route Handlers. Il est impératif d'utiliser `await cookies()` pour y accéder.

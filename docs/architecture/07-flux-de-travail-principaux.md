@@ -30,19 +30,22 @@ sequenceDiagram
     API-->>Client: Texte Markdown
     Client-->>User: Affichage Flouté (Blurred Preview)
 
-    Note over User, DB: Phase 2 : Conversion
+    Note over User, DB: Phase 2 : Conversion (Sécurisée)
     User->>Client: Clic "Révéler" (Saisie Email)
+    Client->>Client: Verrouillage Historique (Anti-Back)
+    Client->>API: POST /api/quiz/pre-persist (Email + Données Quiz/Post)
+    API->>DB: INSERT posts (status: pending, linked to email)
+    API-->>Client: Success
     Client->>DB: Auth.signInWithOtp(email)
     DB-->>User: Envoi Email Magic Link
     
-    Note over User, DB: Phase 3 : Révélation (Authentifié)
+    Note over User, DB: Phase 3 : Révélation (Authentifié - Multi-Device)
     User->>Client: Clic Lien Email (Retour sur /dashboard)
-    Client->>Client: Récupère Post "En Attente" (LocalStorage)
-    Client->>API: POST /api/post/save (Contenu + UserID)
-    API->>DB: INSERT posts
-    DB-->>API: Success
-    API-->>Client: Success
-    Client->>Client: Clear LocalStorage
+    Client->>API: GET /api/quiz/reveal (Session Auth)
+    API->>DB: SELECT post WHERE email = auth.email AND status = pending
+    DB-->>API: Data
+    API->>DB: UPDATE post (status: revealed)
+    API-->>Client: Markdown Content
     Client-->>User: Affichage Post Net (Déflouté)
 ```
 

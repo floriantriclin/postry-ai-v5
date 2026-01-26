@@ -46,16 +46,24 @@ export function sanitizeTopic(topic: string): string {
 
 const genAI = new GoogleGenerativeAI(env.GEMINI_API_KEY || '');
 
+// Default models for different tasks - can be easily overridden here
+export const GEMINI_MODELS = {
+  QUIZ: 'gemini-2.5-flash',
+  PROFILE: 'gemini-2.5-flash',
+  POST: 'gemini-2.5-flash',
+};
+
 /**
  * Returns a configured Gemini model instance.
  */
 export function getGeminiModel(config: {
+  model?: string;
   systemInstruction?: string;
   temperature?: number;
   responseMimeType?: 'application/json' | 'text/plain';
 } = {}) {
   return genAI.getGenerativeModel({
-    model: 'gemini-2.5-flash',
+    model: config.model || GEMINI_MODELS.QUIZ,
     systemInstruction: config.systemInstruction,
     generationConfig: {
       responseMimeType: config.responseMimeType || 'application/json',
@@ -73,17 +81,9 @@ export async function generateWithGemini(
   retries = 2,
   signal?: AbortSignal
 ): Promise<QuizQuestion[]> {
-  const apiKey = env.GEMINI_API_KEY;
-  if (!apiKey) {
-    throw new Error('GEMINI_API_KEY is not defined');
-  }
-
-  const model = new GoogleGenerativeAI(apiKey).getGenerativeModel({
-    model: 'gemini-2.5-flash',
-    systemInstruction,
-    generationConfig: {
-      responseMimeType: 'application/json',
-    },
+  const model = getGeminiModel({
+    model: GEMINI_MODELS.QUIZ,
+    systemInstruction
   });
 
   let lastError: Error | null = null;
@@ -100,7 +100,7 @@ export async function generateWithGemini(
     } catch (error: unknown) {
       const err = error as Error;
       lastError = err;
-      console.error(`Gemini call attempt ${attempt + 1} failed:`, error instanceof z.ZodError ? JSON.stringify(error.errors, null, 2) : error instanceof Error ? error.message : String(error));
+      console.error(`Gemini call attempt ${attempt + 1} failed:`, error instanceof z.ZodError ? JSON.stringify(error.issues, null, 2) : error instanceof Error ? error.message : String(error));
       if (attempt < retries) {
         // Wait before retry (exponential backoff could be added here)
         await new Promise(resolve => setTimeout(resolve, 1000 * (attempt + 1)));
@@ -120,17 +120,9 @@ export async function generatePostWithGemini(
   retries = 2,
   signal?: AbortSignal
 ): Promise<PostGenerationResponse> {
-  const apiKey = env.GEMINI_API_KEY;
-  if (!apiKey) {
-    throw new Error('GEMINI_API_KEY is not defined');
-  }
-
-  const model = new GoogleGenerativeAI(apiKey).getGenerativeModel({
-    model: 'gemini-2.5-flash',
-    systemInstruction,
-    generationConfig: {
-      responseMimeType: 'application/json',
-    },
+  const model = getGeminiModel({
+    model: GEMINI_MODELS.POST,
+    systemInstruction
   });
 
   let lastError: Error | null = null;
@@ -147,7 +139,7 @@ export async function generatePostWithGemini(
     } catch (error: unknown) {
       const err = error as Error;
       lastError = err;
-      console.error(`Gemini Post Generation call attempt ${attempt + 1} failed:`, error instanceof z.ZodError ? JSON.stringify(error.errors, null, 2) : error instanceof Error ? error.message : String(error));
+      console.error(`Gemini Post Generation call attempt ${attempt + 1} failed:`, error instanceof z.ZodError ? JSON.stringify(error.issues, null, 2) : error instanceof Error ? error.message : String(error));
       if (attempt < retries) {
         await new Promise(resolve => setTimeout(resolve, 1000 * (attempt + 1)));
       }

@@ -1,0 +1,81 @@
+
+import { test, expect } from "@playwright/test";
+
+test.describe("Dashboard", () => {
+  // This test runs with an authenticated user because of the global setup.
+  test.describe("Authenticated", () => {
+    test.beforeEach(async ({ page }) => {
+      // Navigate directly to dashboard
+      // The storageState includes both cookies and localStorage
+      // which should be sufficient for authentication
+      await page.goto("/dashboard");
+    });
+
+    test("should display the post reveal view if authenticated", async ({
+      page,
+    }) => {
+      // Fail fast check (Task 2.6.11)
+      await expect(page).toHaveURL("/dashboard");
+
+      const postContent = page.getByTestId("post-content");
+      // const postMeta = page.getByTestId("post-meta"); // Element removed in new UI
+
+      // Verify Initial Blur State (Robust check)
+      // We expect the blur class to be present initially
+      await expect(postContent).toHaveClass(/blur-sm/);
+      
+      // Verify Transition to Clear
+      // The transition takes 1000ms + 100ms delay
+      await expect(postContent).toHaveClass(/blur-0/, { timeout: 5000 });
+      await expect(postContent).toHaveClass(/opacity-100/);
+
+      // Verify Content
+      // Theme is displayed directly without prefix in new UI
+      await expect(postContent).toContainText("Tech Leadership");
+      await expect(postContent).toContainText("This is a robust test post");
+    });
+
+    test("should copy the post content to clipboard", async ({ page, context, browserName }) => {
+      if (browserName !== "chromium") test.skip();
+      
+      await context.grantPermissions(['clipboard-write', 'clipboard-read']);
+      await expect(page).toHaveURL("/dashboard");
+      await page.getByTestId("copy-button").click();
+      await expect(page.getByTestId("copy-button")).toHaveText("Texte copié !");
+      
+      // Wait for reset
+      await expect(page.getByTestId("copy-button")).toHaveText("Copier le texte", { timeout: 5000 });
+    });
+
+    test("should logout the user", async ({ page }) => {
+      // Wait for the logout button to be visible and enabled
+      const logoutBtn = page.getByTestId("logout-button");
+      await expect(logoutBtn).toBeVisible();
+      await expect(logoutBtn).toBeEnabled();
+      
+      // Click logout button
+      await logoutBtn.click();
+      
+      // Wait for navigation to complete (window.location.href is used)
+      // Using waitForLoadState is more reliable than waitForURL for hard navigations
+      await page.waitForLoadState('networkidle', { timeout: 15000 });
+      
+      // Verify we're on the landing page
+      await expect(page).toHaveURL("/");
+    });
+
+    test("should match the visual snapshot", async ({ page }) => {
+      await expect(page).toHaveScreenshot();
+    });
+  });
+
+  // This test runs without authentication.
+  test.describe("Unauthenticated", () => {
+    test("should redirect to login if not authenticated", async ({ browser }) => {
+      const context = await browser.newContext({ storageState: undefined });
+      const page = await context.newPage();
+      await page.goto("/dashboard");
+      await expect(page).toHaveURL(/\/\?redirectedFrom=%2Fdashboard/);
+    });
+  });
+});

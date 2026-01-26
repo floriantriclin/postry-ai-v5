@@ -12,6 +12,7 @@ import { useQuizPersistence } from '@/hooks/use-quiz-persistence';
 import { quizApiClient } from '@/lib/quiz-api-client';
 import { getTargetDimensions } from '@/lib/ice-logic';
 import mockData from '@/lib/data/mock-quiz.json';
+import themes from '@/lib/data/themes.json';
 import { DimensionCode, Vstyle } from '@/lib/types';
 
 export function QuizEngine() {
@@ -261,6 +262,11 @@ export function QuizEngine() {
             profile={state.profileData || mockData.augmentedProfile as any}
             archetype={state.archetypeData?.archetype || mockData.archetype as any}
             vector={state.currentVector || mockData.archetype.baseVector as any}
+            initialPost={state.generatedPost}
+            onPostGenerated={(post, topic) => dispatch({ type: 'POST_GENERATED', payload: { post, topic } })}
+            topic={state.postTopic || ''}
+            acquisitionTheme={state.themeId || ''}
+            quizAnswers={{ p1: state.answersP1, p2: state.answersP2 }}
           />
         );
       

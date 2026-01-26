@@ -112,3 +112,60 @@
 2. Affiche le post courant dans un conteneur simple centré.
 3. Le texte est lisible, formatté (sauts de ligne respectés) et copiable.
 4. (Pas de sidebar ni de menus complexes à ce stade, juste le contenu et un header minimal "Déconnexion").
+
+### Story 2.6 : Stabilisation, Refactoring & Fiabilisation
+
+**En tant que** Développeur et Product Owner,
+
+**Je veux** stabiliser le flux de conversion, garantir la persistance des données et fiabiliser les tests,
+
+**Afin de** construire une base solide pour le Dashboard et éviter la perte de données utilisateur.
+
+**Type** : Refactoring / Stability / Security
+
+**INVEST Check** :
+
+- **I** : Indépendant des nouvelles features.
+- **V** : Garantit la qualité et la fiabilité du flux existant.
+- **Référence** : [`docs/stories/story-2-6-stabilization-refactoring.md`](../stories/story-2-6-stabilization-refactoring.md)
+
+**Critères d'Acceptation** :
+
+1. Persistance critique : Toutes les données du post sauvegardées en DB.
+2. Cohérence post-Magic Link : Post identique avant/après auth.
+3. Flux UX sécurisé : Verrouillage du retour, nettoyage localStorage.
+4. Tests E2E refondus et stables (3 runs consécutifs sans flake).
+
+### Story 2.7 : Simplification Architecture Auth & Persistance
+
+**En tant que** Équipe Technique,
+
+**Je veux** simplifier l'architecture d'authentification et de persistance,
+
+**Afin de** réduire la complexité du code, améliorer la performance et éliminer les bugs.
+
+**Type** : Refactoring / Architecture / Performance
+
+**INVEST Check** :
+
+- **I** : Indépendant des features utilisateur.
+- **V** : ROI de 1,318% (retour en 3 semaines).
+- **Référence** : [`docs/stories/story-2-7-auth-persistence-simplification.md`](../stories/story-2-7-auth-persistence-simplification.md)
+- **Décision** : [`docs/decisions/20260126-auth-persistence-migration-decision.md`](../decisions/20260126-auth-persistence-migration-decision.md)
+
+**Critères d'Acceptation** :
+
+1. Réduction de 42% du code (634 → 369 lignes).
+2. Réduction de 33% des API calls (3 → 2).
+3. Élimination de 100% des posts orphelins.
+4. Temps auth → dashboard < 2s (-60%).
+5. Nouveau endpoint `persist-on-login` créé.
+6. Suppression de `pre-persist` API et `/quiz/reveal` page.
+7. Tests E2E adaptés et passants (3 navigateurs).
+
+**Bénéfices Business** :
+
+- Maintenance facilitée (-42% code)
+- Performance améliorée (-33% API calls)
+- Base de données plus propre (0 posts orphelins)
+- UX améliorée (-60% temps de chargement)

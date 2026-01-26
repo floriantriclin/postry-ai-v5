@@ -70,3 +70,28 @@ export const PostGenerationResponseSchema = z.object({
 
 export type PostGenerationRequest = z.infer<typeof PostGenerationRequestSchema>;
 export type PostGenerationResponse = z.infer<typeof PostGenerationResponseSchema>;
+
+// --- Database Models ---
+
+export interface User {
+  id: string; // uuid
+  email: string | null;
+  credits_count: number;
+  is_premium: boolean;
+  profile_context: string | null;
+  archetype: string | null;
+  vstyle_vector: number[] | null; // jsonb
+  created_at: string;
+}
+
+export interface Post {
+  id: string; // uuid
+  user_id: string; // uuid
+  theme: string;
+  archetype: string | null;
+  content: string;
+  quiz_answers: z.infer<typeof QuizResponseSchema> | null; // jsonb
+  equalizer_settings: unknown | null; // jsonb
+  is_revealed: boolean;
+  created_at: string;
+}

@@ -15,6 +15,8 @@ create table public.users (
   credits_count integer default 5,
   is_premium boolean default false,
   profile_context text, -- Texte extrait du CV
+  archetype text, -- L'archétype principal (ex: "ALCHIMISTE")
+  vstyle_vector jsonb, -- Le vecteur de style (9 dimensions)
   created_at timestamptz default now()
 );
 
@@ -46,12 +48,14 @@ create trigger on_auth_user_created
 -- 4. Créer la table 'posts'
 create table public.posts (
   id uuid default uuid_generate_v4() primary key,
-  user_id uuid references public.users(id) not null,
+  user_id uuid references public.users(id), -- Nullable initially for pre-persistence
+  email text, -- Used to link post before full auth confirmation
   theme text not null,
   content text not null, -- Markdown content
   quiz_answers jsonb, -- Réponses du profilage
   equalizer_settings jsonb, -- Réglages Ton/Longueur
   is_revealed boolean default false,
+  status text default 'pending', -- 'pending', 'revealed'
   created_at timestamptz default now()
 );
 

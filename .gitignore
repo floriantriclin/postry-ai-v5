@@ -11,6 +11,12 @@ web-bundles/
 # testing
 /coverage
 
+# E2E Auth files
+e2e/.auth/user.json
+e2e/.auth/user.chromium.json
+e2e/.auth/user.firefox.json
+e2e/.auth/user.webkit.json
+
 # next.js
 /.next/
 /out/
@@ -21,7 +27,6 @@ web-bundles/
 # misc
 .DS_Store
 *.pem
-generate_tree.ps1
 generate_tree.py
 
 # debug
@@ -38,3 +43,4 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+nul  
