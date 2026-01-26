@@ -1,21 +1,22 @@
 # Page snapshot
 
 ```yaml
-- generic [ref=e1]:
-  - generic [ref=e2]:
-    - banner [ref=e3]:
-      - link "Postry" [ref=e4] [cursor=pointer]:
-        - /url: /dashboard
-        - heading "Postry" [level=1] [ref=e5]
-      - button "Déconnexion" [active] [ref=e6]
-    - generic [ref=e9]:
-      - generic [ref=e10]:
-        - generic [ref=e12]: ÉCRIT PAR VOTRE BINÔME NUMÉRIQUE
-        - generic [ref=e13]: "Tone: Visionary Tech"
-        - heading "Tech Leadership" [level=2] [ref=e14]
-      - generic [ref=e15]: This is a robust test post content used for E2E testing. It serves to verify the dashboard display.
-      - button "Copier le texte" [ref=e17]
-      - link "Générer un nouveau post" [ref=e19] [cursor=pointer]:
+- generic [active] [ref=e1]:
+  - main [ref=e2]:
+    - generic [ref=e4]: Postry.AI
+    - generic [ref=e6]:
+      - generic [ref=e7]:
+        - heading "Trouvez votre Voix. Pas celle d'un Robot." [level=1] [ref=e8]:
+          - text: Trouvez votre Voix.
+          - text: Pas celle d'un Robot.
+        - paragraph [ref=e9]: Découvrez quel genre d’auteur vous êtes en 2 minutes.
+      - link "DÉTERMINER MON STYLE" [ref=e10] [cursor=pointer]:
         - /url: /quiz
-  - alert [ref=e20]
+    - generic:
+      - generic: v5.0-BRUT
+      - generic: •
+      - generic: No-Robot Policy
+  - button "Open Next.js Dev Tools" [ref=e16] [cursor=pointer]:
+    - img [ref=e17]
+  - alert [ref=e21]
 ```

@@ -1,8 +1,6 @@
 import { defineConfig, devices } from '@playwright/test';
 import 'dotenv/config';
 
-const authFile = 'e2e/.auth/user.json';
-
 export default defineConfig({
   testDir: './e2e',
   fullyParallel: true,
@@ -15,21 +13,44 @@ export default defineConfig({
     trace: 'on-first-retry',
   },
   projects: [
-    { name: 'setup', testMatch: /auth\.setup\.ts/ },
+    // Setup projects - one per browser
+    {
+      name: 'setup-chromium',
+      testMatch: /auth\.setup\.chromium\.ts/
+    },
+    {
+      name: 'setup-firefox',
+      testMatch: /auth\.setup\.firefox\.ts/
+    },
+    {
+      name: 'setup-webkit',
+      testMatch: /auth\.setup\.webkit\.ts/
+    },
+    
+    // Test projects - each with its own storageState
     {
       name: 'chromium',
-      use: { ...devices['Desktop Chrome'], storageState: authFile },
-      dependencies: ['setup'],
+      use: {
+        ...devices['Desktop Chrome'],
+        storageState: 'e2e/.auth/user.chromium.json'
+      },
+      dependencies: ['setup-chromium'],
     },
     {
       name: 'firefox',
-      use: { ...devices['Desktop Firefox'], storageState: authFile },
-      dependencies: ['setup'],
+      use: {
+        ...devices['Desktop Firefox'],
+        storageState: 'e2e/.auth/user.firefox.json'
+      },
+      dependencies: ['setup-firefox'],
     },
     {
       name: 'webkit',
-      use: { ...devices['Desktop Safari'], storageState: authFile },
-      dependencies: ['setup'],
+      use: {
+        ...devices['Desktop Safari'],
+        storageState: 'e2e/.auth/user.webkit.json'
+      },
+      dependencies: ['setup-webkit'],
     },
   ],
   webServer: {

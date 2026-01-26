@@ -106,14 +106,25 @@ function AuthConfirmContent() {
     });
 
     // Initial check in case the user is already logged in
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if(session) {
-        handleAuthSession(session);
+    supabase.auth.getUser().then(({ data: { user }, error }) => {
+      if (error) {
+        console.error("Error in initial getUser:", error);
+        setErrorMsg("Erreur lors de la récupération de l'utilisateur.");
+        setSessionResolved(true);
+        return;
       }
-      // If no session, we wait for onAuthStateChange
+      if(user) {
+        // Get the session for handleAuthSession
+        supabase.auth.getSession().then(({ data: { session } }) => {
+          if (session) {
+            handleAuthSession(session);
+          }
+        });
+      }
+      // If no user, we wait for onAuthStateChange
     }).catch(err => {
-        console.error("Error in initial getSession:", err);
-        setErrorMsg("Erreur lors de la récupération de la session.");
+        console.error("Error in initial getUser:", err);
+        setErrorMsg("Erreur lors de la récupération de l'utilisateur.");
         setSessionResolved(true);
     });
 

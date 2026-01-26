@@ -13,8 +13,18 @@ export default function Header() {
   );
 
   const handleSignOut = async () => {
-    await supabase.auth.signOut();
-    router.push("/");
+    try {
+      // Race signOut with a 2s timeout to prevent hanging
+      await Promise.race([
+        supabase.auth.signOut(),
+        new Promise((resolve) => setTimeout(resolve, 2000)),
+      ]);
+    } catch (error) {
+      console.error("Logout error:", error);
+    } finally {
+      // Force a hard refresh to ensure complete cleanup
+      window.location.href = "/";
+    }
   };
 
   return (

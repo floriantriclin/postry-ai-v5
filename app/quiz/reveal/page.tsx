@@ -17,9 +17,9 @@ export default function RevealPage() {
 
       for (let i = 0; i < MAX_RETRIES; i++) {
         try {
-          const { data: { session } } = await supabase.auth.getSession();
+          const { data: { user } } = await supabase.auth.getUser();
           
-          if (!session) {
+          if (!user) {
             router.push('/');
             return;
           }
@@ -27,7 +27,7 @@ export default function RevealPage() {
           const { data: post, error: postError } = await supabase
             .from('posts')
             .select('*')
-            .eq('user_id', session.user.id)
+            .eq('user_id', user.id)
             .order('created_at', { ascending: false })
             .limit(1)
             .single();

@@ -5,6 +5,9 @@ test.describe("Dashboard", () => {
   // This test runs with an authenticated user because of the global setup.
   test.describe("Authenticated", () => {
     test.beforeEach(async ({ page }) => {
+      // Navigate directly to dashboard
+      // The storageState includes both cookies and localStorage
+      // which should be sufficient for authentication
       await page.goto("/dashboard");
     });
 
@@ -45,7 +48,19 @@ test.describe("Dashboard", () => {
     });
 
     test("should logout the user", async ({ page }) => {
-      await page.getByTestId("logout-button").click();
+      // Wait for the logout button to be visible and enabled
+      const logoutBtn = page.getByTestId("logout-button");
+      await expect(logoutBtn).toBeVisible();
+      await expect(logoutBtn).toBeEnabled();
+      
+      // Click logout button
+      await logoutBtn.click();
+      
+      // Wait for navigation to complete (window.location.href is used)
+      // Using waitForLoadState is more reliable than waitForURL for hard navigations
+      await page.waitForLoadState('networkidle', { timeout: 15000 });
+      
+      // Verify we're on the landing page
       await expect(page).toHaveURL("/");
     });
 

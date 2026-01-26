@@ -56,18 +56,18 @@ export async function middleware(request: NextRequest) {
   );
 
   const {
-    data: { session },
-  } = await supabase.auth.getSession();
+    data: { user },
+  } = await supabase.auth.getUser();
 
   const publicPaths = ["/", "/auth/confirm"];
 
-  if (!session && !publicPaths.includes(request.nextUrl.pathname) && !request.nextUrl.pathname.startsWith('/quiz') && !request.nextUrl.pathname.startsWith('/api/quiz')) {
+  if (!user && !publicPaths.includes(request.nextUrl.pathname) && !request.nextUrl.pathname.startsWith('/quiz') && !request.nextUrl.pathname.startsWith('/api/quiz')) {
     const loginUrl = new URL("/", request.url);
     loginUrl.searchParams.set("redirectedFrom", request.nextUrl.pathname);
     return NextResponse.redirect(loginUrl);
   }
 
-  if (session && request.nextUrl.pathname === "/") {
+  if (user && request.nextUrl.pathname === "/") {
     return NextResponse.redirect(new URL("/dashboard", request.url));
   }
 
