@@ -1,0 +1,16 @@
+{
+  "repository_type": "monolith",
+  "parts": [
+    {
+      "part_id": "main",
+      "project_type_id": "web",
+      "root_path": "c:\\dev\\postry-ai",
+      "display_name": "Postry AI - Main Application",
+      "purpose": "Fullstack web application for AI-powered post generation",
+      "primary_framework": "Next.js 16",
+      "primary_language": "TypeScript"
+    }
+  ],
+  "integration_points": [],
+  "detected_at": "2026-01-27T00:12:58.318Z"
+}

@@ -1,0 +1,125 @@
+# Technology Stack - Postry AI
+
+**Date:** 2026-01-27
+**Project:** Postry AI
+**Part:** main
+
+## Technology Stack Summary
+
+| Category | Technology | Version | Justification |
+|----------|-----------|---------|---------------|
+| **Framework** | Next.js | 16.1.4 | Fullstack React framework with App Router, Server Components, API Routes |
+| **Language** | TypeScript | 5.0.0 | Type safety, better DX, strict mode enabled |
+| **UI Library** | React | 19.2.3 | Component-based UI library |
+| **Styling** | Tailwind CSS | 4.1.18 | Utility-first CSS framework, "Raw UI" design philosophy |
+| **Database** | Supabase (PostgreSQL) | 2.91.0 | Backend-as-a-Service, PostgreSQL database, Auth, RLS |
+| **AI/ML** | Google Gemini | 2.5 Flash | Generative AI for quiz questions and post generation |
+| **Validation** | Zod | latest | Runtime type validation and schema definition |
+| **Icons** | Lucide React | latest | Icon library |
+| **Utilities** | clsx | latest | Conditional class names |
+| | tailwind-merge | latest | Merge Tailwind classes |
+| **Testing (Unit)** | Vitest | 4.0.17 | Fast unit test runner, Vite-based |
+| **Testing (E2E)** | Playwright | 1.57.0 | End-to-end testing framework |
+| **Testing (React)** | React Testing Library | 16.3.2 | React component testing utilities |
+| **Build Tool** | Next.js (built-in) | 16.1.4 | Bundling, compilation, optimization |
+| **CSS Processing** | PostCSS | 8.5.6 | CSS processing with Tailwind plugin |
+| **Environment** | dotenv | 17.2.3 | Environment variable management |
+
+## Architecture Pattern
+
+**Pattern:** Fullstack Monolith with API Routes
+
+- **Frontend:** Next.js App Router with Server Components by default
+- **Backend:** Next.js API Routes (`app/api/`)
+- **Database:** Supabase (PostgreSQL) with Row Level Security (RLS)
+- **Authentication:** Supabase Auth (Magic Link)
+- **State Management:** React Server Components + Client Components hybrid
+- **Styling Approach:** "Raw UI" - flat design, strong borders, monospace font, no shadows/gradients
+
+## Key Dependencies
+
+### Production Dependencies
+
+- **@google/generative-ai** (^0.24.1) - Google Gemini API client
+- **@supabase/ssr** (^0.8.0) - Supabase SSR utilities for Next.js
+- **@supabase/supabase-js** (^2.91.0) - Supabase JavaScript client
+- **next** (^16.1.4) - Next.js framework
+- **react** (^19.2.3) - React library
+- **react-dom** (^19.2.3) - React DOM renderer
+- **zod** (latest) - Schema validation
+
+### Development Dependencies
+
+- **@playwright/test** (^1.57.0) - E2E testing
+- **@testing-library/react** (^16.3.2) - React testing utilities
+- **@testing-library/jest-dom** (^6.9.1) - DOM matchers
+- **vitest** (^4.0.17) - Unit testing framework
+- **@vitest/coverage-v8** (^4.0.18) - Code coverage
+- **typescript** (^5.0.0) - TypeScript compiler
+- **tailwindcss** (^4.1.18) - Tailwind CSS framework
+
+## TypeScript Configuration
+
+- **Target:** ES2022
+- **Module:** ESNext
+- **Module Resolution:** Bundler (Next.js)
+- **JSX:** React JSX
+- **Strict Mode:** Enabled
+- **Path Aliases:** `@/*` → `./*`
+
+## Testing Strategy
+
+### Unit Tests (Vitest)
+- **Environment:** jsdom
+- **Coverage Thresholds:** 80% (lines, functions, branches, statements)
+- **Coverage Includes:** app/, components/, lib/, hooks/
+- **Excludes:** test files, e2e/, node_modules/
+
+### E2E Tests (Playwright)
+- **Browsers:** Chromium, Firefox, WebKit
+- **Test Directory:** `e2e/`
+- **Configuration:** Multi-browser setup with auth state management
+- **Coverage:** Critical user journeys, accessibility, performance
+
+## Environment Variables
+
+Required:
+- `NEXT_PUBLIC_SUPABASE_URL` - Supabase project URL
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY` - Supabase anonymous key
+- `SUPABASE_SERVICE_ROLE_KEY` - Supabase service role key (optional)
+
+Optional:
+- `GEMINI_API_KEY` - Google Gemini API key (falls back to mocks if not set)
+- `STRIPE_SECRET_KEY` - Stripe secret key (for payments)
+- `STRIPE_WEBHOOK_SECRET` - Stripe webhook secret
+- `NEXT_PUBLIC_STRIPE_KEY` - Stripe public key
+- `NEXT_PUBLIC_BASE_URL` - Base URL (defaults to http://localhost:3000)
+
+## Build & Development Commands
+
+- **Development:** `npm run dev` - Start Next.js dev server
+- **Build:** `npm run build` - Production build
+- **Start:** `npm run start` - Start production server
+- **Lint:** `npm run lint` - Run ESLint
+- **Test (Unit):** `npm run test` - Run Vitest tests
+- **Test (Coverage):** `npm run test:coverage` - Run tests with coverage
+- **Test (E2E):** `npm run test:e2e` - Run Playwright E2E tests
+
+## Design Philosophy
+
+**"Raw UI" Design System:**
+- No soft shadows or gradients
+- Flat design with strong borders
+- Monospace font for technical look
+- Strict TypeScript typing
+- Server Components by default
+
+## Font Configuration
+
+- **Inter** - Primary font (variable: `--font-inter`)
+- **Chivo** - Heading font, weights 800-900 (variable: `--font-chivo`)
+- **JetBrains Mono** - Monospace font (variable: `--font-jetbrains-mono`)
+
+---
+
+_Generated by BMAD Method document-project workflow_

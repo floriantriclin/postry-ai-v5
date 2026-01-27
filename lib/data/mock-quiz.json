@@ -1,0 +1,84 @@
+{
+  "phase1": [
+    {
+      "id": "q1",
+      "dimension": "POS",
+      "option_A": "Je partage mes apprentissages et mes doutes comme si je parlais à un pair.",
+      "option_B": "J'affirme mes convictions et mes méthodes avec autorité."
+    },
+    {
+      "id": "q2",
+      "dimension": "TEM",
+      "option_A": "Les résultats indiquent une hausse de 15% sans commentaire émotionnel.",
+      "option_B": "C'est une victoire incroyable pour toute l'équipe, on est ravis !"
+    },
+    {
+      "id": "q3",
+      "dimension": "DEN",
+      "option_A": "C'est comme changer une roue de voiture, simple et basique.",
+      "option_B": "L'implémentation nécessite une orchestration Kubernetes optimisée."
+    },
+    {
+      "id": "q4",
+      "dimension": "PRI",
+      "option_A": "Cette nouvelle technologie est une opportunité historique pour nous.",
+      "option_B": "Attention aux risques cachés de cette technologie, soyez vigilants."
+    },
+    {
+      "id": "q5",
+      "dimension": "CAD",
+      "option_A": "C'est fait. On avance. Pas d'excuse.",
+      "option_B": "Bien que le chemin soit long, nous progressons avec sérénité vers le but."
+    },
+    {
+      "id": "q6",
+      "dimension": "REG",
+      "option_A": "L'intégrité de nos processus garantit la qualité de nos services.",
+      "option_B": "Spoiler alert : notre serveur a rendu l'âme. Oups 💀."
+    }
+  ],
+  "archetype": {
+    "id": 3,
+    "name": "Le Stratège",
+    "family": "LES RATIONNELS",
+    "signature": "Décideur Tranchant",
+    "description": "Vous êtes un leader analytique évaluant les risques avec froideur. Votre style est percutant, structuré pour la décision. Vous utilisez des faits denses pour asseoir une autorité naturelle.",
+    "baseVector": [25, 65, 85, 85, 30, 15, 20, 60, 60]
+  },
+  "phase2": [
+    {
+      "id": "q7",
+      "dimension": "STR",
+      "option_A": "Je pensais à ça l'autre jour, et puis en marchant...",
+      "option_B": "Voici les 3 leviers de croissance : 1. SEO, 2. Pub, 3. CRM."
+    },
+    {
+      "id": "q8",
+      "dimension": "INF",
+      "option_A": "300 personnes étaient présentes au salon.",
+      "option_B": "Il était 8h, le café était froid, c'est là que l'aventure a commencé."
+    },
+    {
+      "id": "q9",
+      "dimension": "ANC",
+      "option_A": "La transformation digitale est un changement de paradigme culturel.",
+      "option_B": "Installez cette extension Chrome et cliquez sur le bouton bleu."
+    },
+    {
+      "id": "q10",
+      "dimension": "POS",
+      "option_A": "Je me considère comme un éternel apprenant.",
+      "option_B": "Je guide les autres vers la réussite."
+    },
+    {
+      "id": "q11",
+      "dimension": "TEM",
+      "option_A": "Analyse rationnelle des faits.",
+      "option_B": "Réaction passionnée et viscérale."
+    }
+  ],
+  "augmentedProfile": {
+    "label_final": "Le Stratège Lumineux",
+    "definition_longue": "Votre identité transcende la simple rigueur de l'expert pour devenir une force d'inspiration narrative rare. Tout en conservant une précision chirurgicale dans vos données stratégiques, vous habillez chaque analyse d'une humanité vibrante qui captive votre audience. Cette capacité rare à transformer des chiffres froids en récits habités fait de vous un leader d'opinion mémorable."
+  }
+}

@@ -1,0 +1,47 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: var(--font-inter);
+  --font-heading: var(--font-chivo);
+  --font-mono: var(--font-jetbrains-mono);
+  
+  --color-carbon: #09090b;
+  --color-signal-orange: #f97316;
+}
+
+@layer base {
+  * {
+    border-color: var(--color-carbon);
+    border-radius: 0;
+  }
+  
+  body {
+    font-family: var(--font-sans);
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
+  }
+}
+
+@layer components {
+  .raw-button {
+    @apply h-12 px-6 border-2 border-carbon font-heading font-black uppercase tracking-tighter transition-all active:scale-95 inline-flex items-center justify-center text-center;
+  }
+  
+  .raw-button-primary {
+    @apply bg-carbon text-white hover:bg-zinc-800;
+  }
+  
+  .raw-button-secondary {
+    @apply bg-white text-carbon hover:bg-zinc-100;
+  }
+  
+  .raw-card {
+    @apply bg-white border-2 border-carbon p-6;
+  }
+  
+  .raw-input {
+    @apply bg-transparent border-b-2 border-carbon px-0 py-2 font-mono focus:outline-none focus:border-b-4 focus:border-signal-orange;
+  }
+}
