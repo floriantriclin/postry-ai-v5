@@ -33,10 +33,15 @@ export async function signInWithOtp(email: string, redirectTo: string = '/dashbo
 
   // 2. Call Supabase Auth
   try {
+    // Use window.location.origin if available (browser), fallback to env var
+    const baseUrl = typeof window !== 'undefined' 
+      ? window.location.origin 
+      : env.NEXT_PUBLIC_BASE_URL;
+
     const { error } = await supabase.auth.signInWithOtp({
       email,
       options: {
-        emailRedirectTo: `${env.NEXT_PUBLIC_BASE_URL}/auth/confirm?next=${encodeURIComponent(redirectTo)}`,
+        emailRedirectTo: `${baseUrl}/auth/confirm?next=${encodeURIComponent(redirectTo)}`,
       },
     });
 
