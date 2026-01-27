@@ -15,6 +15,7 @@ Les tests E2E utilisent **Playwright v1.57.0** pour simuler des parcours utilisa
 | [`critical-user-journeys.spec.ts`](critical-user-journeys.spec.ts) | Parcours utilisateurs critiques complets | 11 tests | Flux E2E, validation, erreurs, persistance, mobile |
 | [`accessibility-and-performance.spec.ts`](accessibility-and-performance.spec.ts) | Accessibilité et performance | 11 tests | A11Y, performance, compatibilité, résilience réseau |
 | [`dashboard.spec.ts`](dashboard.spec.ts) | Dashboard authentifié | 4 tests | Affichage, copie, déconnexion, snapshots |
+| [`story-2-7.spec.ts`](story-2-7.spec.ts) | Story 2.7: Auth Persistence Simplification | 8 tests | Redirects, localStorage cleanup, quiz flow, API validation |
 
 ### Configuration & Setup
 
@@ -43,7 +44,10 @@ Assurez-vous que le fichier `.env` contient :
 NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key
 SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
+GEMINI_API_KEY=your_gemini_api_key  # Optional: For quiz question generation
 ```
+
+**Note:** Si `GEMINI_API_KEY` n'est pas configurée, l'application utilisera des données mock pour les questions du quiz.
 
 ## 🧪 Exécution des Tests
 
@@ -237,6 +241,75 @@ Si un test est instable :
 - [Syntaxe Playwright](../docs/qa/syntax/playwright.md)
 - [Documentation officielle Playwright](https://playwright.dev/)
 
+## 🔐 Contextes d'Authentification
+
+### Authenticated vs Unauthenticated Tests
+
+Les tests E2E utilisent deux contextes différents selon le scénario testé :
+
+#### Tests Authentifiés (Authenticated Context)
+
+Utilisent l'état d'authentification sauvegardé par les fichiers `auth.setup.*.ts` :
+
+```typescript
+// Configuration automatique via playwright.config.ts
+{
+  name: 'chromium',
+  use: {
+    storageState: 'e2e/.auth/user.chromium.json'  // État auth pré-configuré
+  },
+  dependencies: ['setup-chromium'],
+}
+```
+
+**Exemples de tests authentifiés :**
+- [`dashboard.spec.ts`](dashboard.spec.ts) - Tous les tests
+- [`story-2-7.spec.ts`](story-2-7.spec.ts) - E2E-2.7-01, E2E-2.7-03
+
+**Comportement :**
+- L'utilisateur est déjà connecté
+- Accès direct au dashboard
+- Redirection automatique depuis `/` ou `/quiz` vers `/dashboard`
+
+#### Tests Non-Authentifiés (Unauthenticated Context)
+
+Créent un nouveau contexte sans état d'authentification :
+
+```typescript
+test('My unauthenticated test', async ({ browser }) => {
+  // Créer un contexte sans auth
+  const context = await browser.newContext({ storageState: undefined });
+  const page = await context.newPage();
+  
+  try {
+    // Test logic here
+    await page.goto('/quiz');
+    // ...
+  } finally {
+    await context.close();
+  }
+});
+```
+
+**Exemples de tests non-authentifiés :**
+- [`critical-user-journeys.spec.ts`](critical-user-journeys.spec.ts) - Flux complet du quiz
+- [`story-2-7.spec.ts`](story-2-7.spec.ts) - E2E-2.7-02, E2E-2.7-04, E2E-2.7-05, REG-01, REG-02
+
+**Comportement :**
+- L'utilisateur n'est pas connecté
+- Peut accéder au quiz complet
+- Voit la modal d'authentification après génération du post
+
+### Quand Utiliser Quel Contexte ?
+
+| Scénario | Contexte | Raison |
+|----------|----------|--------|
+| Tester le dashboard | Authentifié | Nécessite un utilisateur connecté |
+| Tester le flux quiz complet | Non-authentifié | Simule un nouvel utilisateur |
+| Tester les redirections auth | Authentifié | Valide le comportement pour utilisateurs connectés |
+| Tester la modal d'auth | Non-authentifié | La modal n'apparaît que pour utilisateurs non-connectés |
+| Tester localStorage cleanup | Non-authentifié | Simule le flux complet avant auth |
+
 ## 🆘 Dépannage
 
 ### Problème : Tests d'authentification échouent
@@ -258,6 +331,63 @@ Si vous voyez des échecs, vérifiez que vous avez la dernière version.
 3. Vérifier que la base de données est accessible
 4. Consulter `e2e/auth-setup-failure.png` pour le diagnostic
 
+### Problème : Story 2.7 tests timeout sur quiz questions
+
+**Symptôme :** Tests timeout en attendant `[data-testid="question-card"]` après avoir cliqué sur "Lancer la calibration"
+
+**Cause :** Les questions du quiz ne se chargent pas correctement. Cela peut arriver si :
+- `GEMINI_API_KEY` n'est pas configurée ET le fallback mock ne fonctionne pas
+- L'API Gemini est lente ou indisponible
+- Le timing de chargement des questions n'est pas géré correctement
+
+**Solutions :**
+
+1. **Ajouter la clé API Gemini** (recommandé pour tests avec API réelle) :
+   ```env
+   GEMINI_API_KEY=your_api_key_here
+   ```
+
+2. **Vérifier les logs de console** :
+   ```bash
+   npx playwright test e2e/story-2-7.spec.ts --headed
+   ```
+   Regardez les erreurs dans la console du navigateur.
+
+3. **Augmenter les timeouts** (solution temporaire) :
+   ```bash
+   npx playwright test e2e/story-2-7.spec.ts --timeout=120000
+   ```
+
+4. **Voir le rapport détaillé** :
+   Consultez [`docs/qa/story-2-8-phase-3-e2e-fix-report.md`](../docs/qa/story-2-8-phase-3-e2e-fix-report.md) pour l'analyse complète et les recommandations.
+
+### Problème : Tests utilisent le mauvais contexte d'auth
+
+**Symptôme :**
+- Test non-authentifié redirige vers dashboard
+- Test authentifié montre la modal d'auth
+
+**Solution :**
+Vérifiez que vous utilisez le bon pattern :
+
+```typescript
+// ❌ INCORRECT - Utilise l'auth par défaut
+test('My test', async ({ page }) => {
+  await page.goto('/quiz');
+});
+
+// ✅ CORRECT - Contexte non-authentifié explicite
+test('My test', async ({ browser }) => {
+  const context = await browser.newContext({ storageState: undefined });
+  const page = await context.newPage();
+  try {
+    await page.goto('/quiz');
+  } finally {
+    await context.close();
+  }
+});
+```
+
 ### Problème : Tests lents
 
 **Solution :**
@@ -274,12 +404,13 @@ npx playwright test --update-snapshots
 
 ## 📈 Métriques
 
-- **Total des tests E2E :** 26+ tests
-- **Fichiers de tests :** 5 fichiers (consolidés depuis 12)
+- **Total des tests E2E :** 34+ tests
+- **Fichiers de tests :** 6 fichiers (consolidés depuis 12)
 - **Couverture des parcours critiques :** 100%
 - **Navigateurs testés :** 3 (Chromium, Firefox, WebKit)
 - **Viewports testés :** 3 (Mobile, Tablet, Desktop)
 - **Duplication :** 0% (vs ~40% avant consolidation)
+- **Tests Story 2.7 :** 8 tests (24 exécutions cross-browser)
 
 ## 📚 Documentation Complémentaire
 
@@ -302,5 +433,13 @@ npx playwright test --update-snapshots
 - ✅ Ajout de 10 nouveaux scénarios (A11Y, performance, mobile)
 - ✅ Élimination de 100% de la duplication
 - ✅ Amélioration de +45% de la couverture
+
+**2026-01-26 - Story 2.7: Auth Persistence Tests**
+- ✅ Ajout de 8 tests pour Story 2.7
+- ✅ Implémentation de contextes auth/unauth appropriés
+- ✅ Tests de redirections authentifiées
+- ✅ Tests de flux quiz non-authentifié
+- 🟡 9/24 tests passing (37.5%) - En cours de résolution
+- 📋 Voir [`story-2-8-phase-3-e2e-fix-report.md`](../docs/qa/story-2-8-phase-3-e2e-fix-report.md)
 
 Voir [`e2e-migration-analysis.md`](../docs/qa/e2e-migration-analysis.md) pour les détails complets.

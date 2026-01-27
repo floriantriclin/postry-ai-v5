@@ -1,0 +1,151 @@
+# Linear Integration Configuration for BMAD
+# Ce fichier configure l'intégration Linear pour les workflows BMAD
+
+# Informations Linear
+linear:
+  # Team ID (obtenu via: npm run linear:status)
+  team_id: "${LINEAR_TEAM_ID}"
+  
+  # Mapping des statuts BMAD vers Linear
+  status_mapping:
+    todo: "Backlog"
+    in_progress: "In Progress"
+    review: "In Review"
+    blocked: "Blocked"
+    done: "Done"
+    
+  # Labels automatiques pour les issues créées depuis BMAD
+  auto_labels:
+    - "bmad"
+    - "automated"
+    
+  # Priorité par défaut
+  default_priority: 3  # 1=Urgent, 2=High, 3=Normal, 4=Low
+  
+  # Préfixe pour les titres d'issues
+  title_prefix: "[BMAD]"
+  
+# Configuration de synchronisation
+sync:
+  # Activer la synchronisation automatique
+  auto_sync: true
+  
+  # Intervalle de synchronisation (en minutes)
+  interval: 15
+  
+  # Directions de synchronisation
+  directions:
+    bmad_to_linear: true  # BMAD → Linear
+    linear_to_bmad: false  # Linear → BMAD (désactivé par défaut)
+    
+  # Chemins à surveiller pour auto-sync
+  watch_paths:
+    - "_bmad-output/implementation-artifacts/"
+    - "_bmad-output/planning-artifacts/"
+    
+# Webhooks (configuration avancée)
+webhooks:
+  # Activer les webhooks Linear
+  enabled: false
+  
+  # URL de l'endpoint webhook (à configurer dans Linear)
+  endpoint_url: "https://your-app.com/api/webhooks/linear"
+  
+  # Secret pour validation des webhooks
+  secret: "${LINEAR_WEBHOOK_SECRET}"
+  
+  # Événements à écouter
+  events:
+    - "Issue"
+    - "IssueUpdate"
+    - "Comment"
+
+# Templates d'issues
+templates:
+  # Template pour les user stories
+  user_story:
+    title_template: "[Story] {{ title }}"
+    description_template: |
+      ## 📋 User Story
+      {{ description }}
+      
+      ## ✅ Critères d'Acceptation
+      {{ acceptance_criteria }}
+      
+      ## 🔗 Lien BMAD
+      Story générée via BMAD workflow
+      
+    labels:
+      - "user-story"
+      - "bmad"
+      
+  # Template pour les bugs
+  bug:
+    title_template: "[Bug] {{ title }}"
+    description_template: |
+      ## 🐛 Description
+      {{ description }}
+      
+      ## 🔍 Steps to Reproduce
+      {{ steps }}
+      
+      ## ✅ Expected Behavior
+      {{ expected }}
+      
+      ## ❌ Actual Behavior
+      {{ actual }}
+      
+    labels:
+      - "bug"
+      - "bmad"
+    priority: 2
+    
+  # Template pour les tâches techniques
+  technical_task:
+    title_template: "[Tech] {{ title }}"
+    description_template: |
+      ## 🔧 Tâche Technique
+      {{ description }}
+      
+      ## 📝 Détails d'Implémentation
+      {{ implementation_details }}
+      
+    labels:
+      - "technical"
+      - "bmad"
+
+# Options avancées
+advanced:
+  # Créer automatiquement des sous-tâches pour les stories complexes
+  auto_create_subtasks: true
+  
+  # Seuil de complexité pour la création automatique de sous-tâches
+  complexity_threshold: 5
+  
+  # Attacher les fichiers de contexte BMAD aux issues Linear
+  attach_context_files: true
+  
+  # Format d'attachement
+  attachment_format: "markdown"  # markdown | json | yaml
+  
+# Notifications
+notifications:
+  # Notifier sur Slack lors de la création d'issues
+  slack_notifications: false
+  
+  # Webhook Slack
+  slack_webhook_url: "${SLACK_WEBHOOK_URL}"
+  
+  # Channels par type d'issue
+  channels:
+    user_story: "#stories"
+    bug: "#bugs"
+    technical_task: "#dev"
+
+---
+# Notes d'utilisation:
+# 
+# 1. Les valeurs ${VAR} sont remplacées par les variables d'environnement
+# 2. Les templates utilisent la syntaxe Mustache {{ variable }}
+# 3. Cette config peut être étendue selon vos besoins
+# 4. Consultez docs/linear-integration-guide.md pour plus de détails

@@ -3,6 +3,8 @@ import { z } from 'zod';
 import { supabaseAdmin } from '@/lib/supabase-admin';
 import { cookies } from 'next/headers';
 import { createServerClient } from '@supabase/ssr';
+import { rateLimit, createRateLimitResponse, createRateLimitHeaders } from '@/lib/rate-limit';
+import { alertAuthFailure, alertValidationError, alertDatabaseError, alertUnhandledException } from '@/lib/alerting';
 
 // Define input schema matching the localStorage data structure
 const PersistOnLoginSchema = z.object({
@@ -21,6 +23,16 @@ const PersistOnLoginSchema = z.object({
 
 export async function POST(req: NextRequest) {
   try {
+    // Apply rate limiting: 10 requests per minute per IP
+    const rateLimitResult = rateLimit(req, {
+      limit: 10,
+      windowMs: 60000 // 1 minute
+    });
+
+    if (!rateLimitResult.allowed) {
+      return createRateLimitResponse(rateLimitResult);
+    }
+
     // Get authenticated user from session
     const cookieStore = await cookies();
     const supabase = createServerClient(
@@ -45,6 +57,10 @@ export async function POST(req: NextRequest) {
 
     if (authError || !user) {
       console.error('Persist-on-login: User not authenticated', authError);
+      alertAuthFailure('User not authenticated in persist-on-login', {
+        endpoint: '/api/auth/persist-on-login',
+        error: authError?.message
+      });
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
@@ -53,6 +69,11 @@ export async function POST(req: NextRequest) {
 
     if (!validation.success) {
       console.error('Persist-on-login: Validation failed', validation.error);
+      alertValidationError('Validation failed in persist-on-login', undefined, {
+        endpoint: '/api/auth/persist-on-login',
+        userId: user.id,
+        validationErrors: validation.error.issues
+      });
       return NextResponse.json({ error: validation.error }, { status: 400 });
     }
 
@@ -106,18 +127,33 @@ export async function POST(req: NextRequest) {
 
     if (insertError) {
       console.error('Persist-on-login: Database error', insertError);
+      alertDatabaseError('Failed to insert post in persist-on-login', insertError as Error, {
+        endpoint: '/api/auth/persist-on-login',
+        userId: user.id,
+        email: email,
+        theme: theme
+      });
       return NextResponse.json({ error: 'Database error' }, { status: 500 });
     }
 
     console.log('Persist-on-login: Success', { postId: insertedPost.id, userId: user.id });
 
-    return NextResponse.json({ 
-      success: true, 
-      postId: insertedPost.id 
-    });
+    return NextResponse.json(
+      {
+        success: true,
+        postId: insertedPost.id
+      },
+      {
+        headers: createRateLimitHeaders(rateLimitResult)
+      }
+    );
 
   } catch (err) {
     console.error('Persist-on-login: Exception', err);
+    alertUnhandledException('Unhandled exception in persist-on-login', err as Error, {
+      endpoint: '/api/auth/persist-on-login',
+      method: 'POST'
+    });
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 }
