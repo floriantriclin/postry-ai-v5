@@ -5,13 +5,37 @@ import { signInWithOtp } from "@/lib/auth";
 import { z } from "zod";
 import { X } from "lucide-react";
 
-interface AuthModalProps {}
+interface PostData {
+  theme: string;
+  content: string;
+  quiz_answers: {
+    acquisition_theme?: string;
+    p1: any;
+    p2: any;
+  };
+  equalizer_settings: {
+    vector: number[];
+    profile: any;
+    archetype: string;
+    components: {
+      hook: string;
+      content_body: string;
+      cta: string;
+      style_analysis: string;
+    };
+  };
+}
 
-export function AuthModal({}: AuthModalProps) {
+interface AuthModalProps {
+  postData?: PostData;
+}
+
+export function AuthModal({ postData }: AuthModalProps) {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
+  const [isPersisting, setIsPersisting] = useState(false);
   const modalRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -61,20 +85,74 @@ export function AuthModal({}: AuthModalProps) {
 
     setLoading(true);
 
-    const result = await signInWithOtp(email);
-    setLoading(false);
+    // Story 2.11b: Persist-First Architecture with Feature Flag
+    const enablePersistFirst = process.env.NEXT_PUBLIC_ENABLE_PERSIST_FIRST === 'true';
 
-    if (result.success) {
-      setSuccess(true);
-      
-      // Task 2.6.4: Block back navigation (History API) to prevent abusive regeneration
-      // This pushes a new state and traps the user if they try to go back
-      window.history.pushState(null, "", window.location.href);
-      window.onpopstate = function () {
-        window.history.pushState(null, "", window.location.href);
-      };
+    if (enablePersistFirst && postData) {
+      // NEW FLOW: Persist → Clear localStorage → Send magic link
+      try {
+        // Step 1: Persist post anonymously BEFORE auth
+        setIsPersisting(true);
+        const persistResponse = await fetch('/api/posts/anonymous', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(postData)
+        });
+
+        if (!persistResponse.ok) {
+          if (persistResponse.status === 429) {
+            setError('Limite atteinte. Réessayez dans 1 heure.');
+            setLoading(false);
+            setIsPersisting(false);
+            return;
+          }
+          throw new Error('Failed to persist post');
+        }
+
+        const { postId } = await persistResponse.json();
+        setIsPersisting(false);
+
+        // Step 2: Clear localStorage IMMEDIATELY after 200 response
+        localStorage.removeItem('ice_quiz_state_v1');
+
+        // Step 3: Send magic link with postId in URL
+        const origin = typeof window !== 'undefined' ? window.location.origin : '';
+        const result = await signInWithOtp(email, `/auth/confirm?postId=${postId}`);
+        setLoading(false);
+
+        if (result.success) {
+          setSuccess(true);
+          
+          // Block back navigation to prevent abusive regeneration
+          window.history.pushState(null, "", window.location.href);
+          window.onpopstate = function () {
+            window.history.pushState(null, "", window.location.href);
+          };
+        } else {
+          setError(result.error?.message || "Une erreur est survenue.");
+        }
+      } catch (err) {
+        console.error('Persist-first flow error:', err);
+        setError('Erreur lors de la sauvegarde. Réessayez.');
+        setLoading(false);
+        setIsPersisting(false);
+      }
     } else {
-      setError(result.error?.message || "An unknown error occurred.");
+      // OLD FLOW: Direct auth (for rollback or no postData)
+      const result = await signInWithOtp(email);
+      setLoading(false);
+
+      if (result.success) {
+        setSuccess(true);
+        
+        // Block back navigation
+        window.history.pushState(null, "", window.location.href);
+        window.onpopstate = function () {
+          window.history.pushState(null, "", window.location.href);
+        };
+      } else {
+        setError(result.error?.message || "Une erreur est survenue.");
+      }
     }
   };
 
@@ -136,7 +214,7 @@ export function AuthModal({}: AuthModalProps) {
             className="w-full min-h-[44px] bg-black text-white py-3 px-4 rounded-none hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black disabled:opacity-50"
             disabled={loading}
           >
-            {loading ? "Envoi..." : "Envoyez-moi un lien"}
+            {isPersisting ? "Sauvegarde en cours..." : loading ? "Envoi..." : "Envoyez-moi un lien"}
           </button>
         </form>
       </div>

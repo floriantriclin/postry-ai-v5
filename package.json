@@ -9,7 +9,8 @@
     "lint": "next lint",
     "test": "vitest --no-color",
     "test:coverage": "vitest --no-color --coverage",
-    "test:e2e": "cross-env DOTENV_CONFIG_PATH=.env playwright test > test.log 2>&1"
+    "test:e2e": "cross-env DOTENV_CONFIG_PATH=.env playwright test > test.log 2>&1",
+    "db:backup": "node scripts/backup-db.mjs"
   },
   "dependencies": {
     "@google/generative-ai": "^0.24.1",

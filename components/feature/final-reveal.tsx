@@ -190,7 +190,28 @@ export function FinalReveal({
                        {/* Auth Modal Integration Point (Story 2.3) */}
                        {showAuthModal && !isAuthLoading && (
                          <div className="absolute inset-0 z-20 flex items-center justify-center">
-                          <AuthModal />
+                          <AuthModal 
+                            postData={{
+                              theme: topic,
+                              content: `${generatedPost.hook}\n\n${generatedPost.content}\n\n${generatedPost.cta}`,
+                              quiz_answers: {
+                                acquisition_theme: acquisitionTheme || '',
+                                p1: quizAnswers?.p1 || {},
+                                p2: quizAnswers?.p2 || {}
+                              },
+                              equalizer_settings: {
+                                vector: vector,
+                                profile: profile,
+                                archetype: archetype.name,
+                                components: {
+                                  hook: generatedPost.hook,
+                                  content_body: generatedPost.content,
+                                  cta: generatedPost.cta,
+                                  style_analysis: generatedPost.style_analysis
+                                }
+                              }
+                            }}
+                          />
                         </div>
                       )}
                    </div>

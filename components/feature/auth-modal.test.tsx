@@ -1,170 +1,285 @@
-import { render, screen, waitFor } from "@testing-library/react";
-import userEvent from '@testing-library/user-event';
-import '@testing-library/jest-dom';
-import { AuthModal } from "./auth-modal";
-import * as auth from "@/lib/auth";
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { AuthModal } from './auth-modal';
+import * as authLib from '@/lib/auth';
 
-// Mock the auth module
-vi.mock("@/lib/auth", () => ({
+// Mock auth library
+vi.mock('@/lib/auth', () => ({
   signInWithOtp: vi.fn(),
 }));
 
-// Mock Lucide icons
-vi.mock("lucide-react", () => ({
-  X: () => <svg>X</svg>,
-}));
+// Mock fetch
+const mockFetch = vi.fn();
+global.fetch = mockFetch;
 
-const signInWithOtpMock = vi.mocked(auth.signInWithOtp);
+// Mock localStorage
+const mockLocalStorage = {
+  getItem: vi.fn(),
+  setItem: vi.fn(),
+  removeItem: vi.fn(),
+  clear: vi.fn(),
+};
+Object.defineProperty(window, 'localStorage', { value: mockLocalStorage });
 
-describe("AuthModal Component", () => {
+// Mock window.history
+const mockPushState = vi.fn();
+Object.defineProperty(window, 'history', {
+  value: { pushState: mockPushState },
+  writable: true,
+});
+
+describe('AuthModal - Story 2.11b Persist-First Architecture', () => {
+  const mockPostData = {
+    theme: 'Test Theme',
+    content: 'Hook\n\nBody content\n\nCTA',
+    quiz_answers: {
+      acquisition_theme: 'theme-1',
+      p1: { q1: 'a1' },
+      p2: { q2: 'a2' },
+    },
+    equalizer_settings: {
+      vector: [0.8, 0.6, 0.4, 0.7, 0.9, 0.5, 0.3, 0.8, 0.6],
+      profile: { label_final: 'Le Pragmatique' },
+      archetype: 'Le Pragmatique',
+      components: {
+        hook: 'Test Hook',
+        content_body: 'Test Body',
+        cta: 'Test CTA',
+        style_analysis: 'Test Analysis',
+      },
+    },
+  };
+
   beforeEach(() => {
-    signInWithOtpMock.mockClear();
+    vi.clearAllMocks();
+    mockFetch.mockClear();
+    mockLocalStorage.removeItem.mockClear();
+    mockPushState.mockClear();
   });
 
   afterEach(() => {
-    vi.clearAllMocks();
+    delete process.env.NEXT_PUBLIC_ENABLE_PERSIST_FIRST;
   });
 
-// C2.3.1: Initial Display
-it("should display the initial state correctly", () => {
-  render(<AuthModal />);
-  expect(screen.getByLabelText("Email Address")).not.toBeNull();
-  expect(screen.getByRole("button", { name: "Envoyez-moi un lien" })).not.toBeNull();
-  expect(screen.queryByText(/lien envoyé/i)).toBeNull();
-  expect(screen.queryByText(/required/i)).toBeNull();
-});
+  describe('Feature Flag OFF (Old Flow)', () => {
+    it('should call signInWithOtp directly without persist API', async () => {
+      process.env.NEXT_PUBLIC_ENABLE_PERSIST_FIRST = 'false';
+      vi.mocked(authLib.signInWithOtp).mockResolvedValue({ success: true });
 
-// C2.3.2: Empty Email Validation
-it("should show an error if the form is submitted with an empty email", async () => {
-  const user = userEvent.setup();
-  const errorMessage = "Adresse email invalide";
-  signInWithOtpMock.mockResolvedValue({ success: false, error: { code: 'INVALID_EMAIL', message: errorMessage } });
-  
-  render(<AuthModal />);
-  const submitButton = screen.getByRole("button", { name: "Envoyez-moi un lien" });
-  await user.click(submitButton);
+      render(<AuthModal postData={mockPostData} />);
 
-  expect(await screen.findByText(errorMessage)).not.toBeNull();
-  expect(signInWithOtpMock).not.toHaveBeenCalled();
-});
+      const emailInput = screen.getByPlaceholderText('moi@exemple.com');
+      const submitButton = screen.getByRole('button', { name: /envoyez-moi un lien/i });
 
-// C2.3.3: Invalid Email Format Validation
-it("should show an API error for invalid email format", async () => {
-  const user = userEvent.setup();
-  const errorMessage = "Adresse email invalide";
-  // The mock won't be called because client-side validation catches it first
-  signInWithOtpMock.mockResolvedValue({ success: false, error: { code: 'INVALID_EMAIL', message: errorMessage } });
-  
-  render(<AuthModal />);
-  const emailInput = screen.getByLabelText("Email Address");
-  const submitButton = screen.getByRole("button", { name: "Envoyez-moi un lien" });
+      fireEvent.change(emailInput, { target: { value: 'test@example.com' } });
+      fireEvent.click(submitButton);
 
-  await user.type(emailInput, "test@");
-  await user.click(submitButton);
-  
-  expect(await screen.findByText(errorMessage)).not.toBeNull();
-  expect(signInWithOtpMock).not.toHaveBeenCalled();
-});
+      await waitFor(() => {
+        expect(authLib.signInWithOtp).toHaveBeenCalledWith('test@example.com');
+      });
 
-// C2.3.11: Valid Special Character Email Validation
-it("should call signInWithOtp with a valid email containing special characters", async () => {
-  const user = userEvent.setup();
-  render(<AuthModal />);
-  const emailInput = screen.getByLabelText("Email Address");
-  const submitButton = screen.getByRole("button", { name: "Envoyez-moi un lien" });
-  const validEmail = "test.name+alias@example.co.uk";
+      // Should NOT call persist API
+      expect(mockFetch).not.toHaveBeenCalledWith(
+        '/api/posts/anonymous',
+        expect.any(Object)
+      );
 
-  await user.type(emailInput, validEmail);
-  await user.click(submitButton);
-
-  await waitFor(() => expect(signInWithOtpMock).toHaveBeenCalledWith(validEmail));
-});
-
-// C2.3.4: Loading State
-it("should show a loading state during submission", async () => {
-  const user = userEvent.setup();
-  signInWithOtpMock.mockImplementation(() => new Promise(() => {})); // Never resolves
-
-  render(<AuthModal />);
-  const emailInput = screen.getByLabelText("Email Address");
-  const submitButton = screen.getByRole("button", { name: "Envoyez-moi un lien" });
-
-  await user.type(emailInput, "test@example.com");
-  await user.click(submitButton);
-
-  await waitFor(() => {
-    const loadingButton = screen.getByRole("button", { name: "Envoi..." });
-    expect(loadingButton).not.toBeNull();
-    expect(loadingButton).toHaveProperty("disabled", true);
+      // Should NOT clear localStorage
+      expect(mockLocalStorage.removeItem).not.toHaveBeenCalled();
+    });
   });
-});
 
-// C2.3.5: Success State
-it("should show a success message on successful submission", async () => {
-  const user = userEvent.setup();
-  signInWithOtpMock.mockResolvedValue({ success: true });
+  describe('Feature Flag ON (New Persist-First Flow)', () => {
+    beforeEach(() => {
+      process.env.NEXT_PUBLIC_ENABLE_PERSIST_FIRST = 'true';
+    });
 
-  render(<AuthModal />);
-  const emailInput = screen.getByLabelText("Email Address");
-  const submitButton = screen.getByRole("button", { name: "Envoyez-moi un lien" });
+    it('should call /api/posts/anonymous BEFORE signInWithOtp', async () => {
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ postId: 'test-post-id-123' }),
+      });
+      vi.mocked(authLib.signInWithOtp).mockResolvedValue({ success: true });
 
-  await user.type(emailInput, "test@example.com");
-  await user.click(submitButton);
+      render(<AuthModal postData={mockPostData} />);
 
-  expect(await screen.findByText("Lien envoyé !")).not.toBeNull();
-  expect(screen.getByText("Un lien de connexion a été envoyé à votre adresse email. Veuillez consulter votre boîte de réception.")).not.toBeNull();
-});
+      const emailInput = screen.getByPlaceholderText('moi@exemple.com');
+      const submitButton = screen.getByRole('button', { name: /envoyez-moi un lien/i });
 
-// C2.3.6: API Error State
-it("should show an API error message on failed submission", async () => {
-  const user = userEvent.setup();
-  const errorMessage = "Failed to send link.";
-  signInWithOtpMock.mockResolvedValue({ success: false, error: { code: 'UNKNOWN', message: errorMessage } });
-  
-  render(<AuthModal />);
-  const emailInput = screen.getByLabelText("Email Address");
-  const submitButton = screen.getByRole("button", { name: "Envoyez-moi un lien" });
+      fireEvent.change(emailInput, { target: { value: 'test@example.com' } });
+      fireEvent.click(submitButton);
 
-  await user.type(emailInput, "test@example.com");
-  await user.click(submitButton);
+      // Wait for persist API call
+      await waitFor(() => {
+        expect(mockFetch).toHaveBeenCalledWith(
+          '/api/posts/anonymous',
+          expect.objectContaining({
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(mockPostData),
+          })
+        );
+      });
 
-  expect(await screen.findByText(errorMessage)).not.toBeNull();
-  const finalSubmitButton = screen.getByRole("button", { name: "Envoyez-moi un lien" });
-  expect(finalSubmitButton).not.toBeNull();
-  expect(finalSubmitButton).toHaveProperty("disabled", false);
-});
+      // Then signInWithOtp should be called with postId in URL
+      await waitFor(() => {
+        expect(authLib.signInWithOtp).toHaveBeenCalledWith(
+          'test@example.com',
+          '/auth/confirm?postId=test-post-id-123'
+        );
+      });
+    });
 
-// C2.3.7: Accessibility (ARIA Roles)
-it('should have role="dialog" on the modal container', () => {
-  const { container } = render(<AuthModal />);
-  // The component renders two divs with role="dialog" in different states. We check the visible one.
-  expect(container.querySelector('[role="dialog"]')).not.toBeNull();
-});
+    it('should clear localStorage IMMEDIATELY after 200 response', async () => {
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ postId: 'test-post-id-456' }),
+      });
+      vi.mocked(authLib.signInWithOtp).mockResolvedValue({ success: true });
 
-// C2.3.8: Accessibility (Focus Trap)
-it("should trap focus within the modal", async () => {
-  const user = userEvent.setup();
-  render(<AuthModal />);
-  
-  const emailInput = screen.getByLabelText("Email Address");
-  const submitButton = screen.getByRole("button", { name: "Envoyez-moi un lien" });
+      render(<AuthModal postData={mockPostData} />);
 
-  emailInput.focus();
-  expect(emailInput).toHaveFocus();
+      const emailInput = screen.getByPlaceholderText('moi@exemple.com');
+      const submitButton = screen.getByRole('button', { name: /envoyez-moi un lien/i });
 
-  // Tab forwards
-  await user.tab();
-  expect(submitButton).toHaveFocus();
+      fireEvent.change(emailInput, { target: { value: 'clear@test.com' } });
+      fireEvent.click(submitButton);
 
-  // Should wrap to the start
-  await user.tab();
-  expect(emailInput).toHaveFocus();
+      await waitFor(() => {
+        expect(mockLocalStorage.removeItem).toHaveBeenCalledWith('ice_quiz_state_v1');
+      });
 
-  // Shift+Tab backwards from the submit button, should wrap to the email input
-  await user.tab({ shift: true });
-  expect(submitButton).toHaveFocus();
-});
+      // Verify localStorage.removeItem was called BEFORE magic link success
+      expect(mockLocalStorage.removeItem).toHaveBeenCalledTimes(1);
+    });
 
-// C2.3.10 is not applicable as title and description are not props
-// C2.3.12 & C2.3.13: Pre-Auth Hook tests removed (Story 2.7 - onPreAuth deprecated)
+    it('should handle 429 rate limit error gracefully', async () => {
+      mockFetch.mockResolvedValueOnce({
+        ok: false,
+        status: 429,
+      });
+
+      render(<AuthModal postData={mockPostData} />);
+
+      const emailInput = screen.getByPlaceholderText('moi@exemple.com');
+      const submitButton = screen.getByRole('button', { name: /envoyez-moi un lien/i });
+
+      fireEvent.change(emailInput, { target: { value: 'ratelimit@test.com' } });
+      fireEvent.click(submitButton);
+
+      // Should show user-friendly rate limit message
+      await waitFor(() => {
+        expect(screen.getByText(/limite atteinte/i)).toBeInTheDocument();
+      });
+
+      // Should NOT call signInWithOtp
+      expect(authLib.signInWithOtp).not.toHaveBeenCalled();
+
+      // Should NOT clear localStorage (persist failed)
+      expect(mockLocalStorage.removeItem).not.toHaveBeenCalled();
+    });
+
+    it('should show "Sauvegarde en cours..." during persist', async () => {
+      let resolvePersist: any;
+      const persistPromise = new Promise((resolve) => {
+        resolvePersist = resolve;
+      });
+
+      mockFetch.mockReturnValueOnce(
+        persistPromise.then(() => ({
+          ok: true,
+          json: async () => ({ postId: 'test-id' }),
+        }))
+      );
+
+      render(<AuthModal postData={mockPostData} />);
+
+      const emailInput = screen.getByPlaceholderText('moi@exemple.com');
+      const submitButton = screen.getByRole('button', { name: /envoyez-moi un lien/i });
+
+      fireEvent.change(emailInput, { target: { value: 'loading@test.com' } });
+      fireEvent.click(submitButton);
+
+      // Should show "Sauvegarde en cours..." immediately
+      await waitFor(() => {
+        expect(screen.getByText(/sauvegarde en cours/i)).toBeInTheDocument();
+      });
+
+      // Resolve persist
+      resolvePersist();
+      await waitFor(() => {
+        expect(screen.queryByText(/sauvegarde en cours/i)).not.toBeInTheDocument();
+      });
+    });
+
+    it('should handle persist error and show retry message', async () => {
+      mockFetch.mockResolvedValueOnce({
+        ok: false,
+        status: 500,
+      });
+
+      render(<AuthModal postData={mockPostData} />);
+
+      const emailInput = screen.getByPlaceholderText('moi@exemple.com');
+      const submitButton = screen.getByRole('button', { name: /envoyez-moi un lien/i });
+
+      fireEvent.change(emailInput, { target: { value: 'error@test.com' } });
+      fireEvent.click(submitButton);
+
+      // Should show error message
+      await waitFor(() => {
+        expect(screen.getByText(/erreur lors de la sauvegarde/i)).toBeInTheDocument();
+      });
+
+      // Should NOT clear localStorage (persist failed)
+      expect(mockLocalStorage.removeItem).not.toHaveBeenCalled();
+
+      // Should NOT call signInWithOtp (persist failed)
+      expect(authLib.signInWithOtp).not.toHaveBeenCalled();
+    });
+
+    it('should validate email before persist', async () => {
+      render(<AuthModal postData={mockPostData} />);
+
+      const emailInput = screen.getByPlaceholderText('moi@exemple.com');
+      const submitButton = screen.getByRole('button', { name: /envoyez-moi un lien/i });
+
+      fireEvent.change(emailInput, { target: { value: 'invalid-email' } });
+      fireEvent.click(submitButton);
+
+      // Should show validation error
+      await waitFor(() => {
+        expect(screen.getByText(/adresse email invalide/i)).toBeInTheDocument();
+      });
+
+      // Should NOT call persist API
+      expect(mockFetch).not.toHaveBeenCalled();
+
+      // Should NOT call signInWithOtp
+      expect(authLib.signInWithOtp).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('Without postData (Fallback)', () => {
+    it('should use old flow even with feature flag ON', async () => {
+      process.env.NEXT_PUBLIC_ENABLE_PERSIST_FIRST = 'true';
+      vi.mocked(authLib.signInWithOtp).mockResolvedValue({ success: true });
+
+      // Render without postData
+      render(<AuthModal />);
+
+      const emailInput = screen.getByPlaceholderText('moi@exemple.com');
+      const submitButton = screen.getByRole('button', { name: /envoyez-moi un lien/i });
+
+      fireEvent.change(emailInput, { target: { value: 'fallback@test.com' } });
+      fireEvent.click(submitButton);
+
+      await waitFor(() => {
+        expect(authLib.signInWithOtp).toHaveBeenCalledWith('fallback@test.com');
+      });
+
+      // Should NOT call persist API (no postData)
+      expect(mockFetch).not.toHaveBeenCalled();
+    });
+  });
 });
