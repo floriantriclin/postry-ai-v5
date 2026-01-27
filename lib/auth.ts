@@ -1,4 +1,4 @@
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/lib/supabase-client';
 import { env } from '@/lib/env';
 import { emailSchema } from './auth-schema';
 

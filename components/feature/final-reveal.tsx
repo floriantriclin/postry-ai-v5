@@ -5,7 +5,7 @@ import { Archetype, Vstyle, PostGenerationResponse } from '@/lib/types';
 import { Loader2, ChevronDown, ChevronUp, X } from 'lucide-react';
 import { LoaderMachine } from '../ui/loader-machine';
 import { AuthModal } from './auth-modal';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/lib/supabase-client';
 
 interface FinalRevealProps {
   profile: {
