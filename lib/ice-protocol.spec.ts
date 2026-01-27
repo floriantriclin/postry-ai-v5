@@ -2,9 +2,9 @@ import {
   ICE_ARCHETYPES,
   vstyleSchema,
   binarySignatureSchema,
-  ICE_PHASE1_DIMENSIONS_ORDER,
-  type Vstyle
+  ICE_PHASE1_DIMENSIONS_ORDER
 } from './ice-constants';
+import { type Vstyle } from './types';
 import { 
   getClosestArchetype, 
   updateVector, 
