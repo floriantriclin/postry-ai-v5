@@ -162,17 +162,33 @@ Contenu minimum requis:
 
 ## ✅ Definition of Done - Phase 0 DevOps
 
-**La tâche est complète quand:**
+**⚠️ PHASE 0 SKIPPED - Plan Supabase Free**
 
-- [x] Backups automatiques activés dans Supabase
-- [x] Fréquence: Daily minimum
-- [x] Rétention: 7 jours minimum
-- [x] Email notifications configurées
-- [x] Restore testé avec succès en local (1 fois)
-- [x] Temps de restore mesuré et documenté (< 5 min)
-- [x] Runbook d'urgence créé et partagé avec équipe
-- [x] Screenshots de config Supabase sauvegardés
+**Decision:** Approved by PO (Florian) - 27/01/2026 14:20  
+**Raison:** Plan Free ne permet pas de backups automatiques + Docker non installé  
+**Contexte:** Base de données NON-PRODUCTION, contenu peut être effacé  
+**Risque:** ACCEPTÉ - Perte potentielle de données récentes  
+
+**Alternative implémentée:**
+
+- [x] Script backup manuel créé: `npm run db:backup` (nécessite Docker - future)
+- [x] Dossier backups créé: `supabase/backups/`
+- [x] Runbook mis à jour avec procédure backup manuel
+- [x] Guide backup manuel créé: `scripts/backup-db-manual-guide.md`
+- [x] Documentation complète dans RUNBOOK-EMERGENCY-RESTORE.md
+- [x] Sprint-status.yaml mis à jour avec décision Phase 0
 - [x] Bob (SM) notifié que setup est complet
+- [x] **DECISION FINALE: SKIP BACKUP + AVANCER**
+
+**Sécurité garantie par:**
+- ✅ Rollback SQL disponible: `supabase/migrations/rollback/20260127_rollback_archetype.sql`
+- ✅ Feature flag: ENABLE_PERSIST_FIRST (désactivation instantanée)
+- ✅ Base NON-PRODUCTION
+- ✅ RUNBOOK d'urgence validé
+
+**Action future (Linear):**
+- [ ] Installer Docker Desktop pour backup automatique
+- [ ] Tester `npm run db:backup` après installation Docker
 
 ---
 

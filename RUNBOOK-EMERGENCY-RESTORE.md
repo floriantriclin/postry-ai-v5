@@ -4,14 +4,31 @@
 **📅 Créé:** 27 Janvier 2026  
 **👤 Owner:** DevOps / Tech Lead  
 **⚠️ Severity:** P0 CRITICAL  
-**⏱️ Temps total:** < 10 minutes
+**⏱️ Temps total:** < 10 minutes  
+**🆓 Plan:** Supabase Free (BACKUPS MANUELS UNIQUEMENT)
+
+---
+
+## ⚠️ IMPORTANT: Plan Free - Backup Manuel
+
+**Ce projet utilise Supabase FREE:**
+- ❌ Pas de backups automatiques
+- ✅ Backups manuels AVANT chaque migration (voir section ci-dessous)
+- ✅ Base de données NON-PRODUCTION (contenu peut être effacé)
+- ⚠️ Risque accepté: Perte potentielle de données récentes
+
+**Procédure backup manuel OBLIGATOIRE avant migration:**
+```bash
+# Voir section "Backup Manuel Pre-Migration" ci-dessous
+npm run db:backup  # ou export manuel via Supabase CLI
+```
 
 ---
 
 ## 🎯 Quand Utiliser Ce Runbook?
 
 **Utiliser IMMÉDIATEMENT si:**
-- ✅ Story 2.11b a causé data loss en production
+- ✅ Story 2.11b a causé data loss
 - ✅ Migration SQL a corrompu les données `posts`
 - ✅ Dashboard affiche erreurs critiques post-déploiement
 - ✅ Besoin de revenir à l'état avant Story 2.11b
@@ -20,7 +37,7 @@
 **NE PAS utiliser si:**
 - ❌ Erreur mineure corrigeable par hotfix
 - ❌ Problème isolé à 1-2 utilisateurs
-- ❌ Backup disponible < 1h (attendre résolution)
+- ❌ Backup manuel récent disponible (< 2h)
 
 ---
 
@@ -38,14 +55,85 @@
    - [ ] Tech Lead notifié
    - [ ] Équipe Dev informée
 
-3. **Backup Disponible**
-   - [ ] Backup < 24h existe dans Supabase
+3. **Backup Manuel Disponible**
+   - [ ] Backup manuel < 24h existe dans `supabase/backups/`
    - [ ] Timestamp backup noté: ______________
    - [ ] Taille backup vérifiée: _______ MB
+   - [ ] Vérifier présence fichier: `backup_YYYYMMDD_HHMM.sql`
 
 4. **Communication**
    - [ ] Users notifiés (si downtime prévu)
    - [ ] Monitoring actif (Sentry, logs)
+
+---
+
+## 💾 BACKUP MANUEL PRE-MIGRATION (OBLIGATOIRE)
+
+**⚠️ À EXÉCUTER AVANT CHAQUE MIGRATION SQL**
+
+Cette section est **OBLIGATOIRE** pour le plan Free car pas de backups automatiques.
+
+### Option 1: Via Supabase CLI (Recommandé - 2 min)
+
+```bash
+# 1. Installer Supabase CLI si pas déjà fait
+npm install -g supabase
+
+# 2. Login Supabase
+supabase login
+
+# 3. Créer backup avec timestamp
+TIMESTAMP=$(date +%Y%m%d_%H%M)
+supabase db dump --db-url "$DATABASE_URL" > supabase/backups/backup_$TIMESTAMP.sql
+
+# 4. Vérifier backup créé
+ls -lh supabase/backups/backup_$TIMESTAMP.sql
+
+# 5. Commit backup (optionnel mais recommandé)
+git add supabase/backups/backup_$TIMESTAMP.sql
+git commit -m "backup: pre-migration Story 2.11b"
+```
+
+### Option 2: Via Supabase Dashboard (Alternative - 3 min)
+
+1. **Export SQL**
+   - [ ] Aller sur https://supabase.com/dashboard/project/hoomcbsfqunrkeapxbvh
+   - [ ] Menu: **SQL Editor** → **New Query**
+   - [ ] Exécuter: `pg_dump` via custom query
+   
+2. **Copy/Paste Export**
+   - [ ] Copier output SQL complet
+   - [ ] Créer fichier: `supabase/backups/backup_YYYYMMDD_HHMM.sql`
+   - [ ] Coller contenu
+   - [ ] Sauvegarder fichier
+
+### Option 3: Script NPM (Plus Rapide - 30 sec)
+
+```bash
+# Ajouter dans package.json (à faire 1 fois):
+# "scripts": {
+#   "db:backup": "supabase db dump --db-url \"$DATABASE_URL\" > supabase/backups/backup_$(date +%Y%m%d_%H%M).sql"
+# }
+
+# Utilisation (avant chaque migration):
+npm run db:backup
+
+# Résultat: supabase/backups/backup_20260127_1430.sql créé
+```
+
+### ✅ Checklist Backup Pré-Migration
+
+**AVANT de lancer une migration SQL:**
+- [ ] Backup manuel créé via option 1, 2 ou 3
+- [ ] Fichier existe dans `supabase/backups/`
+- [ ] Taille fichier > 10 KB (pas vide)
+- [ ] Timestamp dans nom fichier
+- [ ] (Optionnel) Backup commité dans Git
+
+**Rétention des backups:**
+- Garder 7 derniers backups
+- Supprimer backups > 7 jours (économie espace disque)
+- Backups importants (pré-migration majeure): garder indéfiniment
 
 ---
 
@@ -76,48 +164,57 @@ ENABLE_PERSIST_FIRST=false
 
 ---
 
-### STEP 2: Identifier Backup à Restore (1 min)
+### STEP 2: Identifier Backup Manuel à Restore (1 min)
 
-**Supabase Dashboard:**
+**Plan Free - Backup Manuel:**
 
-1. **Naviguer vers Backups**
-   - [ ] https://supabase.com/dashboard/project/hoomcbsfqunrkeapxbvh
-   - [ ] Settings → Database → Backups
+1. **Trouver Backup Local**
+   - [ ] Ouvrir dossier: `supabase/backups/`
+   - [ ] Lister fichiers: `ls -lh supabase/backups/`
+   - [ ] Chercher backup AVANT migration Story 2.11b
 
 2. **Sélectionner Backup**
-   - [ ] Trouver backup AVANT déploiement Story 2.11b
-   - [ ] Vérifier timestamp: Doit être < dernière migration
-   - [ ] Noter backup ID: __________________
+   - [ ] Trouver backup avec timestamp AVANT déploiement
+   - [ ] Exemple: `backup_20260127_1430.sql` (27 Jan 14h30)
+   - [ ] Noter nom fichier: __________________
 
 3. **Vérifier Intégrité**
-   - [ ] Taille du backup normal (< 100 MB)
-   - [ ] Status: ✅ Completed
-   - [ ] No errors in backup logs
+   - [ ] Taille du backup normale (> 10 KB)
+   - [ ] Ouvrir fichier: premières lignes doivent contenir SQL valide
+   - [ ] Vérifier présence: `CREATE TABLE`, `INSERT INTO posts`
 
 **⏱️ Temps écoulé:** 2 min
 
 ---
 
-### STEP 3: Restore Database (5 min) ⚠️
+### STEP 3: Restore Database Manuellement (5 min) ⚠️
 
 **⚠️ ATTENTION: Cette opération va REMPLACER la DB actuelle**
 
-**Supabase Dashboard:**
+**Plan Free - Restore Manuel via SQL Editor:**
 
-1. **Initier Restore**
-   - [ ] Cliquer sur backup sélectionné
-   - [ ] Bouton **Restore**
-   - [ ] Confirmer avec mot de passe Admin
+1. **Préparer Backup SQL**
+   - [ ] Ouvrir fichier backup: `supabase/backups/backup_YYYYMMDD_HHMM.sql`
+   - [ ] Copier TOUT le contenu (Ctrl+A, Ctrl+C)
+   - [ ] Vérifier taille fichier < 2 MB (limitation SQL Editor)
 
-2. **Monitoring Restore**
-   - [ ] Popup de progression apparaît
-   - [ ] Attendre completion (2-4 min généralement)
-   - [ ] Vérifier "Restore completed successfully"
+2. **Supabase SQL Editor**
+   - [ ] Aller sur https://supabase.com/dashboard/project/hoomcbsfqunrkeapxbvh
+   - [ ] Menu: **SQL Editor** → **New Query**
+   - [ ] Coller contenu backup SQL
+   - [ ] Cliquer **Run** (ou Ctrl+Enter)
 
-3. **Logs Monitoring**
-   - [ ] Ouvrir onglet Logs (pendant restore)
-   - [ ] Vérifier aucune erreur SQL
-   - [ ] Confirmer tables restaurées
+3. **Monitoring Restore**
+   - [ ] Attendre exécution (1-3 min généralement)
+   - [ ] Vérifier message: "Success. No rows returned"
+   - [ ] Vérifier aucune erreur SQL dans output
+
+**Alternative si fichier > 2 MB:**
+```bash
+# Utiliser Supabase CLI (plus rapide)
+supabase db reset --db-url "postgresql://postgres:[PASSWORD]@db.hoomcbsfqunrkeapxbvh.supabase.co:5432/postgres"
+psql -h db.hoomcbsfqunrkeapxbvh.supabase.co -U postgres -d postgres < supabase/backups/backup_YYYYMMDD_HHMM.sql
+```
 
 **⏱️ Temps écoulé:** 7 min
 
