@@ -72,7 +72,7 @@ development_status:
   2-9-e2e-test-completion: ready-for-dev  # Linear: BMA-10
   2-10-unit-tests-documentation: ready-for-dev  # Linear: BMA-11
   2-11-epic-2-bug-fixes: cancelled  # Linear: BMA-9 - SPLITTED into 2.11a + 2.11b (Go/No-Go Decision 27/01/2026)
-  2-11b-persist-first-architecture: local-testing  # Linear: BMA-48 - BUG-006, BUG-007 Security (8h, P0 CRITICAL) - PRIORITÉ #1 - AC1-AC6 COMPLETED, SMOKE TESTS PASSED (7/7) - 28/01/2026
+  2-11b-persist-first-architecture: production-ready  # Linear: BMA-48 - BUG-006, BUG-007 Security (8h, P0 CRITICAL) - COMPLETED ✅ - All bugs fixed, new flow working on staging - 28/01/2026
   2-11a-quick-wins: backlog  # Linear: BMA-49 - BUG-002 Dashboard, BUG-003 Archetype (2h30, P1 MEDIUM)
   2-12-cleanup-job-posts-orphelins: backlog  # Linear: BMA-50 - Cleanup posts pending>24h (3h, P2 LOW, blocked by BMA-48)
   epic-2-retrospective: optional

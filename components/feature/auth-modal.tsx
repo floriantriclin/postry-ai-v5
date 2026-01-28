@@ -2,6 +2,7 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import { signInWithOtp } from "@/lib/auth";
+import { usePersistFirstClient } from "@/lib/feature-flags";
 import { z } from "zod";
 import { X } from "lucide-react";
 
@@ -86,7 +87,8 @@ export function AuthModal({ postData }: AuthModalProps) {
     setLoading(true);
 
     // Story 2.11b: Persist-First Architecture with Feature Flag
-    const enablePersistFirst = process.env.NEXT_PUBLIC_ENABLE_PERSIST_FIRST === 'true';
+    // Use rollout system for gradual deployment
+    const enablePersistFirst = usePersistFirstClient();
 
     if (enablePersistFirst && postData) {
       // NEW FLOW: Persist → Clear localStorage → Send magic link

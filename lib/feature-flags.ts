@@ -1,84 +1,74 @@
 /**
- * Feature Flags System
- * Story 2.11b (BMA-48) - Architecture Persist-First
- * 
- * Purpose: Enable/disable persist-first architecture for gradual rollout
- * Owner: Tech Lead
- * Date: 2026-01-27
+ * Feature Flags Management
+ * Story 2.11b (BMA-48)
  */
 
 /**
- * Feature flag configuration
- * Loaded from environment variables at runtime
- * 
- * Note: Flags are evaluated dynamically on each call to support testing
+ * Get persist-first flag status
+ * Supports gradual rollout via percentage
  */
-export const FeatureFlags = {
-  /**
-   * ENABLE_PERSIST_FIRST
-   * 
-   * Controls whether posts are persisted to DB BEFORE auth modal (persist-first)
-   * or saved to localStorage (legacy behavior)
-   * 
-   * Default: false (legacy behavior - safe)
-   * Rollout plan:
-   *   - Phase 1: 10% users → Monitor 24h
-   *   - Phase 2: 50% users → Monitor 24h  
-   *   - Phase 3: 100% users → Monitor 48h
-   * 
-   * Rollback: Set to false in .env, redeploy (< 5 min)
-   */
-  get ENABLE_PERSIST_FIRST(): boolean {
-    return process.env.NEXT_PUBLIC_ENABLE_PERSIST_FIRST === 'true';
-  },
+export function getPersistFirstEnabled(identifier?: string): boolean {
+  // Base flag - must be true to enable rollout
+  const baseFlag = process.env.NEXT_PUBLIC_ENABLE_PERSIST_FIRST === 'true';
   
-  /**
-   * Helper: Check if persist-first is enabled
-   */
-  isPersistFirstEnabled(): boolean {
-    return this.ENABLE_PERSIST_FIRST;
-  },
-  
-  /**
-   * Helper: Get current behavior mode
-   */
-  getPostPersistMode(): 'persist-first' | 'localStorage-legacy' {
-    return this.ENABLE_PERSIST_FIRST ? 'persist-first' : 'localStorage-legacy';
-  },
-  
-  /**
-   * Debug helper: Get all flags status
-   */
-  getAllFlags(): Record<string, boolean> {
-    return {
-      ENABLE_PERSIST_FIRST: this.ENABLE_PERSIST_FIRST,
-    };
-  },
-};
+  if (!baseFlag) {
+    return false;
+  }
 
-/**
- * Type-safe feature flag checker
- * Use this in components/API routes
- * 
- * @example
- * ```typescript
- * if (FeatureFlags.isPersistFirstEnabled()) {
- *   // Call /api/posts/anonymous
- * } else {
- *   // Use localStorage (legacy)
- * }
- * ```
- */
-export function usePersistFirst(): boolean {
-  return FeatureFlags.isPersistFirstEnabled();
+  // Rollout percentage (0-100)
+  const rolloutPercentage = parseInt(process.env.NEXT_PUBLIC_PERSIST_FIRST_ROLLOUT || '100', 10);
+  
+  // 100% = everyone gets it
+  if (rolloutPercentage >= 100) {
+    return true;
+  }
+
+  // 0% = nobody gets it
+  if (rolloutPercentage <= 0) {
+    return false;
+  }
+
+  // For gradual rollout, use consistent hashing
+  if (!identifier) {
+    // No identifier = use random (not consistent across page reloads)
+    return Math.random() * 100 < rolloutPercentage;
+  }
+
+  // Hash the identifier to get consistent result
+  const hash = simpleHash(identifier);
+  const bucket = hash % 100; // 0-99
+  
+  return bucket < rolloutPercentage;
 }
 
 /**
- * Server-side only: Get feature flags from server env
- * Use in API routes to check flags
+ * Simple hash function for consistent rollout
  */
-export function getServerFeatureFlags() {
-  return {
-    ENABLE_PERSIST_FIRST: process.env.ENABLE_PERSIST_FIRST === 'true',
-  };
+function simpleHash(str: string): number {
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    const char = str.charCodeAt(i);
+    hash = ((hash << 5) - hash) + char;
+    hash = hash & hash; // Convert to 32bit integer
+  }
+  return Math.abs(hash);
+}
+
+/**
+ * CLIENT-SIDE: Get persist-first flag
+ * Uses session storage for consistency during session
+ */
+export function usePersistFirstClient(): boolean {
+  if (typeof window === 'undefined') {
+    return false;
+  }
+
+  // Get or create session identifier
+  let sessionId = sessionStorage.getItem('_session_id');
+  if (!sessionId) {
+    sessionId = `session_${Date.now()}_${Math.random()}`;
+    sessionStorage.setItem('_session_id', sessionId);
+  }
+
+  return getPersistFirstEnabled(sessionId);
 }

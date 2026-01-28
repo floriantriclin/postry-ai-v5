@@ -4,6 +4,7 @@ import { useEffect, useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { createBrowserClient } from '@supabase/ssr';
 import { type Session } from '@supabase/supabase-js';
+import { usePersistFirstClient } from '@/lib/feature-flags';
 import { LoaderMachine } from '@/components/ui/loader-machine';
 
 function AuthConfirmContent() {
@@ -49,7 +50,8 @@ function AuthConfirmContent() {
         }
 
         // Story 2.11b: Persist-First Architecture with Feature Flag
-        const enablePersistFirst = process.env.NEXT_PUBLIC_ENABLE_PERSIST_FIRST === 'true';
+        // Use rollout system for gradual deployment
+        const enablePersistFirst = usePersistFirstClient();
 
         if (enablePersistFirst) {
           // NEW FLOW: Link pending post to user
