@@ -38,7 +38,10 @@ export async function signInWithOtp(email: string, redirectTo: string = '/dashbo
       ? window.location.origin 
       : env.NEXT_PUBLIC_BASE_URL;
 
-    const fullRedirectUrl = `${baseUrl}/auth/confirm?next=${encodeURIComponent(redirectTo)}`;
+    // Story 2.11b: Support full paths (starting with /) directly
+    const fullRedirectUrl = redirectTo.startsWith('/') 
+      ? `${baseUrl}${redirectTo}`
+      : `${baseUrl}/auth/confirm?next=${encodeURIComponent(redirectTo)}`;
     
     // Debug log (remove after validation)
     console.log('🔗 Magic link will redirect to:', fullRedirectUrl);
