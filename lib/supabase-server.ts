@@ -39,6 +39,10 @@ export async function createClient() {
  * Use ONLY for trusted server-side operations
  */
 export function createServiceRoleClient() {
+  if (!env.SUPABASE_SERVICE_ROLE_KEY) {
+    throw new Error('SUPABASE_SERVICE_ROLE_KEY is required for service role operations');
+  }
+  
   return createSupabaseClient(
     env.NEXT_PUBLIC_SUPABASE_URL,
     env.SUPABASE_SERVICE_ROLE_KEY,
