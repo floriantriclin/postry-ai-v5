@@ -61,8 +61,8 @@ export async function middleware(request: NextRequest) {
 
   const publicPaths = ["/", "/auth/confirm"];
 
-  // Story 2.11b: Allow anonymous post creation endpoint
-  if (!user && !publicPaths.includes(request.nextUrl.pathname) && !request.nextUrl.pathname.startsWith('/quiz') && !request.nextUrl.pathname.startsWith('/api/quiz') && !request.nextUrl.pathname.startsWith('/api/posts')) {
+  // Story 2.11b: Allow anonymous post creation endpoint + debug endpoints
+  if (!user && !publicPaths.includes(request.nextUrl.pathname) && !request.nextUrl.pathname.startsWith('/quiz') && !request.nextUrl.pathname.startsWith('/api/quiz') && !request.nextUrl.pathname.startsWith('/api/posts') && !request.nextUrl.pathname.startsWith('/api/debug')) {
     const loginUrl = new URL("/", request.url);
     loginUrl.searchParams.set("redirectedFrom", request.nextUrl.pathname);
     return NextResponse.redirect(loginUrl);
