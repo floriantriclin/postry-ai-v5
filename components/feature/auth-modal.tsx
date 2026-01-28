@@ -86,8 +86,7 @@ export function AuthModal({ postData }: AuthModalProps) {
     setLoading(true);
 
     // Story 2.11b: Persist-First Architecture with Feature Flag
-    // TEMPORARY HARDCODE: Force enable until env var injection works
-    const enablePersistFirst = true; // process.env.NEXT_PUBLIC_ENABLE_PERSIST_FIRST === 'true';
+    const enablePersistFirst = process.env.NEXT_PUBLIC_ENABLE_PERSIST_FIRST === 'true';
 
     if (enablePersistFirst && postData) {
       // NEW FLOW: Persist → Clear localStorage → Send magic link
