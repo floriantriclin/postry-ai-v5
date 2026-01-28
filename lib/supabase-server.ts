@@ -1,4 +1,5 @@
 import { createServerClient } from '@supabase/ssr';
+import { createClient as createSupabaseClient } from '@supabase/supabase-js';
 import { cookies } from 'next/headers';
 import { env } from '@/lib/env';
 
@@ -29,6 +30,23 @@ export async function createClient() {
           }
         },
       },
+    }
+  );
+}
+
+/**
+ * Create a Supabase client with Service Role key (bypasses RLS)
+ * Use ONLY for trusted server-side operations
+ */
+export function createServiceRoleClient() {
+  return createSupabaseClient(
+    env.NEXT_PUBLIC_SUPABASE_URL,
+    env.SUPABASE_SERVICE_ROLE_KEY,
+    {
+      auth: {
+        autoRefreshToken: false,
+        persistSession: false
+      }
     }
   );
 }

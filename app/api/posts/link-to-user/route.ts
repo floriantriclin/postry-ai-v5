@@ -16,7 +16,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
-import { createClient } from '@/lib/supabase-server';
+import { createClient, createServiceRoleClient } from '@/lib/supabase-server';
 
 /**
  * Zod schema for link-to-user request
@@ -60,7 +60,9 @@ export async function POST(req: NextRequest) {
     const { postId } = result.data;
 
     // 3. Check if post exists and get current user_id
-    const { data: existingPost, error: fetchError } = await supabase
+    // Use service role to bypass RLS (post has user_id=NULL)
+    const supabaseAdmin = createServiceRoleClient();
+    const { data: existingPost, error: fetchError } = await supabaseAdmin
       .from('posts')
       .select('user_id')
       .eq('id', postId)
@@ -92,7 +94,8 @@ export async function POST(req: NextRequest) {
     }
 
     // 5. Update post with user_id and status='revealed'
-    const { data, error: updateError } = await supabase
+    // Use service role to bypass RLS
+    const { data, error: updateError } = await supabaseAdmin
       .from('posts')
       .update({
         user_id: user.id,
