@@ -176,10 +176,19 @@ setup("authenticate for Chromium", async ({ page }) => {
   }
 
   // 4. Verify & Save State
-  await page.goto('/dashboard');
-  
+  await page.goto('/dashboard', { waitUntil: 'networkidle', timeout: 30000 });
+  await page.waitForLoadState('domcontentloaded');
+
+  const url = page.url();
+  if (!url.includes('/dashboard') || url.includes('redirectedFrom')) {
+    await page.screenshot({ path: 'e2e/auth-setup-failure-chromium.png' });
+    throw new Error(`[Chromium] Auth failed: redirected to ${url}`);
+  }
+
+  // Wait for dashboard content: either post block or "Aucun post généré" (no post)
+  const contentLocator = page.getByTestId('post-content').or(page.getByText('Aucun post généré'));
   try {
-    await page.waitForSelector('[data-testid="post-content"]', { timeout: 15000 });
+    await contentLocator.waitFor({ state: 'visible', timeout: 30000 });
     console.log("✅ [Chromium] Dashboard loaded successfully");
   } catch (e) {
     console.error("❌ [Chromium] Login failed or Dashboard failed to load post.");

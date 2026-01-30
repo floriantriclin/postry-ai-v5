@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<protocol name="linear-integration" version="1.0">
+  <metadata>
+    <title>Protocole d'Intégration Linear</title>
+    <description>Protocole réutilisable pour créer et gérer des issues dans Linear</description>
+    <author>BMAD System</author>
+    <date>2026-01-27</date>
+  </metadata>
+
+  <critical>
+    🎯 RÈGLE D'OR : Toujours vérifier si une issue existe AVANT d'en créer une nouvelle
+    🔄 RÈGLE CRITIQUE : Linear ↔ Fichiers locaux doivent TOUJOURS être synchronisés (voir .cursor/rules/linear-sync.md)
+  </critical>
+
+  <!-- ============================================ -->
+  <!-- PROTOCOLE 1: Créer une Issue dans Linear -->
+  <!-- ============================================ -->
+  <procedure name="create_linear_issue">
+    <description>Crée une issue dans Linear après vérification des doublons</description>
+    
+    <inputs>
+      <input name="title" type="string" required="true" description="Titre de l'issue"/>
+      <input name="description" type="string" required="true" description="Description Markdown"/>
+      <input name="priority" type="string" required="false" description="critique|high|medium|low"/>
+      <input name="estimate" type="number" required="false" description="Estimation en heures"/>
+      <input name="labels" type="array" required="false" description="Liste de labels"/>
+      <input name="assignee" type="string" required="false" description="Assigné (me, email, name, ID)"/>
+      <input name="project" type="string" required="false" description="Projet Linear"/>
+    </inputs>
+
+    <steps>
+      <step n="1" title="Charger la configuration Linear">
+        <action>Lire le fichier {project-root}/_bmad/_memory/linear-config.yaml</action>
+        <action>Extraire default_team, priority_mapping, labels</action>
+      </step>
+
+      <step n="2" title="Vérifier si l'issue existe déjà">
+        <action>Appeler l'outil MCP: list_issues avec query={title_keywords}</action>
+        <check if="issue existe déjà avec titre similaire">
+          <output>⚠️ Issue déjà existante trouvée: {issue_id} - {issue_title}</output>
+          <output>URL: {issue_url}</output>
+          <ask>Voulez-vous : [u]pdater l'issue existante, [c]réer quand même, ou [s]kip?</ask>
+          <check if="réponse = 'u'">
+            <action>GOTO step 4 (update issue)</action>
+          </check>
+          <check if="réponse = 's'">
+            <action>RETURN {issue_id, issue_url, action: 'skipped'}</action>
+          </check>
+        </check>
+      </step>
+
+      <step n="3" title="Mapper les priorités et labels">
+        <action>Convertir {priority} selon priority_mapping (critique→1, high→2, etc.)</action>
+        <action>Valider que les {labels} existent dans la config</action>
+        <action>Préparer les paramètres pour l'API Linear</action>
+      </step>
+
+      <step n="4" title="Créer l'issue dans Linear">
+        <action>Appeler l'outil MCP: create_issue avec:</action>
+        <parameters>
+          - title: {title}
+          - description: {description}
+          - team: {default_team}
+          - priority: {mapped_priority}
+          - estimate: {estimate}
+          - labels: {labels}
+          - assignee: {assignee}
+          - project: {project}
+        </parameters>
+        <action>Récupérer: issue_id, identifier, url, gitBranchName</action>
+      </step>
+
+      <step n="5" title="Enregistrer la référence">
+        <action>Optionnel: Créer un lien dans la doc locale</action>
+        <action>Optionnel: Ajouter l'URL Linear dans les fichiers concernés</action>
+        <output>✅ Issue créée avec succès!</output>
+        <output>ID: {identifier} ({issue_id})</output>
+        <output>URL: {url}</output>
+        <output>Git Branch: {gitBranchName}</output>
+      </step>
+
+      <step n="5b" title="Vérifier Synchronisation Linear ↔ Local" critical="true">
+        <check if="fichier local existe (_bmad-output/implementation-artifacts/*.md)">
+          <action>Vérifier cohérence entre issue Linear et fichier local</action>
+          <check if="divergence détectée">
+            <action>Informer utilisateur des différences</action>
+            <ask>Mettre à jour Linear ou fichier local ? [Linear/Local/Skip]</ask>
+            <action>Procéder à la synchronisation selon choix utilisateur</action>
+          </check>
+        </check>
+        <note>Voir règle complète: .cursor/rules/linear-sync.md</note>
+      </step>
+
+      <step n="6" title="Retourner les informations">
+        <return>
+          {
+            "issue_id": "{issue_id}",
+            "identifier": "{identifier}",
+            "url": "{url}",
+            "gitBranchName": "{gitBranchName}",
+            "action": "created"
+          }
+        </return>
+      </step>
+    </steps>
+  </procedure>
+
+  <!-- ============================================ -->
+  <!-- PROTOCOLE 2: Mettre à Jour une Issue Linear -->
+  <!-- ============================================ -->
+  <procedure name="update_linear_issue">
+    <description>Met à jour une issue Linear existante</description>
+    
+    <inputs>
+      <input name="issue_id_or_identifier" type="string" required="true" description="ID ou Identifier (ex: BMA-5)"/>
+      <input name="status" type="string" required="false" description="Nouveau statut"/>
+      <input name="description" type="string" required="false" description="Nouvelle description"/>
+      <input name="priority" type="number" required="false" description="Nouvelle priorité"/>
+    </inputs>
+
+    <steps>
+      <step n="1" title="Récupérer l'issue existante">
+        <action>Appeler l'outil MCP: get_issue avec id={issue_id_or_identifier}</action>
+        <action>Valider que l'issue existe</action>
+      </step>
+
+      <step n="2" title="Appliquer les modifications">
+        <action>Appeler l'outil MCP: update_issue avec les nouveaux champs</action>
+        <output>✅ Issue {identifier} mise à jour</output>
+      </step>
+    </steps>
+  </procedure>
+
+  <!-- ============================================ -->
+  <!-- PROTOCOLE 3: Lister les Issues pour Contexte -->
+  <!-- ============================================ -->
+  <procedure name="get_linear_context">
+    <description>Récupère le contexte Linear (bugs, stories, etc.)</description>
+    
+    <inputs>
+      <input name="filter_type" type="string" required="false" description="bug|feature|story"/>
+      <input name="filter_status" type="string" required="false" description="backlog|in-progress|done"/>
+    </inputs>
+
+    <steps>
+      <step n="1" title="Récupérer les issues">
+        <action>Appeler l'outil MCP: list_issues avec filtres</action>
+        <action>Parser et formater les résultats</action>
+      </step>
+
+      <step n="2" title="Retourner le contexte">
+        <return>Liste formatée des issues avec ID, titre, statut, priorité, URL</return>
+      </step>
+    </steps>
+  </procedure>
+
+  <!-- ============================================ -->
+  <!-- USAGE DANS LES WORKFLOWS -->
+  <!-- ============================================ -->
+  <usage>
+    <example>
+      <!-- Dans un workflow XML, utiliser: -->
+      <invoke-protocol name="linear-integration.create_linear_issue">
+        <param name="title">🐛 Bug trouvé dans le Dashboard</param>
+        <param name="description">## Description\n\nLe dashboard crash...</param>
+        <param name="priority">critique</param>
+        <param name="estimate">2</param>
+        <param name="labels">["Bug"]</param>
+      </invoke-protocol>
+    </example>
+  </usage>
+
+  <notes>
+    <note>Ce protocole nécessite que le MCP server Linear soit configuré</note>
+    <note>La configuration Linear doit être dans _bmad/_memory/linear-config.yaml</note>
+    <note>Toujours vérifier les doublons avant de créer une nouvelle issue</note>
+  </notes>
+</protocol>

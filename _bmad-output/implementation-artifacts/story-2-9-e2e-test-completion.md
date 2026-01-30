@@ -5,7 +5,7 @@
 **Référence:** [`docs/RECAP-CE-QUI-RESTE-A-FAIRE.md`](../RECAP-CE-QUI-RESTE-A-FAIRE.md) - Story 2.9  
 **Référence Story 2.8:** [`story-2-8-production-readiness.md`](story-2-8-production-readiness.md)  
 **Date de Création:** 26 Janvier 2026 23:10 UTC  
-**Statut:** 📋 **PLANIFIÉE** (Post-Production)  
+**Statut:** 🟢 **IN PROGRESS** (29/01/2026)  
 **Priorité:** 🟡 MOYENNE
 
 ---
@@ -472,7 +472,7 @@ useEffect(() => {
 **Créé par:** Scrum Master (BMad SM)  
 **Date de création:** 26 Janvier 2026 23:10 UTC  
 **Dernière mise à jour:** 26 Janvier 2026 23:10 UTC  
-**Statut:** 📋 **PLANIFIÉE** (Post-Production)  
+**Statut:** 🟢 **IN PROGRESS** (29/01/2026)  
 **Priorité:** 🟡 MOYENNE  
 **Sprint:** Prochain sprint (après déploiement production)  
 **Effort Estimé:** 3h30 (1 jour)
@@ -511,3 +511,125 @@ Cette story sera considérée comme **DONE** quand:
 ---
 
 **Bonne chance pour l'implémentation! 🚀**
+
+---
+
+## Contexte Dev (pour dev-story)
+
+*Section générée par le workflow Create Story pour fournir au Dev agent tout le contexte nécessaire. Utiliser ce document comme référence unique pour l’implémentation.*
+
+### Story Header (référence)
+
+- **Story ID:** 2.9  
+- **Story Key:** 2-9-e2e-test-completion  
+- **Linear:** BMA-10 — [Story 2.9: E2E Test Completion](https://linear.app/floriantriclin/issue/BMA-10/story-29-e2e-test-completion)  
+- **Statut cible:** ready-for-dev → in-progress  
+- **Fichier story:** `_bmad-output/implementation-artifacts/story-2-9-e2e-test-completion.md`
+
+---
+
+### Exigences techniques (guardrails)
+
+1. **Ne pas réinventer**
+   - Réutiliser `lib/data/mock-quiz.json` et les fallbacks existants dans `quiz-engine.tsx` / `quiz-engine.logic.ts`.
+   - Les actions `API_LOAD_P1_ERROR`, `API_ARCHETYPE_ERROR`, `API_LOAD_P2_ERROR`, `API_PROFILE_ERROR` appliquent déjà un fallback mock ; ne pas dupliquer la logique.
+
+2. **Stack et versions**
+   - **Playwright:** ^1.57.0 (déjà en place). Ne pas changer de version sans raison.
+   - **Vitest:** pour les tests unitaires du fallback. Voir `components/feature/quiz-engine.logic.test.ts` pour le pattern (API_LOAD_P1_ERROR avec fallback).
+   - **Next.js App Router:** `app/`, `components/`, `lib/`, `e2e/` — respecter l’arborescence existante.
+
+3. **Fichiers à modifier / créer (liste stricte)**
+   - **Modifier:** `components/feature/quiz-engine.tsx` — timing du fallback P1 (voir ci‑dessous).
+   - **Modifier (si besoin):** `lib/quiz-api-client.ts` — pas d’appel API si clé absente (optionnel, ou gérer côté composant).
+   - **Tests unitaires:** étendre `components/feature/quiz-engine.logic.test.ts` ou `components/feature/quiz-engine.test.tsx` pour le scénario “sans API key / fallback immédiat”.
+   - **E2E:** `e2e/story-2-7.spec.ts` — les 15 tests en échec doivent passer sans changer le contrat (localStorage, auth, quiz flow).
+   - **Créer:** `.github/workflows/e2e-tests.yml` (AC4).
+   - **Créer:** `docs/qa/e2e-troubleshooting-guide.md` (AC5).
+   - **Mettre à jour:** `e2e/README.md` (AC5).
+
+4. **Comportement attendu du quiz sans GEMINI_API_KEY**
+   - En absence de clé (ou échec API), les questions P1 doivent être disponibles **sans délai perceptible** pour l’utilisateur (et pour les E2E).
+   - Cause actuelle des timeouts E2E : l’API est appelée, échoue après timeout, puis le reducer applique le fallback ; le test clique sur “Lancer la calibration” avant que `questionsP1` soit rempli.
+   - **Piste de fix recommandée:** Détecter l’absence de `GEMINI_API_KEY` (ou env) **avant** l’appel dans le `useEffect` P1 et dispatcher directement un équivalent à `API_LOAD_P1_ERROR` avec `fallback: mockData.phase1` (pas d’appel réseau). Même logique possible pour P2/archetype/profile si les E2E parcourent tout le flux.
+   - Ne pas supprimer les appels API quand la clé est présente ; uniquement court‑circuiter quand elle est absente.
+
+5. **Régression et tests existants**
+   - Ne pas casser : `e2e/dashboard.spec.ts`, `e2e/dashboard-multiple-posts.spec.ts`, `e2e/auth.setup.*.ts`, flux auth et persist-on-login.
+   - Story 2.11a (Quick Wins) a ajouté `e2e/helpers/supabase.ts` et des tests dashboard ; ne pas modifier ces helpers sans nécessité.
+
+---
+
+### Conformité architecture
+
+- **Source:** `_bmad-output/planning-artifacts/architecture/source-tree.md`, `testing-standards.md`
+- **E2E:** Playwright, `data-testid` pour les locators, pas de `sleep` inutiles — privilégier `waitFor` / `waitForSelector` / `waitForFunction`.
+- **Tests unitaires:** Vitest, pattern AAA, un assert principal par test, mocker les dépendances.
+- **CI/CD:** Un workflow GitHub Actions dédié E2E (fichier unique `.github/workflows/e2e-tests.yml`), pas de secrets GEMINI pour les E2E (mock uniquement).
+
+---
+
+### Bibliothèques et frameworks
+
+- **React / Next.js:** hooks existants (`useQuizPersistence`, `useReducer` + `quizReducer`).
+- **Quiz:** `quizApiClient` (`lib/quiz-api-client.ts`), `getTargetDimensions` (`lib/ice-logic.ts`), `mockData` (`lib/data/mock-quiz.json`).
+- **E2E:** `@playwright/test`, contextes authentifié / non authentifié via `storageState` (fichiers `e2e/.auth/user-*.json`).
+
+---
+
+### Structure des fichiers (rappel)
+
+```
+components/feature/quiz-engine.tsx    # Logique UI + useEffects (P1, P2, archetype, profile)
+components/feature/quiz-engine.logic.ts # Reducer + types (déjà fallback sur API_LOAD_P*_ERROR)
+lib/quiz-api-client.ts                # Appels API quiz (optionnel: court-circuit si pas de clé)
+lib/data/mock-quiz.json               # Données mock (ne pas dupliquer)
+e2e/story-2-7.spec.ts                 # 24 tests E2E Story 2.7 (15 à faire passer)
+e2e/README.md                         # Doc E2E
+docs/qa/                              # Guides QA et troubleshooting
+.github/workflows/e2e-tests.yml        # À créer
+```
+
+---
+
+### Exigences de test
+
+- **AC1:** Tests unitaires pour le chemin “sans API key → fallback mock immédiat” (reducer déjà partiel dans `quiz-engine.logic.test.ts`).
+- **AC2:** 24/24 E2E passants (Chromium, Firefox, WebKit) ; temps total &lt; 5 min.
+- **AC4:** Pipeline CI exécute les E2E sur PR, sans exposer de clé API.
+- Ne pas introduire de dépendance à une vraie clé Gemini dans les E2E.
+
+---
+
+### Previous Story Intelligence (2.8, 2.11a)
+
+- **Story 2.8:** Rate limiting, alerting, E2E partiels (9/24 passants). Les 15 échecs sont documentés dans `docs/qa/story-2-8-phase-3-e2e-fix-report.md` (quiz questions ne chargent pas après “Lancer la calibration”).
+- **Story 2.11a:** Dashboard multiple posts, colonne `archetype` sur `posts`, E2E dashboard et archetype. Helpers E2E dans `e2e/helpers/supabase.ts`. Ne pas toucher au flux persist-on-login ni aux migrations sans nécessité.
+
+### Git / récents changements
+
+- Derniers patterns utiles : migrations Supabase dans `supabase/migrations/`, E2E dans `e2e/*.spec.ts`, helpers dans `e2e/helpers/`, API dans `app/api/auth/persist-on-login/`.
+- Branche type : `florian/bma-10-story-29-e2e-test-completion` (Linear BMA-10).
+
+---
+
+### Références techniques
+
+- [Source: docs/qa/story-2-8-phase-3-e2e-fix-report.md] — Root cause: missing GEMINI_API_KEY + timing fallback.
+- [Source: components/feature/quiz-engine.tsx L34–56] — useEffect P1 : appel `quizApiClient.generateQuestions`, catch → `API_LOAD_P1_ERROR` avec `mockData.phase1`.
+- [Source: components/feature/quiz-engine.logic.ts L99–107] — Réduction `API_LOAD_P1_SUCCESS` / `API_LOAD_P1_ERROR` et mise à jour `questionsP1`.
+- [Source: e2e/story-2-7.spec.ts] — Contexte non authentifié, attente du bouton “Lancer”, puis `question-card`.
+- [Source: _bmad-output/planning-artifacts/architecture/testing-standards.md] — Vitest, Playwright, data-testid, pas de sleep.
+
+---
+
+### Dev Agent Record (à remplir par le Dev)
+
+- **Agent Model Used:** Cursor / Auto (Story 2.9 DS workflow)
+- **Debug Log References:** Build/vitest EPERM sur la machine (sandbox/env) — exécution manuelle requise
+- **Completion Notes List:**
+  - AC1: Fix mock fallback — `NEXT_PUBLIC_QUIZ_USE_MOCK` + court-circuit synchrone P1/archetype/P2/profile dans `quiz-engine.tsx` ; tests unitaires fallback dans `quiz-engine.logic.test.ts`
+  - AC4: `.github/workflows/e2e-tests.yml` créé (build avec NEXT_PUBLIC_QUIZ_USE_MOCK, Playwright 3 navigateurs, rapport HTML)
+  - AC5: `e2e/README.md` mis à jour ; `docs/qa/e2e-troubleshooting-guide.md` créé
+  - Pour valider 24/24 E2E en local : `npm run build:e2e` puis `npm run start` (ou `npm run dev` avec la var), puis `npx playwright test`
+- **File List:** next.config.mjs, components/feature/quiz-engine.tsx, components/feature/quiz-engine.logic.test.ts, package.json, .github/workflows/e2e-tests.yml, e2e/README.md, docs/qa/e2e-troubleshooting-guide.md

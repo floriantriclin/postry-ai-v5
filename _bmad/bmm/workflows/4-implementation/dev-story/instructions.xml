@@ -128,7 +128,7 @@
     <action>Identify first incomplete task (unchecked [ ]) in Tasks/Subtasks</action>
 
     <action if="no incomplete tasks">
-      <goto step="6">Completion sequence</goto>
+      <goto step="9">Completion sequence</goto>
     </action>
     <action if="story file inaccessible">HALT: "Cannot develop story without access to story file"</action>
     <action if="incomplete task or subtask requirements ambiguous">ASK user to clarify or HALT</action>
@@ -138,6 +138,8 @@
     <critical>Load all available context to inform implementation</critical>
 
     <action>Load {project_context} for coding standards and project-wide patterns (if exists)</action>
+    <action>Load {project-root}/docs/git-strategy.md for git workflow requirements</action>
+    <action>Load {project-root}/.cursor/rules/linear-sync.md for Linear synchronization rules</action>
     <action>Parse sections: Story, Acceptance Criteria, Tasks/Subtasks, Dev Notes, Dev Agent Record, File List, Change Log, Status</action>
     <action>Load comprehensive context from story file's Dev Notes section</action>
     <action>Extract developer guidance from Dev Notes: architecture requirements, previous learnings, technical specifications</action>
@@ -145,6 +147,27 @@
     <output>✅ **Context Loaded**
       Story and project context available for implementation
     </output>
+  </step>
+
+  <step n="2.5" goal="Initialize Git workflow according to git strategy">
+    <critical>Apply git strategy from {project-root}/docs/git-strategy.md - execute git commands directly, NEVER create instruction files</critical>
+    
+    <action>Check current git branch: `git branch --show-current`</action>
+    <action>If not on 'dev' branch: `git checkout dev`</action>
+    <action>Pull latest changes: `git pull origin dev`</action>
+    <action>Extract Linear issue ID from story file (if available) or story_key for branch naming</action>
+    <action>Determine if feature branch needed (complex story) or work directly on dev (simple story)</action>
+    
+    <check if="feature branch needed">
+      <action>Create feature branch: `git checkout -b features/{{story_key}}` or `features/{{linear_issue_id}}`</action>
+      <output>🌿 Created feature branch: features/{{branch_name}}</output>
+    </check>
+    
+    <check if="work directly on dev">
+      <output>🌿 Working directly on 'dev' branch</output>
+    </check>
+    
+    <action>Verify git status is clean before starting</action>
   </step>
 
   <step n="3" goal="Detect review continuation and extract review context">
@@ -311,6 +334,17 @@
     </check>
 
     <action>Save the story file</action>
+    
+    <!-- Git commit after task completion -->
+    <action>🚨 GIT COMMIT - Commit completed task changes:
+        - Stage all changed files: `git add .`
+        - Create conventional commit message based on task type (feat:, fix:, test:, refactor:, etc.)
+        - Format: `<type>(<scope>): <subject>` following {project-root}/docs/git-strategy.md
+        - Include story ID and Linear issue ID in commit message if available
+        - Commit: `git commit -m "{{commit_message}}"`
+        - Push to remote: `git push origin {{current_branch}}`
+    </action>
+    
     <action>Determine if more incomplete tasks remain</action>
     <action if="more tasks remain">
       <goto step="5">Next task</goto>
@@ -368,15 +402,59 @@
     <action if="regression failures exist">HALT - Fix regression issues before completing</action>
     <action if="File List is incomplete">HALT - Update File List with all changed files</action>
     <action if="definition-of-done validation fails">HALT - Address DoD failures before completing</action>
+    
+    <!-- Final git commit and merge if feature branch -->
+    <action>🚨 GIT FINAL COMMIT - Commit story completion:
+        - Stage all remaining changes: `git add .`
+        - Create final commit: `git commit -m "feat(story-{{story_key}}): complete implementation - ready for review"`
+        - Push to remote: `git push origin {{current_branch}}`
+    </action>
+    
+    <check if="working on feature branch">
+      <action>Merge feature branch to dev:
+          - `git checkout dev`
+          - `git merge features/{{branch_name}}`
+          - `git push origin dev`
+      </action>
+      <output>✅ Merged feature branch to 'dev'</output>
+    </check>
   </step>
 
-  <step n="10" goal="Completion communication and user support">
+  <step n="10" goal="Update Linear issue directly via MCP">
+    <critical>Update Linear issue DIRECTLY using MCP update_issue tool - NEVER create update files like "*-linear-update.md"</critical>
+    
+    <action>Extract Linear issue ID from story file metadata (if available)</action>
+    
+    <check if="Linear issue ID found">
+      <action>Load Linear issue via MCP: get_issue with id={{linear_issue_id}}</action>
+      <action>Prepare summary description (~20 lines max) following {project-root}/.cursor/rules/linear-sync.md:
+          - Context fonctionnel (2-3 lignes)
+          - Problème/Objectif résolu (3-4 lignes)
+          - Bugs/Stories liés (2-3 lignes)
+          - Impact business/technique (2-3 lignes)
+          - Lien vers fichier story local complet
+      </action>
+      <action>Update Linear issue via MCP update_issue tool:
+          - status: "In Review" (or appropriate status)
+          - description: {{summary_description}} (~20 lignes max)
+          - Include link to story file: `_bmad-output/implementation-artifacts/{{story_key}}.md`
+      </action>
+      <output>✅ Linear issue {{linear_issue_id}} updated directly via MCP</output>
+    </check>
+    
+    <check if="Linear issue ID NOT found">
+      <output>ℹ️ No Linear issue ID found in story file - skipping Linear update</output>
+    </check>
+  </step>
+
+  <step n="11" goal="Completion communication and user support">
     <action>Execute the enhanced definition-of-done checklist using the validation framework</action>
     <action>Prepare a concise summary in Dev Agent Record → Completion Notes</action>
 
     <action>Communicate to {user_name} that story implementation is complete and ready for review</action>
     <action>Summarize key accomplishments: story ID, story key, title, key changes made, tests added, files modified</action>
     <action>Provide the story file path and current status (now "review")</action>
+    <action>Confirm git commits were made and Linear issue was updated (if applicable)</action>
 
     <action>Based on {user_skill_level}, ask if user needs any explanations about:
       - What was implemented and how it works

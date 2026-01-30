@@ -1,0 +1,60 @@
+# Configuration Linear pour BMAD
+# Généré automatiquement le 27/01/2026
+# Dernière mise à jour: 28/01/2026
+
+# Équipe par défaut pour les issues
+default_team: BMAD
+default_team_id: 362d6776-0634-4830-8e34-b7f08e91dce5
+
+# Labels disponibles
+labels:
+  # Labels principaux (types d'issues)
+  bug: Bug
+  feature: Feature
+  improvement: Improvement
+  story: Story
+  
+  # Labels techniques
+  technical: Technical
+  technical_note: Technical Note
+  devops: DevOps
+  infrastructure: Infrastructure
+  
+  # Labels de statut/travail
+  draft: Draft
+  wip: WIP
+  
+  # Labels de gestion
+  future_enhancement: Future Enhancement
+  technical_debt: Technical Debt
+  
+  # Labels automatiques BMAD
+  bmad: BMAD
+  automated: Automated
+
+# Mapping des priorités BMAD → Linear
+# Linear: 0 = No priority, 1 = Urgent, 2 = High, 3 = Normal, 4 = Low
+priority_mapping:
+  critique: 1  # Urgent
+  high: 2      # High
+  medium: 3    # Normal
+  low: 4       # Low
+
+# Mapping des statuts
+status_mapping:
+  backlog: Backlog
+  todo: Todo
+  in-progress: In Progress
+  review: In Review
+  done: Done
+  cancelled: Cancelled
+
+# Projet par défaut (optionnel)
+default_project: null
+
+# Préférences
+preferences:
+  auto_create_issues: true
+  auto_assign_to_creator: true
+  use_git_branch_names: true
+  add_documentation_links: true

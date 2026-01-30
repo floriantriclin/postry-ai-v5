@@ -309,7 +309,49 @@
     context engine analysis completed - comprehensive developer guide created"</action>
   </step>
 
-  <step n="6" goal="Update sprint status and finalize">
+  <step n="6" goal="Create Linear issue for story">
+    <critical>Create Linear issue directly via MCP - NEVER create update files</critical>
+    <critical>Follow {project-root}/.cursor/rules/linear-sync.md for format (~20 lines max description)</critical>
+    
+    <action>Load {project-root}/_bmad/_memory/linear-config.yaml for Linear configuration</action>
+    <action>Extract story summary from created story file:
+      - Title: {{story_title}}
+      - Context fonctionnel (2-3 lignes)
+      - Problème/Objectif (3-4 lignes)
+      - Bugs/Stories liés (2-3 lignes)
+      - Impact business/technique (2-3 lignes)
+      - Dépendances clés (2-3 lignes)
+      - Lien vers fichier local: {default_output_file}
+    </action>
+    
+    <action>Check if Linear issue already exists for this story:
+      - Use MCP tool: list_issues with query={{story_title_keywords}}
+      - Check for existing issues with similar title
+    </action>
+    
+    <check if="Linear issue already exists">
+      <action>Inform user: "Linear issue {{existing_issue_id}} already exists for this story"</action>
+      <action>Update local story file with Linear issue URL</action>
+      <action>GOTO step 7</action>
+    </check>
+    
+    <check if="Linear issue does NOT exist">
+      <action>Use MCP tool: create_issue with:
+        - title: "Story {{story_id}}: {{story_title}}"
+        - description: {{summary_description}} (~20 lignes max + lien vers fichier local)
+        - priority: "medium" (or extract from story if specified)
+        - labels: ["Feature"]
+        - estimate: {{estimated_hours}} (if available from story)
+        - team: {{default_team}} (from linear-config.yaml)
+      </action>
+      
+      <action>Extract from MCP response: issue_id, identifier, url, gitBranchName</action>
+      <action>Update story file with Linear issue URL in metadata section</action>
+      <output>✅ Created Linear issue {{identifier}}: {{url}}</output>
+    </check>
+  </step>
+
+  <step n="7" goal="Update sprint status and finalize">
     <invoke-task>Validate against checklist at {installed_path}/checklist.md using _bmad/core/tasks/validate-workflow.xml</invoke-task>
     <action>Save story document unconditionally</action>
 
@@ -321,6 +363,15 @@
       <action>Verify current status is "backlog" (expected previous state)</action>
       <action>Update development_status[{{story_key}}] = "ready-for-dev"</action>
       <action>Save file, preserving ALL comments and structure including STATUS DEFINITIONS</action>
+    </check>
+    
+    <!-- Sync Linear status if issue exists -->
+    <check if="Linear issue was created or found">
+      <action>Use MCP tool: update_issue with:
+        - id: {{linear_issue_id}}
+        - status: "Todo" (or "Backlog" depending on Linear status mapping)
+      </action>
+      <output>✅ Linear issue {{linear_issue_id}} status synchronized</output>
     </check>
 
     <action>Report completion</action>

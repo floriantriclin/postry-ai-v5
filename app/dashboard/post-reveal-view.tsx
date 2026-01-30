@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { LoaderMachine } from "@/components/ui/loader-machine";
 import { useCopyToClipboard } from "@/hooks/use-copy-to-clipboard";
-import { Post } from "@/lib/types";
+import { Post, EqualizerSettings } from "@/lib/types";
 import { ChevronDown, ChevronUp } from "lucide-react";
 
 export default function PostRevealView({ post }: { post: Post | null | undefined }) {
@@ -44,7 +44,7 @@ export default function PostRevealView({ post }: { post: Post | null | undefined
     );
   }
 
-  const meta = post?.equalizer_settings as any;
+  const meta = (post?.equalizer_settings as EqualizerSettings | null | undefined) ?? null;
   const components = meta?.generated_components;
   // Fallback chain for archetype label: profile.label_final -> post.archetype -> meta.archetype.name -> "Unknown"
   const archetypeLabel = meta?.profile?.label_final || post.archetype || meta?.archetype?.name || "Archetype Inconnu";

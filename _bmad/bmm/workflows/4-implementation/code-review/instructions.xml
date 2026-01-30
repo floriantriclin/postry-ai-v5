@@ -213,12 +213,74 @@
     <check if="{{current_sprint_status}} == 'no-sprint-tracking'">
       <output>ℹ️ Story status updated (no sprint tracking configured)</output>
     </check>
+  </step>
 
+  <step n="6" goal="Create Linear bugs for critical findings and sync Linear status">
+    <critical>Create Linear bugs directly via MCP for critical findings - NEVER create bug files</critical>
+    <critical>Sync Linear issue status if story status changed - use MCP update_issue directly</critical>
+    
+    <action>Load {project-root}/.cursor/rules/linear-sync.md for synchronization rules</action>
+    <action>Load {project-root}/_bmad/_memory/linear-config.yaml for Linear configuration</action>
+    
+    <!-- Extract Linear issue ID from story file -->
+    <action>Extract Linear issue ID from story file metadata (if available)</action>
+    
+    <!-- Create Linear bugs for critical findings -->
+    <action>Review action items with severity "CRITICAL" or "HIGH"</action>
+    <iterate>For each critical/high finding that represents a bug:</iterate>
+    
+    <action>Check if Linear bug already exists:
+      - Use MCP tool: list_issues with query={{bug_title_keywords}}
+      - Check for existing bugs with similar title
+    </action>
+    
+    <check if="bug does NOT exist and finding is critical/high">
+      <action>Use MCP tool: create_issue with:
+        - title: "🐛 [CRITICAL/HIGH] {{finding_title}}"
+        - description: {{finding_description}} (~20 lignes max)
+          - Résumé du problème
+          - Impact utilisateur/business
+          - Steps to reproduce (si applicable)
+          - Lien vers story file: {{story_file}}
+        - priority: "critique" (if CRITICAL) or "high" (if HIGH)
+        - labels: ["Bug"]
+        - estimate: {{estimated_hours}} (if estimable)
+        - team: {{default_team}} (from linear-config.yaml)
+      </action>
+      
+      <action>Extract from MCP response: issue_id, identifier, url</action>
+      <action>Add Linear bug reference to review findings in story file</action>
+      <output>✅ Created Linear bug {{identifier}}: {{url}}</output>
+    </check>
+    
+    <!-- Sync Linear issue status if story status changed -->
+    <check if="Linear issue ID found AND story status changed">
+      <action>Map story status to Linear status:
+        - "review" → "In Review"
+        - "done" → "Done"
+        - "in-progress" → "In Progress"
+      </action>
+      
+      <action>Use MCP tool: update_issue with:
+        - id: {{linear_issue_id}}
+        - status: {{mapped_linear_status}}
+      </action>
+      
+      <output>✅ Linear issue {{linear_issue_id}} status synchronized: {{mapped_linear_status}}</output>
+    </check>
+    
+    <check if="Linear issue ID NOT found but story has status change">
+      <output>ℹ️ Story status changed but no Linear issue ID found in story file</output>
+    </check>
+  </step>
+
+  <step n="7" goal="Finalize review">
     <output>**✅ Review Complete!**
 
       **Story Status:** {{new_status}}
       **Issues Fixed:** {{fixed_count}}
       **Action Items Created:** {{action_count}}
+      **Linear Bugs Created:** {{linear_bugs_created_count}}
 
       {{#if new_status == "done"}}Code review complete!{{else}}Address the action items and continue development.{{/if}}
     </output>

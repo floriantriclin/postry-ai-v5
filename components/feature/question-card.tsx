@@ -16,7 +16,7 @@ interface QuestionCardProps {
 
 export function QuestionCard({ question, progressValue, onAnswer, onBack, canGoBack }: QuestionCardProps) {
   return (
-    <div className="flex flex-col items-center w-full max-w-3xl mx-auto p-4 min-h-[60vh] justify-center">
+    <div className="flex flex-col items-center w-full max-w-3xl mx-auto p-4 min-h-[60vh] justify-center" data-testid="question-card">
       <div className="w-full mb-8 space-y-4">
         <div className="flex justify-between items-center">
           <button

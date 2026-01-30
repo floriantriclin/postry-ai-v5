@@ -176,10 +176,18 @@ setup("authenticate for WebKit", async ({ page }) => {
   }
 
   // 4. Verify & Save State
-  await page.goto('/dashboard');
+  await page.goto('/dashboard', { waitUntil: 'networkidle' });
   
+  // If redirected to home, auth failed
+  const url = page.url();
+  if (!url.includes('/dashboard') || url.includes('redirectedFrom')) {
+    await page.screenshot({ path: 'e2e/auth-setup-failure-webkit.png' });
+    throw new Error(`[WebKit] Auth failed: redirected to ${url}`);
+  }
+
+  // Wait for dashboard content (post or empty state) - longer timeout when running in parallel
   try {
-    await page.waitForSelector('[data-testid="post-content"]', { timeout: 15000 });
+    await page.getByTestId('post-content').or(page.getByText('Aucun post généré')).waitFor({ state: 'visible', timeout: 25000 });
     console.log("✅ [WebKit] Dashboard loaded successfully");
   } catch (e) {
     console.error("❌ [WebKit] Login failed or Dashboard failed to load post.");

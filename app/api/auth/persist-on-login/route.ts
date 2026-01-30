@@ -120,6 +120,7 @@ export async function POST(req: NextRequest) {
         content: post_content,
         quiz_answers: quiz_answers || null,
         equalizer_settings: metaData,
+        archetype: archetype?.name || null, // BUG-003: Denormalize archetype name to column
         status: 'revealed' // Critical: Direct to revealed status
       })
       .select()

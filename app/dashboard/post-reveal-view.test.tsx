@@ -41,4 +41,91 @@ describe("PostRevealView", () => {
     ).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Retourner au Quiz" })).toHaveAttribute("href", "/quiz");
   });
+
+  describe("Archetype Fallback Chain", () => {
+    it("should use meta.profile.label_final when available (priority 1)", () => {
+      const postWithProfileLabel: Post = {
+        ...mockPost,
+        archetype: "post-archetype",
+        equalizer_settings: {
+          profile: { label_final: "Profile Label Final" },
+          archetype: { name: "Meta Archetype Name" },
+        },
+      };
+
+      render(<PostRevealView post={postWithProfileLabel} />);
+
+      expect(screen.getByText("Tone: Profile Label Final")).toBeInTheDocument();
+    });
+
+    it("should use post.archetype when meta.profile.label_final is missing (priority 2)", () => {
+      const postWithArchetypeColumn: Post = {
+        ...mockPost,
+        archetype: "Post Archetype Column",
+        equalizer_settings: {
+          archetype: { name: "Meta Archetype Name" },
+        },
+      };
+
+      render(<PostRevealView post={postWithArchetypeColumn} />);
+
+      expect(screen.getByText("Tone: Post Archetype Column")).toBeInTheDocument();
+    });
+
+    it("should use meta.archetype.name when post.archetype is missing (priority 3)", () => {
+      const postWithMetaArchetype: Post = {
+        ...mockPost,
+        archetype: null,
+        equalizer_settings: {
+          archetype: { name: "Meta Archetype Name" },
+        },
+      };
+
+      render(<PostRevealView post={postWithMetaArchetype} />);
+
+      expect(screen.getByText("Tone: Meta Archetype Name")).toBeInTheDocument();
+    });
+
+    it("should use 'Archetype Inconnu' when all sources are missing (priority 4)", () => {
+      const postWithoutArchetype: Post = {
+        ...mockPost,
+        archetype: null,
+        equalizer_settings: null,
+      };
+
+      render(<PostRevealView post={postWithoutArchetype} />);
+
+      expect(screen.getByText("Tone: Archetype Inconnu")).toBeInTheDocument();
+    });
+
+    it("should prioritize meta.profile.label_final over post.archetype", () => {
+      const postWithBoth: Post = {
+        ...mockPost,
+        archetype: "Post Archetype",
+        equalizer_settings: {
+          profile: { label_final: "Profile Label" },
+        },
+      };
+
+      render(<PostRevealView post={postWithBoth} />);
+
+      expect(screen.getByText("Tone: Profile Label")).toBeInTheDocument();
+      expect(screen.queryByText("Tone: Post Archetype")).not.toBeInTheDocument();
+    });
+
+    it("should prioritize post.archetype over meta.archetype.name", () => {
+      const postWithBoth: Post = {
+        ...mockPost,
+        archetype: "Post Archetype",
+        equalizer_settings: {
+          archetype: { name: "Meta Archetype" },
+        },
+      };
+
+      render(<PostRevealView post={postWithBoth} />);
+
+      expect(screen.getByText("Tone: Post Archetype")).toBeInTheDocument();
+      expect(screen.queryByText("Tone: Meta Archetype")).not.toBeInTheDocument();
+    });
+  });
 });

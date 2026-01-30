@@ -31,80 +31,106 @@ export function QuizEngine() {
     saveState(state);
   }, [state, saveState]);
 
+  // Skip API when mock-only mode (E2E/CI without GEMINI_API_KEY) — no network delay
+  const useQuizMockOnly = process.env.NEXT_PUBLIC_QUIZ_USE_MOCK === 'true';
+
   // 1. Pre-load Phase 1 questions (Early Trigger)
   useEffect(() => {
     if (state.step === 'INSTRUCTIONS' && state.themeId && state.questionsP1.length === 0 && state.status !== 'loading') {
+      if (useQuizMockOnly) {
+        dispatch({
+          type: 'API_LOAD_P1_ERROR',
+          payload: { error: 'Mock-only mode (no API key)', fallback: mockData.phase1 as any },
+        });
+        return;
+      }
       const loadP1 = async () => {
         dispatch({ type: 'API_LOAD_P1_START' });
         try {
-          const questions = await quizApiClient.generateQuestions({ 
-            phase: 1, 
-            topic: state.themeId! 
+          const questions = await quizApiClient.generateQuestions({
+            phase: 1,
+            topic: state.themeId!,
           });
           dispatch({ type: 'API_LOAD_P1_SUCCESS', payload: questions });
         } catch (error) {
           console.error('P1 Loading failed, falling back to mock.', error);
-          dispatch({ 
-            type: 'API_LOAD_P1_ERROR', 
-            payload: { 
-              error: error instanceof Error ? error.message : 'Unknown error', 
-              fallback: mockData.phase1 as any 
-            } 
+          dispatch({
+            type: 'API_LOAD_P1_ERROR',
+            payload: {
+              error: error instanceof Error ? error.message : 'Unknown error',
+              fallback: mockData.phase1 as any,
+            },
           });
         }
       };
       loadP1();
     }
-  }, [state.step, state.themeId, state.questionsP1.length, state.status]);
+  }, [state.step, state.themeId, state.questionsP1.length, state.status, useQuizMockOnly]);
 
   // 2. Identify Archetype after Phase 1 completion
   useEffect(() => {
-    const isP1Complete = state.questionsP1.length > 0 && 
+    const isP1Complete = state.questionsP1.length > 0 &&
                         Object.keys(state.answersP1).length === state.questionsP1.length;
-    
+
     if (state.step === 'PHASE1' && isP1Complete && state.status !== 'loading' && !state.archetypeData) {
+      if (useQuizMockOnly) {
+        dispatch({
+          type: 'API_ARCHETYPE_ERROR',
+          payload: {
+            error: 'Mock-only mode (no API key)',
+            fallback: {
+              archetype: mockData.archetype as any,
+              targetDimensions: ['STR', 'INF', 'ANC'],
+            },
+          },
+        });
+        return;
+      }
       const identify = async () => {
         dispatch({ type: 'API_ARCHETYPE_START' });
         try {
-          const result = await quizApiClient.identifyArchetype({ 
-            answers: state.answersP1 
-          });
+          const result = await quizApiClient.identifyArchetype({ answers: state.answersP1 });
           dispatch({ type: 'API_ARCHETYPE_SUCCESS', payload: result });
         } catch (error) {
           console.error('Archetype identification failed, falling back to mock.', error);
-          dispatch({ 
-            type: 'API_ARCHETYPE_ERROR', 
-            payload: { 
-              error: error instanceof Error ? error.message : 'Unknown error', 
-              fallback: { 
-                archetype: mockData.archetype as any, 
-                targetDimensions: ['STR', 'INF', 'ANC'] 
-              } 
-            } 
+          dispatch({
+            type: 'API_ARCHETYPE_ERROR',
+            payload: {
+              error: error instanceof Error ? error.message : 'Unknown error',
+              fallback: {
+                archetype: mockData.archetype as any,
+                targetDimensions: ['STR', 'INF', 'ANC'],
+              },
+            },
           });
         }
       };
       identify();
     }
-  }, [state.step, state.answersP1, state.questionsP1.length, state.status, state.archetypeData]);
+  }, [state.step, state.answersP1, state.questionsP1.length, state.status, state.archetypeData, useQuizMockOnly]);
 
   // 3. Pre-load Phase 2 Questions (AC 1.1)
   useEffect(() => {
-    // We trigger this as soon as we have archetype data (during Transition screen)
     if (state.archetypeData && state.questionsP2.length === 0) {
+      if (useQuizMockOnly) {
+        dispatch({
+          type: 'API_LOAD_P2_ERROR',
+          payload: { error: 'Mock-only mode (no API key)', fallback: mockData.phase2 as any },
+        });
+        return;
+      }
       const loadP2 = async () => {
         dispatch({ type: 'API_LOAD_P2_START' });
         try {
           const targetDims = getTargetDimensions(state.archetypeData!.archetype.baseVector as Vstyle);
-          
           const questions = await quizApiClient.generateQuestions({
             phase: 2,
             topic: state.themeId!,
             context: {
               archetypeName: state.archetypeData!.archetype.name,
               archetypeVector: [...state.archetypeData!.archetype.baseVector],
-              targetDimensions: targetDims
-            }
+              targetDimensions: targetDims,
+            },
           });
           dispatch({ type: 'API_LOAD_P2_SUCCESS', payload: questions });
         } catch (error) {
@@ -113,24 +139,34 @@ export function QuizEngine() {
             type: 'API_LOAD_P2_ERROR',
             payload: {
               error: error instanceof Error ? error.message : 'Unknown error',
-              fallback: mockData.phase2 as any
-            }
+              fallback: mockData.phase2 as any,
+            },
           });
         }
       };
       loadP2();
     }
-  }, [state.archetypeData, state.questionsP2.length, state.themeId]);
+  }, [state.archetypeData, state.questionsP2.length, state.themeId, useQuizMockOnly]);
 
   // 4. Generate Final Profile (AC 2.1)
   useEffect(() => {
     if (state.step === 'LOADING_RESULTS' && state.status !== 'loading' && state.currentVector && state.archetypeData) {
+      if (useQuizMockOnly) {
+        dispatch({
+          type: 'API_PROFILE_ERROR',
+          payload: {
+            error: 'Mock-only mode (no API key)',
+            fallback: mockData.augmentedProfile as any,
+          },
+        });
+        return;
+      }
       const generateProfile = async () => {
         dispatch({ type: 'API_PROFILE_START' });
         try {
           const profile = await quizApiClient.generateProfile({
             baseArchetype: state.archetypeData!.archetype.name,
-            finalVector: state.currentVector!
+            finalVector: state.currentVector!,
           });
           dispatch({ type: 'API_PROFILE_SUCCESS', payload: profile });
         } catch (error) {
@@ -139,14 +175,14 @@ export function QuizEngine() {
             type: 'API_PROFILE_ERROR',
             payload: {
               error: error instanceof Error ? error.message : 'Unknown error',
-              fallback: mockData.augmentedProfile as any
-            }
+              fallback: mockData.augmentedProfile as any,
+            },
           });
         }
       };
       generateProfile();
     }
-  }, [state.step, state.status, state.currentVector, state.archetypeData]);
+  }, [state.step, state.status, state.currentVector, state.archetypeData, useQuizMockOnly]);
 
   // 5. UX Trap: Lock user on Final Reveal
   useEffect(() => {

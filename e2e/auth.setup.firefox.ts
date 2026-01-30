@@ -176,10 +176,17 @@ setup("authenticate for Firefox", async ({ page }) => {
   }
 
   // 4. Verify & Save State
-  await page.goto('/dashboard');
+  await page.goto('/dashboard', { waitUntil: 'networkidle' });
   
+  // If redirected to home, auth failed
+  const url = page.url();
+  if (!url.includes('/dashboard') || url.includes('redirectedFrom')) {
+    await page.screenshot({ path: 'e2e/auth-setup-failure-firefox.png' });
+    throw new Error(`[Firefox] Auth failed: redirected to ${url}`);
+  }
+
   try {
-    await page.waitForSelector('[data-testid="post-content"]', { timeout: 15000 });
+    await page.getByTestId('post-content').or(page.getByText('Aucun post généré')).waitFor({ state: 'visible', timeout: 20000 });
     console.log("✅ [Firefox] Dashboard loaded successfully");
   } catch (e) {
     console.error("❌ [Firefox] Login failed or Dashboard failed to load post.");

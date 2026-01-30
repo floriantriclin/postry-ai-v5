@@ -84,6 +84,24 @@ export interface User {
   created_at: string;
 }
 
+/**
+ * Structure of equalizer_settings JSONB stored in posts table
+ */
+export interface EqualizerSettings {
+  profile?: {
+    label_final?: string;
+  };
+  archetype?: {
+    name?: string;
+  };
+  generated_components?: {
+    hook?: string;
+    content?: string;
+    cta?: string;
+    style_analysis?: string;
+  };
+}
+
 export interface Post {
   id: string; // uuid
   user_id: string; // uuid
@@ -91,7 +109,7 @@ export interface Post {
   archetype: string | null;
   content: string;
   quiz_answers: z.infer<typeof QuizResponseSchema> | null; // jsonb
-  equalizer_settings: unknown | null; // jsonb
+  equalizer_settings: EqualizerSettings | null; // jsonb
   is_revealed: boolean;
   created_at: string;
 }

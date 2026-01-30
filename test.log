@@ -1,40 +1,17 @@
+[1A[2K[WebServer] ⚠ The "middleware" file convention is deprecated. Please use "proxy" instead. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
 
-Running 81 tests using 2 workers
 
-[1A[2K[1/81] [setup-firefox] › e2e\auth.setup.firefox.ts:12:6 › authenticate for Firefox
-[1A[2K[2/81] [setup-webkit] › e2e\auth.setup.webkit.ts:12:6 › authenticate for WebKit
-[1A[2K[setup-webkit] › e2e\auth.setup.webkit.ts:12:6 › authenticate for WebKit
-⚠️ [WebKit] Session invalid or expired.
+Running 12 tests using 4 workers
 
-[1A[2K🔄 [WebKit] Performing full authentication...
+[1A[2K(node:23044) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
 
-[1A[2K[setup-firefox] › e2e\auth.setup.firefox.ts:12:6 › authenticate for Firefox
-⚠️ [Firefox] Session invalid or expired.
 
-[1A[2K🔄 [Firefox] Performing full authentication...
+[1A[2K(node:23044) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
 
-[1A[2K🛠️ [Firefox] Ensuring data consistency...
 
-[1A[2K[setup-webkit] › e2e\auth.setup.webkit.ts:12:6 › authenticate for WebKit
-🛠️ [WebKit] Ensuring data consistency...
-
-[1A[2K[setup-firefox] › e2e\auth.setup.firefox.ts:12:6 › authenticate for Firefox
-✅ [Firefox] Seed post already exists.
-
-[1A[2K[setup-webkit] › e2e\auth.setup.webkit.ts:12:6 › authenticate for WebKit
-✅ [WebKit] Seed post already exists.
-
-[1A[2K[setup-firefox] › e2e\auth.setup.firefox.ts:12:6 › authenticate for Firefox
-✅ [Firefox] Dashboard loaded successfully
-
-[1A[2K✅ [Firefox] Auth state saved to: e2e/.auth/user.firefox.json
-
-[1A[2K[setup-webkit] › e2e\auth.setup.webkit.ts:12:6 › authenticate for WebKit
-✅ [WebKit] Dashboard loaded successfully
-
-[1A[2K✅ [WebKit] Auth state saved to: e2e/.auth/user.webkit.json
-
-[1A[2K[3/81] [setup-chromium] › e2e\auth.setup.chromium.ts:12:6 › authenticate for Chromium
+[1A[2K[1/12] [setup-chromium] › e2e\auth.setup.chromium.ts:12:6 › authenticate for Chromium
 [1A[2K[setup-chromium] › e2e\auth.setup.chromium.ts:12:6 › authenticate for Chromium
 ⚠️ [Chromium] Session invalid or expired.
 
@@ -48,232 +25,252 @@ Running 81 tests using 2 workers
 
 [1A[2K✅ [Chromium] Auth state saved to: e2e/.auth/user.chromium.json
 
-[1A[2K[4/81] [chromium] › e2e\accessibility-and-performance.spec.ts:57:7 › Accessibility Tests › E2E-A11Y-02: Screen reader friendly elements
-[1A[2K[5/81] [chromium] › e2e\accessibility-and-performance.spec.ts:15:7 › Accessibility Tests › E2E-A11Y-01: Keyboard navigation through quiz
-[1A[2K[6/81] [chromium] › e2e\accessibility-and-performance.spec.ts:76:7 › Accessibility Tests › E2E-A11Y-03: Form labels and error messages
-[1A[2K[7/81] [chromium] › e2e\accessibility-and-performance.spec.ts:141:7 › Accessibility Tests › E2E-A11Y-04: Color contrast and visibility
-[1A[2K[8/81] [chromium] › e2e\accessibility-and-performance.spec.ts:158:7 › Performance Tests › E2E-PERF-01: Quiz loads within acceptable time
-[1A[2K[9/81] [chromium] › e2e\accessibility-and-performance.spec.ts:172:7 › Performance Tests › E2E-PERF-02: Question transitions are smooth
-[1A[2K[10/81] [chromium] › e2e\accessibility-and-performance.spec.ts:208:7 › Performance Tests › E2E-PERF-03: No memory leaks during quiz completion
-[1A[2K[11/81] [chromium] › e2e\accessibility-and-performance.spec.ts:255:7 › Cross-Browser Compatibility › E2E-COMPAT-01: Quiz works across different viewports
-[1A[2K[12/81] [chromium] › e2e\accessibility-and-performance.spec.ts:284:7 › Cross-Browser Compatibility › E2E-COMPAT-02: Touch interactions work on mobile
-[1A[2K[13/81] [chromium] › e2e\accessibility-and-performance.spec.ts:335:7 › Network Resilience › E2E-NETWORK-01: Handles slow network gracefully
-[1A[2K[14/81] [chromium] › e2e\accessibility-and-performance.spec.ts:370:7 › Network Resilience › E2E-NETWORK-02: Recovers from temporary network failure
-[1A[2K[15/81] [chromium] › e2e\auth-confirm-hang.spec.ts:8:7 › Auth Confirm Page › E2E-AUTH-01: should show error message if no auth event occurs
-[1A[2K[16/81] [chromium] › e2e\auth-confirm-hang.spec.ts:25:7 › Auth Confirm Page › E2E-AUTH-02: should show error for fake token hash
-[1A[2K[17/81] [chromium] › e2e\auth-confirm-hang.spec.ts:37:7 › Auth Confirm Page › E2E-AUTH-03: should handle implicit flow hash error
-[1A[2K[18/81] [chromium] › e2e\critical-user-journeys.spec.ts:115:9 › Critical User Journeys › Complete User Journey: Quiz to Dashboard › E2E-JOURNEY-01: Complete flow from landing to post generation
-[1A[2K[19/81] [chromium] › e2e\critical-user-journeys.spec.ts:234:9 › Critical User Journeys › Form Validation End-to-End › E2E-VALIDATION-01: Email validation in auth modal
-[1A[2K[20/81] [chromium] › e2e\critical-user-journeys.spec.ts:265:9 › Critical User Journeys › Form Validation End-to-End › E2E-VALIDATION-02: Topic input validation
-[1A[2K[21/81] [chromium] › e2e\critical-user-journeys.spec.ts:287:9 › Critical User Journeys › Error Handling End-to-End › E2E-ERROR-01: API failure during quiz generation
-[1A[2K[22/81] [chromium] › e2e\critical-user-journeys.spec.ts:307:9 › Critical User Journeys › Error Handling End-to-End › E2E-ERROR-02: Pre-persist failure handling
-[1A[2K[23/81] [chromium] › e2e\critical-user-journeys.spec.ts:398:9 › Critical User Journeys › State Persistence › E2E-PERSIST-01: Quiz progress persists after page reload
-[1A[2K[24/81] [chromium] › e2e\critical-user-journeys.spec.ts:435:9 › Critical User Journeys › Mobile Responsiveness › E2E-MOBILE-01: Quiz flow on mobile viewport
-[1A[2K[25/81] [chromium] › e2e\dashboard.spec.ts:11:9 › Dashboard › Authenticated › should display the post reveal view if authenticated
-[1A[2K[26/81] [chromium] › e2e\dashboard.spec.ts:35:9 › Dashboard › Authenticated › should copy the post content to clipboard
-[1A[2K[27/81] [chromium] › e2e\dashboard.spec.ts:47:9 › Dashboard › Authenticated › should logout the user
-[1A[2K[28/81] [chromium] › e2e\dashboard.spec.ts:69:9 › Dashboard › Authenticated › should match the visual snapshot
-[1A[2K[29/81] [chromium] › e2e\dashboard.spec.ts:76:9 › Dashboard › Unauthenticated › should redirect to login if not authenticated
-[1A[2K[30/81] [firefox] › e2e\accessibility-and-performance.spec.ts:15:7 › Accessibility Tests › E2E-A11Y-01: Keyboard navigation through quiz
-[1A[2K[31/81] [firefox] › e2e\accessibility-and-performance.spec.ts:57:7 › Accessibility Tests › E2E-A11Y-02: Screen reader friendly elements
-[1A[2K[32/81] [firefox] › e2e\accessibility-and-performance.spec.ts:76:7 › Accessibility Tests › E2E-A11Y-03: Form labels and error messages
-[1A[2K[33/81] [firefox] › e2e\accessibility-and-performance.spec.ts:141:7 › Accessibility Tests › E2E-A11Y-04: Color contrast and visibility
-[1A[2K[34/81] [firefox] › e2e\accessibility-and-performance.spec.ts:158:7 › Performance Tests › E2E-PERF-01: Quiz loads within acceptable time
-[1A[2K[35/81] [firefox] › e2e\accessibility-and-performance.spec.ts:172:7 › Performance Tests › E2E-PERF-02: Question transitions are smooth
-[1A[2K[36/81] [firefox] › e2e\accessibility-and-performance.spec.ts:208:7 › Performance Tests › E2E-PERF-03: No memory leaks during quiz completion
-[1A[2K[37/81] [firefox] › e2e\accessibility-and-performance.spec.ts:255:7 › Cross-Browser Compatibility › E2E-COMPAT-01: Quiz works across different viewports
-[1A[2K[38/81] [firefox] › e2e\accessibility-and-performance.spec.ts:284:7 › Cross-Browser Compatibility › E2E-COMPAT-02: Touch interactions work on mobile
-[1A[2K[39/81] [firefox] › e2e\accessibility-and-performance.spec.ts:335:7 › Network Resilience › E2E-NETWORK-01: Handles slow network gracefully
-[1A[2K[40/81] [firefox] › e2e\accessibility-and-performance.spec.ts:370:7 › Network Resilience › E2E-NETWORK-02: Recovers from temporary network failure
-[1A[2K[41/81] [firefox] › e2e\auth-confirm-hang.spec.ts:8:7 › Auth Confirm Page › E2E-AUTH-01: should show error message if no auth event occurs
-[1A[2K[42/81] [firefox] › e2e\auth-confirm-hang.spec.ts:25:7 › Auth Confirm Page › E2E-AUTH-02: should show error for fake token hash
-[1A[2K[43/81] [firefox] › e2e\auth-confirm-hang.spec.ts:37:7 › Auth Confirm Page › E2E-AUTH-03: should handle implicit flow hash error
-[1A[2K[44/81] [firefox] › e2e\critical-user-journeys.spec.ts:115:9 › Critical User Journeys › Complete User Journey: Quiz to Dashboard › E2E-JOURNEY-01: Complete flow from landing to post generation
-[1A[2K[45/81] [firefox] › e2e\critical-user-journeys.spec.ts:234:9 › Critical User Journeys › Form Validation End-to-End › E2E-VALIDATION-01: Email validation in auth modal
-[1A[2K[46/81] [firefox] › e2e\critical-user-journeys.spec.ts:265:9 › Critical User Journeys › Form Validation End-to-End › E2E-VALIDATION-02: Topic input validation
-[1A[2K[47/81] [firefox] › e2e\critical-user-journeys.spec.ts:287:9 › Critical User Journeys › Error Handling End-to-End › E2E-ERROR-01: API failure during quiz generation
-[1A[2K[48/81] [firefox] › e2e\critical-user-journeys.spec.ts:307:9 › Critical User Journeys › Error Handling End-to-End › E2E-ERROR-02: Pre-persist failure handling
-[1A[2K[49/81] [firefox] › e2e\critical-user-journeys.spec.ts:398:9 › Critical User Journeys › State Persistence › E2E-PERSIST-01: Quiz progress persists after page reload
-[1A[2K[50/81] [firefox] › e2e\critical-user-journeys.spec.ts:435:9 › Critical User Journeys › Mobile Responsiveness › E2E-MOBILE-01: Quiz flow on mobile viewport
-[1A[2K[51/81] [firefox] › e2e\dashboard.spec.ts:11:9 › Dashboard › Authenticated › should display the post reveal view if authenticated
-[1A[2K[52/81] [firefox] › e2e\dashboard.spec.ts:35:9 › Dashboard › Authenticated › should copy the post content to clipboard
-[1A[2K[53/81] [firefox] › e2e\dashboard.spec.ts:47:9 › Dashboard › Authenticated › should logout the user
-[1A[2K  1) [firefox] › e2e\dashboard.spec.ts:11:9 › Dashboard › Authenticated › should display the post reveal view if authenticated 
-
-    Error: [2mexpect([22m[31mpage[39m[2m).[22mtoHaveURL[2m([22m[32mexpected[39m[2m)[22m failed
-
-    Expected: [32m"http://localhost:3000/dashboard"[39m
-    Received: [31m"http://localhost:3000/[7m?redirectedFrom=%2F[27mdashboard"[39m
-    Timeout:  5000ms
-
-    Call log:
-    [2m  - Expect "toHaveURL" with timeout 5000ms[22m
-    [2m    9 × unexpected value "http://localhost:3000/?redirectedFrom=%2Fdashboard"[22m
+[1A[2K(node:9920) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
 
 
-      13 |     }) => {
-      14 |       // Fail fast check (Task 2.6.11)
-    > 15 |       await expect(page).toHaveURL("/dashboard");
-         |                          ^
-      16 |
-      17 |       const postContent = page.getByTestId("post-content");
-      18 |       // const postMeta = page.getByTestId("post-meta"); // Element removed in new UI
-        at c:\dev\postry-ai-v5\e2e\dashboard.spec.ts:15:26
-
-    Error Context: test-results\dashboard-Dashboard-Authen-cf1d1-eveal-view-if-authenticated-firefox\error-context.md
+[1A[2K(node:4712) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
 
 
-[1A[2K[54/81] [firefox] › e2e\dashboard.spec.ts:69:9 › Dashboard › Authenticated › should match the visual snapshot
-[1A[2K  2) [firefox] › e2e\dashboard.spec.ts:47:9 › Dashboard › Authenticated › should logout the user ───
+[1A[2K(node:23188) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K(node:25896) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K(node:4712) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K(node:9920) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K(node:23188) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K(node:25896) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K[2/12] [chromium] › e2e\dashboard-multiple-posts.spec.ts:17:9 › Dashboard Multiple Posts (BUG-002) › Authenticated › should display most recent post when multiple revealed posts exist
+[1A[2K[3/12] [setup-firefox] › e2e\auth.setup.firefox.ts:12:6 › authenticate for Firefox
+[1A[2K[4/12] [chromium] › e2e\dashboard-multiple-posts.spec.ts:223:9 › Dashboard Multiple Posts (BUG-002) › Authenticated › should handle 10+ posts without performance issues
+[1A[2K[5/12] [chromium] › e2e\dashboard-multiple-posts.spec.ts:142:9 › Dashboard Multiple Posts (BUG-002) › Authenticated › should not display posts with status='pending'
+[1A[2K[chromium] › e2e\dashboard-multiple-posts.spec.ts:17:9 › Dashboard Multiple Posts (BUG-002) › Authenticated › should display most recent post when multiple revealed posts exist
+[authenticateProgrammatically] Using isolated user: test-ad124ca3ccb0bef961e0@example.com
+
+[1A[2K[chromium] › e2e\dashboard-multiple-posts.spec.ts:223:9 › Dashboard Multiple Posts (BUG-002) › Authenticated › should handle 10+ posts without performance issues
+[authenticateProgrammatically] Using isolated user: test-ad124ca3ccb0bef961e0@example.com
+
+[1A[2K[chromium] › e2e\dashboard-multiple-posts.spec.ts:142:9 › Dashboard Multiple Posts (BUG-002) › Authenticated › should not display posts with status='pending'
+[authenticateProgrammatically] Using isolated user: test-ad124ca3ccb0bef961e0@example.com
+
+[1A[2K[setup-firefox] › e2e\auth.setup.firefox.ts:12:6 › authenticate for Firefox
+⚠️ [Firefox] Session invalid or expired.
+
+[1A[2K🔄 [Firefox] Performing full authentication...
+
+[1A[2K[chromium] › e2e\dashboard-multiple-posts.spec.ts:17:9 › Dashboard Multiple Posts (BUG-002) › Authenticated › should display most recent post when multiple revealed posts exist
+[authenticateProgrammatically] Session created for user: test-ad124ca3ccb0bef961e0@example.com
+
+[1A[2K[chromium] › e2e\dashboard-multiple-posts.spec.ts:223:9 › Dashboard Multiple Posts (BUG-002) › Authenticated › should handle 10+ posts without performance issues
+[authenticateProgrammatically] Session created for user: test-ad124ca3ccb0bef961e0@example.com
+
+[1A[2K[chromium] › e2e\dashboard-multiple-posts.spec.ts:142:9 › Dashboard Multiple Posts (BUG-002) › Authenticated › should not display posts with status='pending'
+[authenticateProgrammatically] Session created for user: test-ad124ca3ccb0bef961e0@example.com
+
+[1A[2K[chromium] › e2e\dashboard-multiple-posts.spec.ts:223:9 › Dashboard Multiple Posts (BUG-002) › Authenticated › should handle 10+ posts without performance issues
+[authenticateProgrammatically] Session injected via context.addCookies (Firefox-compatible)
+
+[1A[2K[chromium] › e2e\dashboard-multiple-posts.spec.ts:17:9 › Dashboard Multiple Posts (BUG-002) › Authenticated › should display most recent post when multiple revealed posts exist
+[authenticateProgrammatically] Session injected via context.addCookies (Firefox-compatible)
+
+[1A[2K[authenticateProgrammatically] Session injected into localStorage AND cookies as sb-hoomcbsfqunrkeapxbvh-auth-token
+
+[1A[2K[chromium] › e2e\dashboard-multiple-posts.spec.ts:223:9 › Dashboard Multiple Posts (BUG-002) › Authenticated › should handle 10+ posts without performance issues
+[authenticateProgrammatically] Session injected into localStorage AND cookies as sb-hoomcbsfqunrkeapxbvh-auth-token
+
+[1A[2K[chromium] › e2e\dashboard-multiple-posts.spec.ts:142:9 › Dashboard Multiple Posts (BUG-002) › Authenticated › should not display posts with status='pending'
+[authenticateProgrammatically] Session injected via context.addCookies (Firefox-compatible)
+
+[1A[2K[authenticateProgrammatically] Session injected into localStorage AND cookies as sb-hoomcbsfqunrkeapxbvh-auth-token
+
+[1A[2K[setup-firefox] › e2e\auth.setup.firefox.ts:12:6 › authenticate for Firefox
+🛠️ [Firefox] Ensuring data consistency...
+
+[1A[2K✅ [Firefox] Seed post already exists.
+
+[1A[2K✅ [Firefox] Dashboard loaded successfully
+
+[1A[2K✅ [Firefox] Auth state saved to: e2e/.auth/user.firefox.json
+
+[1A[2K  1) [chromium] › e2e\dashboard-multiple-posts.spec.ts:223:9 › Dashboard Multiple Posts (BUG-002) › Authenticated › should handle 10+ posts without performance issues 
 
     Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
 
-    Locator: getByTestId('logout-button')
+    Locator: getByText('Test Performance Post 0')
     Expected: visible
     Timeout: 5000ms
     Error: element(s) not found
 
     Call log:
     [2m  - Expect "toBeVisible" with timeout 5000ms[22m
-    [2m  - waiting for getByTestId('logout-button')[22m
+    [2m  - waiting for getByText('Test Performance Post 0')[22m
 
 
-      51 |       // Attendre que le bouton soit visible et enabled
-      52 |       const logoutBtn = page.getByTestId("logout-button");
-    > 53 |       await expect(logoutBtn).toBeVisible();
-         |                               ^
-      54 |       await expect(logoutBtn).toBeEnabled();
-      55 |       
-      56 |       // Attendre que le contenu soit chargé (signe que React est hydraté)
-        at c:\dev\postry-ai-v5\e2e\dashboard.spec.ts:53:31
+      324 |
+      325 |       // Verify: Most recent post (Post 0) is displayed
+    > 326 |       await expect(page.getByText("Test Performance Post 0")).toBeVisible();
+          |                                                               ^
+      327 |
+      328 |       // Verify: Performance is acceptable (loads within 5 seconds)
+      329 |       expect(loadTime).toBeLessThan(5000);
+        at C:\dev\postry-ai\e2e\dashboard-multiple-posts.spec.ts:326:63
 
-    Error Context: test-results\dashboard-Dashboard-Authenticated-should-logout-the-user-firefox\error-context.md
-
-
-[1A[2K[55/81] [firefox] › e2e\dashboard.spec.ts:76:9 › Dashboard › Unauthenticated › should redirect to login if not authenticated
-[1A[2K[56/81] [webkit] › e2e\accessibility-and-performance.spec.ts:15:7 › Accessibility Tests › E2E-A11Y-01: Keyboard navigation through quiz
-[1A[2K[57/81] [webkit] › e2e\accessibility-and-performance.spec.ts:57:7 › Accessibility Tests › E2E-A11Y-02: Screen reader friendly elements
-[1A[2K[58/81] [webkit] › e2e\accessibility-and-performance.spec.ts:76:7 › Accessibility Tests › E2E-A11Y-03: Form labels and error messages
-[1A[2K[59/81] [webkit] › e2e\accessibility-and-performance.spec.ts:141:7 › Accessibility Tests › E2E-A11Y-04: Color contrast and visibility
-[1A[2K[60/81] [webkit] › e2e\accessibility-and-performance.spec.ts:158:7 › Performance Tests › E2E-PERF-01: Quiz loads within acceptable time
-[1A[2K[61/81] [webkit] › e2e\accessibility-and-performance.spec.ts:172:7 › Performance Tests › E2E-PERF-02: Question transitions are smooth
-[1A[2K[62/81] [webkit] › e2e\accessibility-and-performance.spec.ts:208:7 › Performance Tests › E2E-PERF-03: No memory leaks during quiz completion
-[1A[2K[63/81] [webkit] › e2e\accessibility-and-performance.spec.ts:255:7 › Cross-Browser Compatibility › E2E-COMPAT-01: Quiz works across different viewports
-[1A[2K[64/81] [webkit] › e2e\accessibility-and-performance.spec.ts:284:7 › Cross-Browser Compatibility › E2E-COMPAT-02: Touch interactions work on mobile
-[1A[2K[65/81] [webkit] › e2e\accessibility-and-performance.spec.ts:335:7 › Network Resilience › E2E-NETWORK-01: Handles slow network gracefully
-[1A[2K[66/81] [webkit] › e2e\accessibility-and-performance.spec.ts:370:7 › Network Resilience › E2E-NETWORK-02: Recovers from temporary network failure
-[1A[2K[67/81] [webkit] › e2e\auth-confirm-hang.spec.ts:8:7 › Auth Confirm Page › E2E-AUTH-01: should show error message if no auth event occurs
-[1A[2K[68/81] [webkit] › e2e\auth-confirm-hang.spec.ts:25:7 › Auth Confirm Page › E2E-AUTH-02: should show error for fake token hash
-[1A[2K[69/81] [webkit] › e2e\auth-confirm-hang.spec.ts:37:7 › Auth Confirm Page › E2E-AUTH-03: should handle implicit flow hash error
-[1A[2K[70/81] [webkit] › e2e\critical-user-journeys.spec.ts:115:9 › Critical User Journeys › Complete User Journey: Quiz to Dashboard › E2E-JOURNEY-01: Complete flow from landing to post generation
-[1A[2K[71/81] [webkit] › e2e\critical-user-journeys.spec.ts:234:9 › Critical User Journeys › Form Validation End-to-End › E2E-VALIDATION-01: Email validation in auth modal
-[1A[2K[72/81] [webkit] › e2e\critical-user-journeys.spec.ts:265:9 › Critical User Journeys › Form Validation End-to-End › E2E-VALIDATION-02: Topic input validation
-[1A[2K[73/81] [webkit] › e2e\critical-user-journeys.spec.ts:287:9 › Critical User Journeys › Error Handling End-to-End › E2E-ERROR-01: API failure during quiz generation
-[1A[2K[74/81] [webkit] › e2e\critical-user-journeys.spec.ts:307:9 › Critical User Journeys › Error Handling End-to-End › E2E-ERROR-02: Pre-persist failure handling
-[1A[2K[75/81] [webkit] › e2e\critical-user-journeys.spec.ts:398:9 › Critical User Journeys › State Persistence › E2E-PERSIST-01: Quiz progress persists after page reload
-[1A[2K[76/81] [webkit] › e2e\critical-user-journeys.spec.ts:435:9 › Critical User Journeys › Mobile Responsiveness › E2E-MOBILE-01: Quiz flow on mobile viewport
-[1A[2K[77/81] [webkit] › e2e\dashboard.spec.ts:11:9 › Dashboard › Authenticated › should display the post reveal view if authenticated
-[1A[2K[78/81] [webkit] › e2e\dashboard.spec.ts:35:9 › Dashboard › Authenticated › should copy the post content to clipboard
-[1A[2K[79/81] [webkit] › e2e\dashboard.spec.ts:47:9 › Dashboard › Authenticated › should logout the user
-[1A[2K  3) [webkit] › e2e\dashboard.spec.ts:11:9 › Dashboard › Authenticated › should display the post reveal view if authenticated 
-
-    Error: [2mexpect([22m[31mpage[39m[2m).[22mtoHaveURL[2m([22m[32mexpected[39m[2m)[22m failed
-
-    Expected: [32m"http://localhost:3000/dashboard"[39m
-    Received: [31m"http://localhost:3000/[7m?redirectedFrom=%2F[27mdashboard"[39m
-    Timeout:  5000ms
-
-    Call log:
-    [2m  - Expect "toHaveURL" with timeout 5000ms[22m
-    [2m    9 × unexpected value "http://localhost:3000/?redirectedFrom=%2Fdashboard"[22m
+    Error Context: test-results\dashboard-multiple-posts-D-98c25--without-performance-issues-chromium\error-context.md
 
 
-      13 |     }) => {
-      14 |       // Fail fast check (Task 2.6.11)
-    > 15 |       await expect(page).toHaveURL("/dashboard");
-         |                          ^
-      16 |
-      17 |       const postContent = page.getByTestId("post-content");
-      18 |       // const postMeta = page.getByTestId("post-meta"); // Element removed in new UI
-        at c:\dev\postry-ai-v5\e2e\dashboard.spec.ts:15:26
-
-    Error Context: test-results\dashboard-Dashboard-Authen-cf1d1-eveal-view-if-authenticated-webkit\error-context.md
+[1A[2K(node:34592) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
 
 
-[1A[2K[80/81] [webkit] › e2e\dashboard.spec.ts:69:9 › Dashboard › Authenticated › should match the visual snapshot
-[1A[2K  4) [webkit] › e2e\dashboard.spec.ts:47:9 › Dashboard › Authenticated › should logout the user ────
+[1A[2K(node:37844) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K(node:32280) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K(node:8152) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K(node:34592) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K(node:37844) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K(node:32280) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K(node:8152) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K[6/12] [setup-webkit] › e2e\auth.setup.webkit.ts:12:6 › authenticate for WebKit
+[1A[2K[7/12] [firefox] › e2e\dashboard-multiple-posts.spec.ts:142:9 › Dashboard Multiple Posts (BUG-002) › Authenticated › should not display posts with status='pending'
+[1A[2K[8/12] [firefox] › e2e\dashboard-multiple-posts.spec.ts:17:9 › Dashboard Multiple Posts (BUG-002) › Authenticated › should display most recent post when multiple revealed posts exist
+[1A[2K[9/12] [firefox] › e2e\dashboard-multiple-posts.spec.ts:223:9 › Dashboard Multiple Posts (BUG-002) › Authenticated › should handle 10+ posts without performance issues
+[1A[2K[setup-webkit] › e2e\auth.setup.webkit.ts:12:6 › authenticate for WebKit
+⚠️ [WebKit] Session invalid or expired.
+
+[1A[2K🔄 [WebKit] Performing full authentication...
+
+[1A[2K🛠️ [WebKit] Ensuring data consistency...
+
+[1A[2K✅ [WebKit] Seed post already exists.
+
+[1A[2K✅ [WebKit] Dashboard loaded successfully
+
+[1A[2K✅ [WebKit] Auth state saved to: e2e/.auth/user.webkit.json
+
+[1A[2K(node:9036) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K(node:15320) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K(node:5800) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K(node:15320) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K(node:9036) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K(node:5800) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K[10/12] [webkit] › e2e\dashboard-multiple-posts.spec.ts:142:9 › Dashboard Multiple Posts (BUG-002) › Authenticated › should not display posts with status='pending'
+[1A[2K[11/12] [webkit] › e2e\dashboard-multiple-posts.spec.ts:17:9 › Dashboard Multiple Posts (BUG-002) › Authenticated › should display most recent post when multiple revealed posts exist
+[1A[2K[12/12] [webkit] › e2e\dashboard-multiple-posts.spec.ts:223:9 › Dashboard Multiple Posts (BUG-002) › Authenticated › should handle 10+ posts without performance issues
+[1A[2K[webkit] › e2e\dashboard-multiple-posts.spec.ts:142:9 › Dashboard Multiple Posts (BUG-002) › Authenticated › should not display posts with status='pending'
+[authenticateProgrammatically] Using isolated user: test-ad124ca3ccb0bef961e0@example.com
+
+[1A[2K[webkit] › e2e\dashboard-multiple-posts.spec.ts:17:9 › Dashboard Multiple Posts (BUG-002) › Authenticated › should display most recent post when multiple revealed posts exist
+[authenticateProgrammatically] Using isolated user: test-ad124ca3ccb0bef961e0@example.com
+
+[1A[2K[webkit] › e2e\dashboard-multiple-posts.spec.ts:223:9 › Dashboard Multiple Posts (BUG-002) › Authenticated › should handle 10+ posts without performance issues
+[authenticateProgrammatically] Using isolated user: test-ad124ca3ccb0bef961e0@example.com
+
+[1A[2K[authenticateProgrammatically] Session created for user: test-ad124ca3ccb0bef961e0@example.com
+
+[1A[2K[webkit] › e2e\dashboard-multiple-posts.spec.ts:142:9 › Dashboard Multiple Posts (BUG-002) › Authenticated › should not display posts with status='pending'
+[authenticateProgrammatically] Session created for user: test-ad124ca3ccb0bef961e0@example.com
+
+[1A[2K[webkit] › e2e\dashboard-multiple-posts.spec.ts:17:9 › Dashboard Multiple Posts (BUG-002) › Authenticated › should display most recent post when multiple revealed posts exist
+[authenticateProgrammatically] Session created for user: test-ad124ca3ccb0bef961e0@example.com
+
+[1A[2K[webkit] › e2e\dashboard-multiple-posts.spec.ts:223:9 › Dashboard Multiple Posts (BUG-002) › Authenticated › should handle 10+ posts without performance issues
+[authenticateProgrammatically] Session injected via context.addCookies (Firefox-compatible)
+
+[1A[2K[authenticateProgrammatically] Session injected into localStorage AND cookies as sb-hoomcbsfqunrkeapxbvh-auth-token
+
+[1A[2K[webkit] › e2e\dashboard-multiple-posts.spec.ts:142:9 › Dashboard Multiple Posts (BUG-002) › Authenticated › should not display posts with status='pending'
+[authenticateProgrammatically] Session injected via context.addCookies (Firefox-compatible)
+
+[1A[2K[authenticateProgrammatically] Session injected into localStorage AND cookies as sb-hoomcbsfqunrkeapxbvh-auth-token
+
+[1A[2K[webkit] › e2e\dashboard-multiple-posts.spec.ts:17:9 › Dashboard Multiple Posts (BUG-002) › Authenticated › should display most recent post when multiple revealed posts exist
+[authenticateProgrammatically] Session injected via context.addCookies (Firefox-compatible)
+
+[1A[2K[authenticateProgrammatically] Session injected into localStorage AND cookies as sb-hoomcbsfqunrkeapxbvh-auth-token
+
+[1A[2K  2) [webkit] › e2e\dashboard-multiple-posts.spec.ts:223:9 › Dashboard Multiple Posts (BUG-002) › Authenticated › should handle 10+ posts without performance issues 
 
     Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
 
-    Locator: getByTestId('logout-button')
+    Locator: getByText('Test Performance Post 0')
     Expected: visible
     Timeout: 5000ms
     Error: element(s) not found
 
     Call log:
     [2m  - Expect "toBeVisible" with timeout 5000ms[22m
-    [2m  - waiting for getByTestId('logout-button')[22m
+    [2m  - waiting for getByText('Test Performance Post 0')[22m
 
 
-      51 |       // Attendre que le bouton soit visible et enabled
-      52 |       const logoutBtn = page.getByTestId("logout-button");
-    > 53 |       await expect(logoutBtn).toBeVisible();
-         |                               ^
-      54 |       await expect(logoutBtn).toBeEnabled();
-      55 |       
-      56 |       // Attendre que le contenu soit chargé (signe que React est hydraté)
-        at c:\dev\postry-ai-v5\e2e\dashboard.spec.ts:53:31
+      324 |
+      325 |       // Verify: Most recent post (Post 0) is displayed
+    > 326 |       await expect(page.getByText("Test Performance Post 0")).toBeVisible();
+          |                                                               ^
+      327 |
+      328 |       // Verify: Performance is acceptable (loads within 5 seconds)
+      329 |       expect(loadTime).toBeLessThan(5000);
+        at C:\dev\postry-ai\e2e\dashboard-multiple-posts.spec.ts:326:63
 
-    Error Context: test-results\dashboard-Dashboard-Authenticated-should-logout-the-user-webkit\error-context.md
-
-
-[1A[2K[81/81] [webkit] › e2e\dashboard.spec.ts:76:9 › Dashboard › Unauthenticated › should redirect to login if not authenticated
-[1A[2K  5) [webkit] › e2e\dashboard.spec.ts:69:9 › Dashboard › Authenticated › should match the visual snapshot 
-
-    Error: [2mexpect([22m[31mpage[39m[2m).[22mtoHaveScreenshot[2m([22m[32mexpected[39m[2m)[22m failed
-
-      81041 pixels (ratio 0.09 of all image pixels) are different.
-
-    Call log:
-    [2m  - Expect "toHaveScreenshot" with timeout 5000ms[22m
-    [2m    - verifying given screenshot expectation[22m
-    [2m  - taking page screenshot[22m
-    [2m    - disabled all CSS animations[22m
-    [2m  - waiting for fonts to load...[22m
-    [2m  - fonts loaded[22m
-    [2m  - 81041 pixels (ratio 0.09 of all image pixels) are different.[22m
-    [2m  - waiting 100ms before taking screenshot[22m
-    [2m  - taking page screenshot[22m
-    [2m    - disabled all CSS animations[22m
-    [2m  - waiting for fonts to load...[22m
-    [2m  - fonts loaded[22m
-    [2m  - captured a stable screenshot[22m
-    [2m  - 81041 pixels (ratio 0.09 of all image pixels) are different.[22m
+    Error Context: test-results\dashboard-multiple-posts-D-98c25--without-performance-issues-webkit\error-context.md
 
 
-      68 |
-      69 |     test("should match the visual snapshot", async ({ page }) => {
-    > 70 |       await expect(page).toHaveScreenshot();
-         |                          ^
-      71 |     });
-      72 |   });
-      73 |
-        at c:\dev\postry-ai-v5\e2e\dashboard.spec.ts:70:26
-
-    attachment #1: Dashboard-Authenticated-should-match-the-visual-snapshot-1 (image/png) ──────────
-    Expected: e2e\dashboard.spec.ts-snapshots\Dashboard-Authenticated-should-match-the-visual-snapshot-1-webkit-win32.png
-    Received: test-results\dashboard-Dashboard-Authen-9cd79-d-match-the-visual-snapshot-webkit\Dashboard-Authenticated-should-match-the-visual-snapshot-1-actual.png
-    Diff:     test-results\dashboard-Dashboard-Authen-9cd79-d-match-the-visual-snapshot-webkit\Dashboard-Authenticated-should-match-the-visual-snapshot-1-diff.png
-    ────────────────────────────────────────────────────────────────────────────────────────────────
-
-    Error Context: test-results\dashboard-Dashboard-Authen-9cd79-d-match-the-visual-snapshot-webkit\error-context.md
-
-
-[1A[2K  5 failed
-    [firefox] › e2e\dashboard.spec.ts:11:9 › Dashboard › Authenticated › should display the post reveal view if authenticated 
-    [firefox] › e2e\dashboard.spec.ts:47:9 › Dashboard › Authenticated › should logout the user ────
-    [webkit] › e2e\dashboard.spec.ts:11:9 › Dashboard › Authenticated › should display the post reveal view if authenticated 
-    [webkit] › e2e\dashboard.spec.ts:47:9 › Dashboard › Authenticated › should logout the user ─────
-    [webkit] › e2e\dashboard.spec.ts:69:9 › Dashboard › Authenticated › should match the visual snapshot 
-  2 skipped
-  74 passed (1.2m)
+[1A[2K  2 failed
+    [chromium] › e2e\dashboard-multiple-posts.spec.ts:223:9 › Dashboard Multiple Posts (BUG-002) › Authenticated › should handle 10+ posts without performance issues 
+    [webkit] › e2e\dashboard-multiple-posts.spec.ts:223:9 › Dashboard Multiple Posts (BUG-002) › Authenticated › should handle 10+ posts without performance issues 
+  3 skipped
+  7 passed (43.0s)

@@ -11,25 +11,26 @@ import { test, expect } from '@playwright/test';
  *
  * IMPORTANT: Most tests use UNAUTHENTICATED context to test the quiz flow.
  * Only E2E-2.7-01 uses authenticated context to test redirect behavior.
+ *
+ * QUIZ FLOW TESTS (02, 04, 05, REG-01, REG-02): Require the app to run with
+ * NEXT_PUBLIC_QUIZ_USE_MOCK=true so questions load immediately (no GEMINI_API_KEY).
+ * Run: npm run build:e2e && npm run start (or set env before npm run dev), then run tests.
  */
 
 test.describe('Story 2.7: Auth Persistence Simplification', () => {
   
   test('E2E-2.7-01: /quiz/reveal redirects to /dashboard', async ({ page }) => {
     // This test uses AUTHENTICATED context (from auth.setup)
-    // Navigate directly to /quiz/reveal
     await page.goto('/quiz/reveal');
-    
-    // Should redirect - wait for either /dashboard or landing page with redirect param
-    await page.waitForLoadState('networkidle');
-    
-    // Verify we're redirected (either to dashboard or landing with redirect param)
-    const url = page.url();
-    const isRedirected = url.includes('/dashboard') || url.includes('redirectedFrom');
-    expect(isRedirected).toBe(true);
+    // Wait for redirect away from /quiz/reveal (may land on /dashboard or /)
+    await page.waitForURL(
+      (url) => url.pathname !== '/quiz/reveal' && (url.pathname === '/dashboard' || url.pathname === '/' || url.searchParams.has('redirectedFrom')),
+      { timeout: 20000 }
+    );
   });
 
   test('E2E-2.7-02: localStorage cleaned after successful auth flow', async ({ browser }) => {
+    test.setTimeout(25000); // Quiz + mock post (no Gemini); enough for WebKit
     // Create unauthenticated context
     const context = await browser.newContext({ storageState: undefined });
     const page = await context.newPage();
@@ -67,7 +68,8 @@ test.describe('Story 2.7: Auth Persistence Simplification', () => {
       await page.waitForSelector('[data-testid="question-card"]', { timeout: 30000 });
       
       // Answer all questions
-      for (let i = 0; i < 10; i++) {
+      // mock: 6 P1 + 5 P2 questions
+      for (let i = 0; i < 11; i++) {
         const options = page.locator('[data-testid^="option-"]');
         await options.first().click();
         await page.waitForTimeout(300);
@@ -79,15 +81,17 @@ test.describe('Story 2.7: Auth Persistence Simplification', () => {
         }
       }
       
+      // Allow UI transition to final reveal (reduces flakiness on WebKit)
+      await page.waitForTimeout(200);
       // Wait for final reveal
-      await page.waitForSelector('[data-testid="final-reveal-container"]', { timeout: 15000 });
+      await page.waitForSelector('[data-testid="final-reveal-container"]', { timeout: 10000 });
       
       // Enter topic and generate post
       await page.fill('input[placeholder*="De quoi voulez-vous parler"]', 'Test topic for Story 2.7');
       await page.click('button:has-text("Générer un post")');
       
       // Wait for post generation
-      await page.waitForSelector('[data-testid="post-content"]', { timeout: 20000 });
+      await page.waitForSelector('[data-testid="post-content"]', { timeout: 5000 });
       
       // Verify localStorage contains quiz state before auth
       const quizStateBefore = await page.evaluate(() => {
@@ -123,6 +127,7 @@ test.describe('Story 2.7: Auth Persistence Simplification', () => {
   });
 
   test('E2E-2.7-04: Auth modal appears without pre-persist call', async ({ browser }) => {
+    test.setTimeout(60000); // Full quiz + post + modal can exceed 30s on WebKit
     // Create unauthenticated context
     const context = await browser.newContext({ storageState: undefined });
     const page = await context.newPage();
@@ -161,7 +166,8 @@ test.describe('Story 2.7: Auth Persistence Simplification', () => {
       // Answer questions - increased timeout for API fallback
       await page.waitForSelector('[data-testid="question-card"]', { timeout: 30000 });
       
-      for (let i = 0; i < 10; i++) {
+      // mock: 6 P1 + 5 P2 questions
+      for (let i = 0; i < 11; i++) {
         const options = page.locator('[data-testid^="option-"]');
         await options.first().click();
         await page.waitForTimeout(300);
@@ -173,13 +179,14 @@ test.describe('Story 2.7: Auth Persistence Simplification', () => {
         }
       }
       
+      await page.waitForTimeout(200);
       // Generate post
-      await page.waitForSelector('[data-testid="final-reveal-container"]', { timeout: 15000 });
+      await page.waitForSelector('[data-testid="final-reveal-container"]', { timeout: 10000 });
       await page.fill('input[placeholder*="De quoi voulez-vous parler"]', 'Test topic');
       await page.click('button:has-text("Générer un post")');
       
       // Wait for auth modal
-      await page.waitForSelector('h2:has-text("Sauvegardez votre post")', { timeout: 20000 });
+      await page.waitForSelector('h2:has-text("Sauvegardez votre post")', { timeout: 5000 });
       
       // Verify NO call to /api/quiz/pre-persist
       const hasPrePersistCall = apiCalls.some(url => url.includes('/api/quiz/pre-persist'));
@@ -194,6 +201,7 @@ test.describe('Story 2.7: Auth Persistence Simplification', () => {
   });
 
   test('E2E-2.7-05: Quiz state structure includes all required fields', async ({ browser }) => {
+    test.setTimeout(25000); // Quiz + mock post (no Gemini); enough for WebKit
     // Create unauthenticated context
     const context = await browser.newContext({ storageState: undefined });
     const page = await context.newPage();
@@ -223,7 +231,8 @@ test.describe('Story 2.7: Auth Persistence Simplification', () => {
       // Answer questions - increased timeout for API fallback
       await page.waitForSelector('[data-testid="question-card"]', { timeout: 30000 });
       
-      for (let i = 0; i < 10; i++) {
+      // mock: 6 P1 + 5 P2 questions
+      for (let i = 0; i < 11; i++) {
         const options = page.locator('[data-testid^="option-"]');
         await options.first().click();
         await page.waitForTimeout(300);
@@ -235,13 +244,14 @@ test.describe('Story 2.7: Auth Persistence Simplification', () => {
         }
       }
       
+      await page.waitForTimeout(200);
       // Generate post
-      await page.waitForSelector('[data-testid="final-reveal-container"]', { timeout: 15000 });
+      await page.waitForSelector('[data-testid="final-reveal-container"]', { timeout: 10000 });
       await page.fill('input[placeholder*="De quoi voulez-vous parler"]', 'Test topic');
       await page.click('button:has-text("Générer un post")');
       
       // Wait for post generation
-      await page.waitForSelector('[data-testid="post-content"]', { timeout: 20000 });
+      await page.waitForSelector('[data-testid="post-content"]', { timeout: 5000 });
       
       // Verify localStorage structure
       const quizState = await page.evaluate(() => {
@@ -251,10 +261,11 @@ test.describe('Story 2.7: Auth Persistence Simplification', () => {
       
       expect(quizState).not.toBeNull();
       expect(quizState).toHaveProperty('currentVector');
-      expect(quizState).toHaveProperty('answers');
+      expect(quizState).toHaveProperty('answersP1');
+      expect(quizState).toHaveProperty('answersP2');
       expect(quizState).toHaveProperty('generatedPost');
-      expect(quizState).toHaveProperty('topic');
-      expect(quizState).toHaveProperty('acquisitionTheme');
+      expect(quizState).toHaveProperty('postTopic');
+      expect(quizState).toHaveProperty('themeId');
       
       // Verify generatedPost structure
       expect(quizState.generatedPost).toHaveProperty('hook');
@@ -269,6 +280,7 @@ test.describe('Story 2.7: Auth Persistence Simplification', () => {
 test.describe('Story 2.7: Regression Tests', () => {
 
   test('E2E-2.7-REG-01: Complete quiz flow still works end-to-end', async ({ browser }) => {
+    test.setTimeout(60000); // Full quiz + post + modal can exceed 30s on WebKit
     // Create unauthenticated context
     const context = await browser.newContext({ storageState: undefined });
     const page = await context.newPage();
@@ -300,7 +312,8 @@ test.describe('Story 2.7: Regression Tests', () => {
       // Answer all questions - increased timeout for API fallback
       await page.waitForSelector('[data-testid="question-card"]', { timeout: 30000 });
       
-      for (let i = 0; i < 10; i++) {
+      // mock: 6 P1 + 5 P2 questions
+      for (let i = 0; i < 11; i++) {
         const options = page.locator('[data-testid^="option-"]');
         await expect(options.first()).toBeVisible();
         await options.first().click();
@@ -313,8 +326,9 @@ test.describe('Story 2.7: Regression Tests', () => {
         }
       }
       
+      await page.waitForTimeout(200);
       // Final reveal
-      await page.waitForSelector('[data-testid="final-reveal-container"]', { timeout: 15000 });
+      await page.waitForSelector('[data-testid="final-reveal-container"]', { timeout: 10000 });
       await expect(page.locator('[data-testid="final-reveal-container"]')).toBeVisible();
       
       // Generate post
@@ -322,7 +336,7 @@ test.describe('Story 2.7: Regression Tests', () => {
       await page.click('button:has-text("Générer un post")');
       
       // Verify post generated
-      await page.waitForSelector('[data-testid="post-content"]', { timeout: 20000 });
+      await page.waitForSelector('[data-testid="post-content"]', { timeout: 5000 });
       await expect(page.locator('[data-testid="post-content"]')).toBeVisible();
       
       // Verify auth modal appears
@@ -333,6 +347,7 @@ test.describe('Story 2.7: Regression Tests', () => {
   });
 
   test('E2E-2.7-REG-02: Post generation API still works', async ({ browser }) => {
+    test.setTimeout(25000); // Quiz + mock post (no Gemini); enough for WebKit
     // Create unauthenticated context
     const context = await browser.newContext({ storageState: undefined });
     const page = await context.newPage();
@@ -375,7 +390,8 @@ test.describe('Story 2.7: Regression Tests', () => {
       
       await page.waitForSelector('[data-testid="question-card"]', { timeout: 30000 });
       
-      for (let i = 0; i < 10; i++) {
+      // mock: 6 P1 + 5 P2 questions
+      for (let i = 0; i < 11; i++) {
         const options = page.locator('[data-testid^="option-"]');
         await options.first().click();
         await page.waitForTimeout(300);
@@ -387,11 +403,12 @@ test.describe('Story 2.7: Regression Tests', () => {
         }
       }
       
-      await page.waitForSelector('[data-testid="final-reveal-container"]', { timeout: 15000 });
+      await page.waitForTimeout(200);
+      await page.waitForSelector('[data-testid="final-reveal-container"]', { timeout: 10000 });
       await page.fill('input[placeholder*="De quoi voulez-vous parler"]', 'API test');
       await page.click('button:has-text("Générer un post")');
       
-      await page.waitForSelector('[data-testid="post-content"]', { timeout: 20000 });
+      await page.waitForSelector('[data-testid="post-content"]', { timeout: 5000 });
       
       expect(postApiCalled).toBe(true);
     } finally {

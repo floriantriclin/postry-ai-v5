@@ -97,7 +97,23 @@
       </substep>
     </step>
 
-    <step n="3" title="Completion">
+    <step n="3" title="Linear Synchronization Check">
+      <critical>Check if workflow modified files that impact Linear issues</critical>
+      
+      <action>Detect if workflow modified:
+        - Story files in {implementation_artifacts} or {story_dir}
+        - Sprint status file (sprint-status.yaml)
+        - Bug reports or issue files
+        - Project completion status
+      </action>
+      
+      <check if="Linear impact detected">
+        <action>Invoke protocol: linear_sync_check</action>
+        <action>Wait for protocol completion</action>
+      </check>
+    </step>
+
+    <step n="4" title="Completion">
       <check>Confirm document saved to output path</check>
       <action>Report workflow completion</action>
     </step>
@@ -135,6 +151,96 @@
   </supported-tags>
 
   <protocols desc="Reusable workflow protocols that can be invoked via invoke-protocol tag">
+    <protocol name="linear_sync_check" desc="Check and synchronize Linear issues when project changes impact Linear">
+      <objective>Automatically verify Linear synchronization when workflows modify stories, bugs, or project status</objective>
+      
+      <critical>This protocol MUST be invoked whenever a workflow modifies files that could impact Linear issues</critical>
+      <critical>Follow {project-root}/.cursor/rules/linear-sync.md for synchronization rules</critical>
+      <critical>Use MCP tools (update_issue, get_issue, list_issues) directly - NEVER create update files</critical>
+      
+      <flow>
+        <step n="1" title="Detect Impact on Linear">
+          <action>Identify if workflow modified:
+            - Story files (_bmad-output/implementation-artifacts/*.md)
+            - Sprint status (sprint-status.yaml)
+            - Bug reports or issues
+            - Project status or completion state
+          </action>
+          
+          <check if="no Linear impact detected">
+            <action>Skip protocol - no Linear synchronization needed</action>
+            <action>RETURN</action>
+          </check>
+        </step>
+        
+        <step n="2" title="Extract Linear Issue References">
+          <action>From modified files, extract:
+            - Linear issue IDs (BMA-XXX format)
+            - Story keys that might map to Linear issues
+            - Status changes that should sync to Linear
+          </action>
+          
+          <action>Load {project-root}/.cursor/rules/linear-sync.md for synchronization rules</action>
+          <action>Load {project-root}/_bmad/_memory/linear-config.yaml for Linear configuration</action>
+        </step>
+        
+        <step n="3" title="Verify Linear Issue Exists">
+          <iterate>For each Linear issue ID found:</iterate>
+          
+          <action>Use MCP tool: get_issue with id={{linear_issue_id}}</action>
+          
+          <check if="issue exists">
+            <action>Compare Linear issue with local file:
+              - Status: Linear vs sprint-status.yaml or story file
+              - Description: Linear (~20 lines) vs local file summary
+              - Priority: Linear vs local
+            </action>
+            
+            <check if="divergence detected">
+              <action>Inform user of divergence detected</action>
+              <action>Show differences clearly</action>
+              <action>Ask user: "Synchronize Linear issue {{linear_issue_id}}? [y/n]"</action>
+              
+              <check if="user confirms">
+                <action>Use MCP tool: update_issue with:
+                  - id: {{linear_issue_id}}
+                  - status: {{new_status}} (if changed)
+                  - description: {{summary_description}} (~20 lines max + link to local file)
+                </action>
+                <output>✅ Linear issue {{linear_issue_id}} synchronized</output>
+              </check>
+            </check>
+          </check>
+          
+          <check if="issue does NOT exist but should">
+            <action>Inform user: "Local file references Linear issue {{linear_issue_id}} but issue not found"</action>
+            <action>Ask user: "Create Linear issue for this story/bug? [y/n]"</action>
+            
+            <check if="user confirms">
+              <action>Use MCP tool: create_issue with:
+                - title: {{story_title}}
+                - description: {{summary_description}} (~20 lines max + link to local file)
+                - priority: {{priority}}
+                - labels: {{labels}}
+              </action>
+              <action>Update local file with Linear issue URL</action>
+              <output>✅ Created Linear issue {{new_issue_id}}</output>
+            </check>
+          </check>
+        </step>
+        
+        <step n="4" title="Update Linear Status from Local Changes">
+          <action>If sprint-status.yaml or story file status changed:
+            - Extract new status (ready-for-dev, in-progress, review, done)
+            - Find corresponding Linear issue ID
+            - Use MCP tool: update_issue to sync status
+          </action>
+          
+          <critical>NEVER create files like "*-linear-update.md" - update Linear directly via MCP</critical>
+        </step>
+      </flow>
+    </protocol>
+    
     <protocol name="discover_inputs" desc="Smart file discovery and loading based on input_file_patterns">
       <objective>Intelligently load project files (whole or sharded) based on workflow's input_file_patterns configuration</objective>
 

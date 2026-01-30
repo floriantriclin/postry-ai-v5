@@ -16,19 +16,38 @@ You must fully embody this agent's persona and follow all activation instruction
           - DO NOT PROCEED to step 3 until config is successfully loaded and variables stored
       </step>
       <step n="3">Remember: user's name is {user_name}</step>
-      <step n="4">READ the entire story file BEFORE any implementation - tasks/subtasks sequence is your authoritative implementation guide</step>
-  <step n="5">Execute tasks/subtasks IN ORDER as written in story file - no skipping, no reordering, no doing what you want</step>
-  <step n="6">Mark task/subtask [x] ONLY when both implementation AND tests are complete and passing</step>
-  <step n="7">Run full test suite after each task - NEVER proceed with failing tests</step>
-  <step n="8">Execute continuously without pausing until all tasks/subtasks are complete</step>
-  <step n="9">Document in story file Dev Agent Record what was implemented, tests created, and any decisions made</step>
-  <step n="10">Update story file File List with ALL changed files after each task completion</step>
-  <step n="11">NEVER lie about tests being written or passing - tests must actually exist and pass 100%</step>
-      <step n="12">Show greeting using {user_name} from config, communicate in {communication_language}, then display numbered list of ALL menu items from menu section</step>
+      <step n="4">🚨 CRITICAL - Load Git Strategy and Linear Rules:
+          - Load and read {project-root}/docs/git-strategy.md NOW
+          - Load and read {project-root}/.cursor/rules/linear-sync.md NOW
+          - Store these as reference: git strategy MUST be applied before, during, and after development
+          - Linear updates MUST be done directly via MCP tools (update_issue), NEVER create update files
+      </step>
+      <step n="5">READ the entire story file BEFORE any implementation - tasks/subtasks sequence is your authoritative implementation guide</step>
+  <step n="6">Execute tasks/subtasks IN ORDER as written in story file - no skipping, no reordering, no doing what you want</step>
+  <step n="7">Mark task/subtask [x] ONLY when both implementation AND tests are complete and passing</step>
+  <step n="8">Run full test suite after each task - NEVER proceed with failing tests</step>
+  <step n="9">Execute continuously without pausing until all tasks/subtasks are complete</step>
+  <step n="10">Document in story file Dev Agent Record what was implemented, tests created, and any decisions made</step>
+  <step n="11">Update story file File List with ALL changed files after each task completion</step>
+  <step n="12">NEVER lie about tests being written or passing - tests must actually exist and pass 100%</step>
+  <step n="13">🚨 GIT STRATEGY - Apply git operations according to {project-root}/docs/git-strategy.md:
+          - BEFORE development: Ensure on 'dev' branch, pull latest, create feature branch if needed
+          - DURING development: Commit regularly with conventional commit messages (feat:, fix:, test:, etc.)
+          - AFTER each task completion: Commit changes with proper message format
+          - NEVER create instruction files for git - execute git commands directly
+  </step>
+  <step n="14">🚨 LINEAR SYNC - Update Linear issues directly via MCP tools:
+          - Use update_issue MCP tool to update Linear issues, NOT create update files
+          - When story status changes, update Linear issue status directly
+          - When story completes, update Linear issue with summary (~20 lines max) + link to story file
+          - Follow {project-root}/.cursor/rules/linear-sync.md for synchronization rules
+          - NEVER create files like "*-linear-update.md" - update Linear directly instead
+  </step>
+      <step n="15">Show greeting using {user_name} from config, communicate in {communication_language}, then display numbered list of ALL menu items from menu section</step>
       <step n={HELP_STEP}">-Let {user_name} know they can type command `/bmad-help` at any time to get advice on what to do next, and that they can combine that with what they need help with <example>`/bmad-help where should I start with an idea I have that does XYZ`</example></step>
-      <step n="13">STOP and WAIT for user input - do NOT execute menu items automatically - accept number or cmd trigger or fuzzy command match</step>
-      <step n="14">On user input: Number → process menu item[n] | Text → case-insensitive substring match | Multiple matches → ask user to clarify | No match → show "Not recognized"</step>
-      <step n="15">When processing a menu item: Check menu-handlers section below - extract any attributes from the selected menu item (workflow, exec, tmpl, data, action, validate-workflow) and follow the corresponding handler instructions</step>
+      <step n="16">STOP and WAIT for user input - do NOT execute menu items automatically - accept number or cmd trigger or fuzzy command match</step>
+      <step n="17">On user input: Number → process menu item[n] | Text → case-insensitive substring match | Multiple matches → ask user to clarify | No match → show "Not recognized"</step>
+      <step n="18">When processing a menu item: Check menu-handlers section below - extract any attributes from the selected menu item (workflow, exec, tmpl, data, action, validate-workflow) and follow the corresponding handler instructions</step>
 
       <menu-handlers>
               <handlers>

@@ -47,9 +47,51 @@ SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
 GEMINI_API_KEY=your_gemini_api_key  # Optional: For quiz question generation
 ```
 
-**Note:** Si `GEMINI_API_KEY` n'est pas configurée, l'application utilisera des données mock pour les questions du quiz.
+**Mode mock-only (recommandé pour E2E, sans GEMINI_API_KEY) :**  
+Avec ce flag, le quiz (questions P1/P2, archétype, profil) et la **génération de post** sont mockés : `POST /api/quiz/post` retourne un post statique sans appeler Gemini. Les tests sont plus rapides et ne nécessitent pas de clé API. Build et exécution avec :
+
+```env
+NEXT_PUBLIC_QUIZ_USE_MOCK=true
+```
+
+Exemple en local : `set NEXT_PUBLIC_QUIZ_USE_MOCK=true` (Windows) ou `export NEXT_PUBLIC_QUIZ_USE_MOCK=true` (Linux/macOS), puis `npm run build` et `npm run start`, ou `npm run dev` avant de lancer `npx playwright test`. Voir [docs/qa/e2e-troubleshooting-guide.md](../docs/qa/e2e-troubleshooting-guide.md).
 
 ## 🧪 Exécution des Tests
+
+### Exécution par étape (un test à la fois)
+
+Pour éviter de relancer les 135 tests à chaque fois, procéder par étapes :
+
+1. **Lancer uniquement le setup d’auth** (pour valider la connexion) :
+   ```bash
+   npm run test:e2e:setup
+   # ou un seul navigateur :
+   npx playwright test e2e/auth.setup.chromium.ts
+   ```
+
+2. **Lancer un seul fichier de tests** (ex. Story 2.7) :
+   ```bash
+   npx playwright test e2e/story-2-7.spec.ts
+   ```
+
+3. **Quand un test échoue, ne relancer que celui-là** (copier le nom affiché dans l’erreur) :
+   ```bash
+   npx playwright test -g "E2E-2.7-02"
+   # ou avec le nom exact du test :
+   npx playwright test -g "localStorage cleaned after successful auth"
+   # via npm (le texte après -- est passé à -g) :
+   npm run test:e2e:one -- "E2E-2.7-02"
+   ```
+
+4. **Un seul navigateur** pour aller plus vite :
+   ```bash
+   npx playwright test -g "E2E-2.7-02" --project=chromium
+   ```
+
+5. **Quand le test passe**, enchaîner avec le fichier ou la suite suivante, puis lancer toute la suite une fois que tout est vert :
+   ```bash
+   npm run test:e2e
+   ```
 
 ### Commandes de Base
 
@@ -335,31 +377,15 @@ Si vous voyez des échecs, vérifiez que vous avez la dernière version.
 
 **Symptôme :** Tests timeout en attendant `[data-testid="question-card"]` après avoir cliqué sur "Lancer la calibration"
 
-**Cause :** Les questions du quiz ne se chargent pas correctement. Cela peut arriver si :
-- `GEMINI_API_KEY` n'est pas configurée ET le fallback mock ne fonctionne pas
-- L'API Gemini est lente ou indisponible
-- Le timing de chargement des questions n'est pas géré correctement
+**Cause :** Sans `GEMINI_API_KEY`, l'API échoue et le fallback mock s'applique après un délai réseau ; les tests cliquent avant que les questions soient disponibles.
 
-**Solutions :**
+**Solution recommandée (mode mock-only, sans API) :**  
+Build et exécution avec `NEXT_PUBLIC_QUIZ_USE_MOCK=true` pour que le quiz utilise immédiatement les données mock (aucun appel API). Voir [docs/qa/e2e-troubleshooting-guide.md](../docs/qa/e2e-troubleshooting-guide.md).
 
-1. **Ajouter la clé API Gemini** (recommandé pour tests avec API réelle) :
-   ```env
-   GEMINI_API_KEY=your_api_key_here
-   ```
-
-2. **Vérifier les logs de console** :
-   ```bash
-   npx playwright test e2e/story-2-7.spec.ts --headed
-   ```
-   Regardez les erreurs dans la console du navigateur.
-
-3. **Augmenter les timeouts** (solution temporaire) :
-   ```bash
-   npx playwright test e2e/story-2-7.spec.ts --timeout=120000
-   ```
-
-4. **Voir le rapport détaillé** :
-   Consultez [`docs/qa/story-2-8-phase-3-e2e-fix-report.md`](../docs/qa/story-2-8-phase-3-e2e-fix-report.md) pour l'analyse complète et les recommandations.
+**Autres options :**
+- Configurer `GEMINI_API_KEY` pour utiliser l'API réelle (plus lent, dépendant du réseau).
+- Déboguer : `npx playwright test e2e/story-2-7.spec.ts --headed` et consulter la console.
+- Rapport détaillé : [`docs/qa/story-2-8-phase-3-e2e-fix-report.md`](../docs/qa/story-2-8-phase-3-e2e-fix-report.md).
 
 ### Problème : Tests utilisent le mauvais contexte d'auth
 
@@ -439,7 +465,12 @@ npx playwright test --update-snapshots
 - ✅ Implémentation de contextes auth/unauth appropriés
 - ✅ Tests de redirections authentifiées
 - ✅ Tests de flux quiz non-authentifié
-- 🟡 9/24 tests passing (37.5%) - En cours de résolution
 - 📋 Voir [`story-2-8-phase-3-e2e-fix-report.md`](../docs/qa/story-2-8-phase-3-e2e-fix-report.md)
+
+**2026-01-29 - Story 2.9: E2E Test Completion**
+- ✅ Mode mock-only : `NEXT_PUBLIC_QUIZ_USE_MOCK=true` pour E2E sans GEMINI_API_KEY
+- ✅ Fallback immédiat (P1, archetype, P2, profile) sans appel réseau
+- ✅ CI/CD : `.github/workflows/e2e-tests.yml` pour PR/push
+- ✅ Guide : [`docs/qa/e2e-troubleshooting-guide.md`](../docs/qa/e2e-troubleshooting-guide.md)
 
 Voir [`e2e-migration-analysis.md`](../docs/qa/e2e-migration-analysis.md) pour les détails complets.
