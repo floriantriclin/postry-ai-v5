@@ -59,8 +59,8 @@ development_status:
   1-11-final-flow-patch: done
   epic-1-retrospective: optional
 
-  # Epic 2: Conversion & Identité (Révélation) - 🟡 In Progress
-  epic-2: in-progress
+  # Epic 2: Conversion & Identité (Révélation) - ✅ COMPLETED (31/01/2026)
+  epic-2: done
   2-1-db-schema: done
   2-2-auth-magic-link: done
   2-3-auth-modal: done
@@ -69,12 +69,11 @@ development_status:
   2-6-stabilization-refactoring: done
   2-7-auth-persistence-simplification: done
   2-8-production-readiness: done
-  2-9-e2e-test-completion: review  # Linear: BMA-10 - E2E tests 24/24, CI/CD, doc ✅ COMPLETE
-  2-10-unit-tests-documentation: review  # Linear: BMA-11 - Tests (91.66% coverage) + Ops docs (5 guides) ✅ COMPLETE
+  2-9-e2e-test-completion: done  # Linear: BMA-10 - E2E tests 24/24, CI/CD, doc ✅ VALIDATED 31/01/2026
+  2-10-unit-tests-documentation: done  # Linear: BMA-11 - Tests (91.66% coverage) + Ops docs (5 guides) ✅ VALIDATED 31/01/2026
   2-11-epic-2-bug-fixes: cancelled  # Linear: BMA-9 - SPLITTED into 2.11a + 2.11b (Go/No-Go Decision 27/01/2026)
   2-11b-persist-first-architecture: done  # Linear: BMA-48 - BUG-006, BUG-007 Security (8h, P0 CRITICAL) - ✅ Completed & rolled out in production
   2-11a-quick-wins: done  # Linear: BMA-49 - BUG-002 Dashboard, BUG-003 Archetype - ✅ Clôturée 29/01/2026, passage à 2-9
-  2-12-cleanup-job-posts-orphelins: backlog  # Linear: BMA-50 - Cleanup posts pending>24h (3h, P2 LOW, blocked by BMA-48)
   epic-2-retrospective: optional
   
   # ============================================================================
@@ -98,10 +97,11 @@ development_status:
   # - Git Strategy: docs/git-strategy.md créé et documenté
   # - Story complète avec améliorations équipe consignées
   
-  # Story 2-12 (Cleanup Job - P2 LOW - FUTURE):
+  # Story 2-12 (Cleanup Job - MOVED TO BACKLOG):
   # - Linear: BMA-50 - https://linear.app/floriantriclin/issue/BMA-50
+  # - Status: Backlog (hors Epic 2 - à planifier plus tard)
   # - Cleanup posts orphelins status='pending' > 24h
-  # - Durée: 3h, Blocked by: BMA-48
+  # - Durée: 3h, Priority: P2 LOW
   
   # BONUS (optionnel):
   # - BMA-8: BUG-008 E2E cross-browser (3h)

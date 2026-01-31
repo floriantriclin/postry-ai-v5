@@ -680,9 +680,60 @@ npm run test:e2e:setup  # 3/3 auth setups ✅
 npx playwright test e2e/story-2-7.spec.ts  # 24/24 tests ✅
 ```
 
+#### Test Quality Improvements (30 Janvier 2026)
+
+**Optimisations post-review (TEA Agent recommendations):**
+
+**Context:**
+- Test review report généré : `_bmad-output/test-review-story-2-9.md`
+- Score qualité initial : 68/100 (Grade C)
+- Violations critiques : 15+ hard waits, pas de fixtures, code dupliqué
+
+**Improvements Applied:**
+1. ✅ **Fixture Creation** - Extracted quiz flow into reusable fixture
+   - Created `e2e/fixtures/quiz-flow-fixture.ts` (89 lignes)
+   - Fixture `completeQuizFlow`: Centralizes quiz flow logic
+   - Fixture `unauthenticatedContext`: Auto-cleanup avec try/finally
+   - Benefits: DRY principle, reduced test file from 418 → 166 lines (-60%)
+
+2. ✅ **Hard Waits Reduction** - 15+ → 3 strategic waits (-80%)
+   - Before: 15+ `waitForTimeout()` scattered across 7 tests
+   - After: 3 strategic waits (200ms, 300ms, 300ms) in fixture only
+   - Locations: After theme click, after quiz start, between questions
+   - Reasoning: Pragmatic compromise - minimal waits for UI transitions
+
+3. ✅ **Code Refactoring** - Tests now use fixtures
+   - All 7 tests refactored to use `completeQuizFlow` fixture
+   - Reduced duplication: Setup code extracted to single location
+   - Improved maintainability: Single source of truth for quiz flow
+
+**Results:**
+- ✅ All 24 tests still passing (8 tests × 3 browsers)
+- ✅ Execution time stable: ~58s
+- ✅ Code quality improved significantly
+- ✅ Easier to maintain and extend
+
+**Files Modified:**
+- `e2e/fixtures/quiz-flow-fixture.ts` (created, 89 lines)
+- `e2e/story-2-7.spec.ts` (refactored, -252 lines, -60%)
+
+**Git:**
+- Commit: `c899dce` - "refactor(e2e): reduce hard waits and extract quiz flow fixture"
+- Branch: `dev`
+- Pushed to remote
+
+**Next Steps (Optional Follow-ups):**
+- P1: Create data factories for test topics (reduce hardcoded strings)
+- P2: Add priority markers (P0/P1/P2) to tests for selective execution
+- P3: Apply fixture pattern to other E2E test files
+
 #### File List
 
-Aucune modification de code nécessaire. Tous les fichiers requis existaient déjà:
+Files modified for quality improvements (30 Jan 2026):
+- `e2e/fixtures/quiz-flow-fixture.ts` (created)
+- `e2e/story-2-7.spec.ts` (refactored)
+
+Original implementation files (all existing):
 - `next.config.mjs` (configuration existante)
 - `components/feature/quiz-engine.tsx` (fix déjà implémenté)
 - `components/feature/quiz-engine.logic.test.ts` (tests unitaires existants)
@@ -691,3 +742,4 @@ Aucune modification de code nécessaire. Tous les fichiers requis existaient dé
 - `e2e/README.md` (documentation à jour)
 - `docs/qa/e2e-troubleshooting-guide.md` (guide existant)
 - `_bmad-output/implementation-artifacts/story-2-9-e2e-test-completion.md` (story file - AC marqués complétés)
+- `_bmad-output/test-review-story-2-9.md` (test quality review report)

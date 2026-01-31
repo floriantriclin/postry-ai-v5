@@ -1,9 +1,10 @@
-    # Story 2.10: Unit Tests & Operational Documentation
+# Story 2.10: Unit Tests & Operational Documentation
 
-**Status:** review  
+**Status:** ✅ **DONE** (completed + reviewed)  
 **Date:** 31 Janvier 2026  
 **Epic:** Epic 2 - Conversion & Identité  
-**Priorité:** 🟡 MOYENNE (post-production)
+**Priorité:** 🟡 MOYENNE (post-production)  
+**Quality Score:** 88/100 (A - Good)
 
 ---
 
@@ -21,6 +22,44 @@
 **En tant que** Full Stack Developer,  
 **Je veux** compléter les tests unitaires de l'endpoint persist-on-login et créer la documentation opérationnelle,  
 **Afin d'** assurer la maintenabilité et faciliter les opérations en production.
+
+---
+
+## 🔧 Technical Debt Identifié (Backlog MVP)
+
+**Review Quality Score:** 88/100 (A - Good)  
+**Reviewer:** Murat (TEA - Master Test Architect)  
+**Review Date:** 31 Janvier 2026
+
+Les tests et documentation sont **production-ready**, mais des améliorations d'architecture ont été identifiées pour maintenabilité long-terme :
+
+### 1. Data Factories for Unit Tests (P1 - High)
+- **Linear:** [BMA-59](https://linear.app/floriantriclin/issue/BMA-59/tech-debt-implement-data-factories-for-unit-tests)
+- **Priorité:** High (2)
+- **Effort:** 3 points (2-3h)
+- **Problème:** Hardcoded test data (`email: 'test@example.com'`) cause collisions en parallèle
+- **Solution:** Implémenter factory functions avec `faker.js` pour données dynamiques
+- **Bénéfice:** Parallel-safe, maintenabilité, intent explicite
+
+### 2. Extract Mock Setup to Fixtures (P2 - Medium)
+- **Linear:** [BMA-60](https://linear.app/floriantriclin/issue/BMA-60/tech-debt-extract-mock-setup-to-fixtures)
+- **Priorité:** Medium (3)
+- **Effort:** 2 points (1-2h)
+- **Problème:** `beforeEach` répète 35 lignes de mock setup (DRY violation)
+- **Solution:** Extraire dans fixtures réutilisables avec Vitest
+- **Bénéfice:** Code DRY, réutilisable, override-friendly
+
+### 3. Add Given-When-Then Comments (P3 - Low)
+- **Linear:** [BMA-61](https://linear.app/floriantriclin/issue/BMA-61/tech-debt-add-given-when-then-comments-to-unit-tests)
+- **Priorité:** Low (4)
+- **Effort:** 1 point (30min)
+- **Problème:** Pattern AAA présent mais pas explicitement marqué
+- **Solution:** Ajouter commentaires `// Given`, `// When`, `// Then`
+- **Bénéfice:** BDD-compliant, documentation vivante
+
+**Note:** Ces améliorations sont **non-bloquantes** et seront traitées juste avant release MVP. Tests actuels sont production-ready avec score 88/100.
+
+Voir revue complète: [`_bmad-output/test-review-story-2-10-unit-tests.md`](../test-review-story-2-10-unit-tests.md)
 
 ---
 
@@ -763,9 +802,9 @@ Documentation opérationnelle facilite:
 
 **Créé par:** Scrum Master (Bob - BMad SM)  
 **Date de création:** 31 Janvier 2026  
-**Dernière mise à jour:** 31 Janvier 2026  
-**Statut:** ready-for-dev  
-**Prochaine Story:** 2-11a (Quick Wins) ou 2-12 (Cleanup Job)
+**Dernière mise à jour:** 31 Janvier 2026 (Review TEA completed)  
+**Statut:** ✅ **DONE** (Tests + Docs completed)  
+**Technical Debt:** [BMA-59](https://linear.app/floriantriclin/issue/BMA-59), [BMA-60](https://linear.app/floriantriclin/issue/BMA-60), [BMA-61](https://linear.app/floriantriclin/issue/BMA-61) (Backlog MVP)
 
 ---
 
@@ -780,4 +819,58 @@ Après complétion de cette story:
 - ✅ Onboarding DevOps/Support facilité
 - ✅ Maintenance long-terme simplifiée
 
-**🚀 Ready for Implementation!**
+**🚀 Story 2.10 Completed!**
+
+---
+
+## 🎯 Status Final & Next Steps
+
+### ✅ Story 2.10 - DONE
+
+**Date de completion:** 31 Janvier 2026  
+**Status:** ✅ **COMPLETED** (review → done)  
+**Quality Score:** 88/100 (A - Good)
+
+**Deliverables:**
+- ✅ 18 tests unitaires créés (598 lignes)
+- ✅ Coverage: 91.66% (target: >80%)
+- ✅ 5 guides opérationnels (1,500+ lignes)
+- ✅ Documentation production-ready
+
+**Review TEA:**
+- Tests production-ready avec architecture solide
+- Documentation opérationnelle exceptionnelle
+- Quelques améliorations d'architecture identifiées (non-bloquantes)
+
+### 📋 Technical Debt → Backlog MVP
+
+Les améliorations suivantes sont dans le backlog et seront traitées **juste avant release MVP** :
+
+1. **[BMA-59](https://linear.app/floriantriclin/issue/BMA-59)** - Data Factories for Unit Tests (P1 - High, 3 points)
+2. **[BMA-60](https://linear.app/floriantriclin/issue/BMA-60)** - Extract Mock Setup to Fixtures (P2 - Medium, 2 points)
+3. **[BMA-61](https://linear.app/floriantriclin/issue/BMA-61)** - Add GWT Comments (P3 - Low, 1 point)
+
+**Total Effort:** 6 points (~4-5 heures)
+
+Ces issues sont **non-critiques** car :
+- Tests actuels sont fonctionnels et déterministes
+- Documentation est complète et production-ready
+- Score qualité de 88/100 est excellent
+- Améliorations visent maintenabilité long-terme
+
+### 🚀 Prochaines Actions
+
+**Immédiat:**
+- ✅ Story 2.10 merged et déployée
+- ✅ Tests intégrés dans CI/CD
+- ✅ Documentation accessible à l'équipe
+
+**Avant Release MVP:**
+- 📋 Traiter technical debt (BMA-59, BMA-60, BMA-61)
+- 📋 Re-review après implémentation factories (optionnel)
+
+**Questions?** Voir revue complète dans [`test-review-story-2-10-unit-tests.md`](../test-review-story-2-10-unit-tests.md)
+
+---
+
+**Félicitations ! Story 2.10 complétée avec succès.** 🎉
