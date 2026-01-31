@@ -74,7 +74,7 @@ development_status:
   2-11-epic-2-bug-fixes: cancelled  # Linear: BMA-9 - SPLITTED into 2.11a + 2.11b (Go/No-Go Decision 27/01/2026)
   2-11b-persist-first-architecture: done  # Linear: BMA-48 - BUG-006, BUG-007 Security (8h, P0 CRITICAL) - ✅ Completed & rolled out in production
   2-11a-quick-wins: done  # Linear: BMA-49 - BUG-002 Dashboard, BUG-003 Archetype - ✅ Clôturée 29/01/2026, passage à 2-9
-  epic-2-retrospective: optional
+  epic-2-retrospective: done  # Completed 31/01/2026 - Document: epic-2-retrospective-20260131.md
   
   # ============================================================================
   # DECISION: Story 2-11 SPLITTED (Go/No-Go Meeting 27/01/2026 - Vote 4.67/5)
