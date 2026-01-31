@@ -80,16 +80,46 @@ describe('Quiz Engine Logic (Reducer)', () => {
   });
 
   it('should handle PREVIOUS_PHASE1 and remove last answer', () => {
-     const state: QuizState = { 
-       ...initialState, 
-       step: 'PHASE1', 
-       questionsP1: mockData.phase1 as any, 
-       questionIndex: 1, 
-       answersP1: { POS: 'A' } 
+     const state: QuizState = {
+       ...initialState,
+       step: 'PHASE1',
+       questionsP1: mockData.phase1 as any,
+       questionIndex: 1,
+       answersP1: { POS: 'A' }
      };
      const newState = quizReducer(state, { type: 'PREVIOUS_PHASE1' });
-     
+
      expect(newState.questionIndex).toBe(0);
      expect(newState.answersP1).toEqual({});
+  });
+
+  it('should handle API_ARCHETYPE_ERROR with fallback (mock-only / no API key)', () => {
+    const fallback = {
+      archetype: mockData.archetype as any,
+      targetDimensions: ['STR', 'INF', 'ANC'] as any,
+    };
+    const state = quizReducer(initialState, { type: 'API_ARCHETYPE_START' });
+    const newState = quizReducer(state, { type: 'API_ARCHETYPE_ERROR', payload: { error: 'Mock-only mode (no API key)', fallback } });
+
+    expect(newState.status).toBe('error');
+    expect(newState.step).toBe('TRANSITION_ARCHETYPE');
+    expect(newState.archetypeData).toEqual(fallback);
+  });
+
+  it('should handle API_LOAD_P2_ERROR with fallback (mock-only / no API key)', () => {
+    const fallback = mockData.phase2 as any;
+    const newState = quizReducer(initialState, { type: 'API_LOAD_P2_ERROR', payload: { error: 'Mock-only mode (no API key)', fallback } });
+
+    expect(newState.questionsP2).toEqual(fallback);
+  });
+
+  it('should handle API_PROFILE_ERROR with fallback (mock-only / no API key)', () => {
+    const fallback = mockData.augmentedProfile as any;
+    const state = quizReducer(initialState, { type: 'API_PROFILE_START' });
+    const newState = quizReducer(state, { type: 'API_PROFILE_ERROR', payload: { error: 'Mock-only mode (no API key)', fallback } });
+
+    expect(newState.status).toBe('error');
+    expect(newState.step).toBe('FINAL_REVEAL');
+    expect(newState.profileData).toEqual(fallback);
   });
 });

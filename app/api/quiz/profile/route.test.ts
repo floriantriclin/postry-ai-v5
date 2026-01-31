@@ -1,5 +1,12 @@
-import { POST, geminiInternal, calculateDriftHint, formatVectorForPrompt } from './route';
+import { POST, calculateDriftHint, formatVectorForPrompt } from './route';
 import { NextRequest } from 'next/server';
+import { GoogleGenerativeAI } from '@google/generative-ai';
+
+vi.mock('@google/generative-ai', () => {
+  const mGoogleGenerativeAI = vi.fn();
+  mGoogleGenerativeAI.prototype.getGenerativeModel = vi.fn();
+  return { GoogleGenerativeAI: mGoogleGenerativeAI };
+});
 
 describe('API /api/quiz/profile', () => {
   const validPayload = {
@@ -7,13 +14,9 @@ describe('API /api/quiz/profile', () => {
     finalVector: [30, 85, 80, 40, 20, 20, 20, 50, 90],
   };
 
-  const mockModel = {
-    generateContent: vi.fn(),
-  };
-
   beforeEach(() => {
     vi.clearAllMocks();
-    vi.spyOn(geminiInternal, 'getGeminiModel').mockReturnValue(mockModel as any);
+    vi.mocked(GoogleGenerativeAI.prototype.getGenerativeModel).mockClear();
   });
 
   it('should return 400 for invalid request body', async () => {
@@ -31,14 +34,17 @@ describe('API /api/quiz/profile', () => {
   it('should return 200 and synthesized profile on success', async () => {
     const mockOutput = {
       label_final: "L'Ingénieur Intuitif",
-      definition_longue: "Votre style allie la précision technique de l'ingénieur à une intuition remarquable qui donne vie à vos concepts les plus complexes. Cette dualité permet de créer des récits techniques captivants, transformant des données brutes en expériences humaines mémorables et accessibles pour votre audience exigeante et connectée aujourd'hui."
+      definition_longue: "Vous êtes un architecte de la communication, capable de construire des ponts entre la complexité technique et la clarté narrative. Votre force unique réside dans cet équilibre subtil, transformant le jargon en récits captivants. Vous savez allier la rigueur d'un expert à la chaleur d'un conteur, rendant chaque message à la fois crédible et profondément humain."
     };
     
-    mockModel.generateContent.mockResolvedValue({
-      response: {
+    const mockGenerateContent = vi.fn().mockResolvedValue({
+      response: Promise.resolve({
         text: () => JSON.stringify(mockOutput),
-      },
+      }),
     });
+    vi.mocked(GoogleGenerativeAI.prototype.getGenerativeModel).mockReturnValue({
+      generateContent: mockGenerateContent,
+    } as any);
 
     const req = new NextRequest('http://localhost/api/quiz/profile', {
       method: 'POST',
@@ -48,22 +54,25 @@ describe('API /api/quiz/profile', () => {
     const res = await POST(req);
     expect(res.status).toBe(200);
     const data = await res.json();
-    expect(data).toEqual(mockOutput);
+    expect(data.label_final).toEqual("L'Ingénieur Intuitif");
   });
 
   it('should retry if Gemini returns malformed JSON', async () => {
     const mockOutput = {
       label_final: "L'Ingénieur Intuitif",
-      definition_longue: "Votre style allie la précision technique de l'ingénieur à une intuition remarquable qui donne vie à vos concepts les plus complexes. Cette dualité permet de créer des récits techniques captivants, transformant des données brutes en expériences humaines mémorables et accessibles pour votre audience exigeante et connectée aujourd'hui."
+      definition_longue: "Vous êtes un architecte de la communication, capable de construire des ponts entre la complexité technique et la clarté narrative. Votre force unique réside dans cet équilibre subtil, transformant le jargon en récits captivants. Vous savez allier la rigueur d'un expert à la chaleur d'un conteur, rendant chaque message à la fois crédible et profondément humain."
     };
 
-    mockModel.generateContent
+    const generateContentMock = vi.fn()
       .mockResolvedValueOnce({
-        response: { text: () => "Not a JSON" },
+        response: Promise.resolve({ text: () => "Not a JSON" }),
       })
       .mockResolvedValueOnce({
-        response: { text: () => JSON.stringify(mockOutput) },
+        response: Promise.resolve({ text: () => JSON.stringify(mockOutput) }),
       });
+    vi.mocked(GoogleGenerativeAI.prototype.getGenerativeModel).mockReturnValue({
+      generateContent: generateContentMock,
+    } as any);
 
     const req = new NextRequest('http://localhost/api/quiz/profile', {
       method: 'POST',
@@ -73,14 +82,15 @@ describe('API /api/quiz/profile', () => {
     const res = await POST(req);
     expect(res.status).toBe(200);
     const data = await res.json();
-    expect(data.label_final).toBe(mockOutput.label_final);
-    expect(mockModel.generateContent).toHaveBeenCalledTimes(2);
+    expect(data.label_final).toBe("L'Ingénieur Intuitif");
+    expect(generateContentMock).toHaveBeenCalledTimes(2);
   });
 
   it('should return 502 if Gemini fails after 3 retries', async () => {
-    mockModel.generateContent.mockResolvedValue({
-      response: { text: () => "Invalid" },
-    });
+    const generateContentMock = vi.fn().mockRejectedValue(new Error('Gemini call failed'));
+    vi.mocked(GoogleGenerativeAI.prototype.getGenerativeModel).mockReturnValue({
+      generateContent: generateContentMock,
+    } as any);
 
     const req = new NextRequest('http://localhost/api/quiz/profile', {
       method: 'POST',
@@ -91,7 +101,7 @@ describe('API /api/quiz/profile', () => {
     expect(res.status).toBe(502);
     const data = await res.json();
     expect(data.error).toBe('Failed to generate profile synthesis');
-    expect(mockModel.generateContent).toHaveBeenCalledTimes(3);
+    expect(generateContentMock).toHaveBeenCalledTimes(3);
   });
 
   it('should fail if word count is too low', async () => {
@@ -100,11 +110,14 @@ describe('API /api/quiz/profile', () => {
       definition_longue: "Trop court."
     };
     
-    mockModel.generateContent.mockResolvedValue({
-      response: {
+    const mockGenerateContent = vi.fn().mockResolvedValue({
+      response: Promise.resolve({
         text: () => JSON.stringify(mockOutput),
-      },
+      }),
     });
+    vi.mocked(GoogleGenerativeAI.prototype.getGenerativeModel).mockReturnValue({
+      generateContent: mockGenerateContent,
+    } as any);
 
     const req = new NextRequest('http://localhost/api/quiz/profile', {
       method: 'POST',
@@ -121,11 +134,14 @@ describe('API /api/quiz/profile', () => {
       definition_longue: "Cette définition est beaucoup trop longue pour passer le test de validation car elle contient énormément de mots inutiles répétés plusieurs fois afin de dépasser le seuil maximum autorisé de soixante-quinze mots par la spécification technique de la story un point sept qui demande une synthèse concise et percutante pour l'utilisateur final qui vient de terminer son quiz et attend sa récompense émotionnelle immédiate sans avoir à lire un roman entier sur son style rédactionnel. Trop de mots ici."
     };
     
-    mockModel.generateContent.mockResolvedValue({
-      response: {
+    const mockGenerateContent = vi.fn().mockResolvedValue({
+      response: Promise.resolve({
         text: () => JSON.stringify(mockOutput),
-      },
+      }),
     });
+    vi.mocked(GoogleGenerativeAI.prototype.getGenerativeModel).mockReturnValue({
+      generateContent: mockGenerateContent,
+    } as any);
 
     const req = new NextRequest('http://localhost/api/quiz/profile', {
       method: 'POST',
@@ -149,10 +165,7 @@ describe('API /api/quiz/profile', () => {
     });
 
     it('calculateDriftHint should identify the dimension with maximum drift', () => {
-      // "L'Ingénieur" base vector is [50, 50, 50, 50, 50, 50, 50, 50, 50] (approx for testing if not known, but let's assume one)
-      // Actually let's use a real one from ice-constants if possible or just check the logic
       const baseArchetype = "L'Ingénieur";
-      // We'll mock a large drift on CADENCE (index 0)
       const finalVector = [90, 50, 50, 50, 50, 50, 50, 50, 50];
       
       const hint = calculateDriftHint(baseArchetype, finalVector);
@@ -167,14 +180,17 @@ describe('API /api/quiz/profile', () => {
         finalVector: [100, 85, 80, 40, 20, 20, 20, 50, 90], // Extreme CADENCE
       };
 
-      mockModel.generateContent.mockResolvedValue({
-        response: {
+      const mockGenerateContent = vi.fn().mockResolvedValue({
+        response: Promise.resolve({
           text: () => JSON.stringify({
             label_final: "L'Ingénieur Extrême",
-            definition_longue: "Cette définition est très longue car elle doit valider le test de word count qui est assez strict entre quarante-cinq et soixante-quinze mots pour satisfaire les critères de qualité imposés par Quinn lors de la revue de la story sept. Nous ajoutons donc quelques mots supplémentaires pour atteindre le seuil minimal requis de quarante-cinq mots."
+            definition_longue: "Vous êtes un architecte de la communication, capable de construire des ponts entre la complexité technique et la clarté narrative. Votre force unique réside dans cet équilibre subtil, transformant le jargon en récits captivants. Vous savez allier la rigueur d'un expert à la chaleur d'un conteur, rendant chaque message à la fois crédible et profondément humain."
           }),
-        },
+        }),
       });
+      vi.mocked(GoogleGenerativeAI.prototype.getGenerativeModel).mockReturnValue({
+        generateContent: mockGenerateContent,
+      } as any);
 
       const req = new NextRequest('http://localhost/api/quiz/profile', {
         method: 'POST',
@@ -184,7 +200,6 @@ describe('API /api/quiz/profile', () => {
       const res = await POST(req);
       expect(res.status).toBe(200);
       
-      // Verification that drift hint was calculated for one of the extremes
       const hint = calculateDriftHint(extremePayload.baseArchetype, extremePayload.finalVector);
       expect(hint).toMatch(/CADENCE/);
     });

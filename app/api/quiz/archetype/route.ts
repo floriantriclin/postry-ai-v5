@@ -11,7 +11,7 @@ import { DimensionCode } from '@/lib/types';
 // On attend un objet dont les clés sont les codes de dimension et les valeurs 'A' ou 'B'
 const archetypeRequestSchema = z.object({
   answers: z.record(
-    z.enum(Object.keys(ICE_DIMENSIONS) as [DimensionCode, ...DimensionCode[]]),
+    z.string(),
     z.enum(['A', 'B'])
   ).refine((record) => {
     // Vérifier que toutes les dimensions de la Phase 1 sont présentes

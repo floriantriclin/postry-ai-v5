@@ -1,0 +1,276 @@
+[1A[2K[WebServer] ⚠ The "middleware" file convention is deprecated. Please use "proxy" instead. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+
+
+Running 12 tests using 4 workers
+
+[1A[2K(node:23044) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K(node:23044) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K[1/12] [setup-chromium] › e2e\auth.setup.chromium.ts:12:6 › authenticate for Chromium
+[1A[2K[setup-chromium] › e2e\auth.setup.chromium.ts:12:6 › authenticate for Chromium
+⚠️ [Chromium] Session invalid or expired.
+
+[1A[2K🔄 [Chromium] Performing full authentication...
+
+[1A[2K🛠️ [Chromium] Ensuring data consistency...
+
+[1A[2K✅ [Chromium] Seed post already exists.
+
+[1A[2K✅ [Chromium] Dashboard loaded successfully
+
+[1A[2K✅ [Chromium] Auth state saved to: e2e/.auth/user.chromium.json
+
+[1A[2K(node:9920) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K(node:4712) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K(node:23188) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K(node:25896) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K(node:4712) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K(node:9920) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K(node:23188) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K(node:25896) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K[2/12] [chromium] › e2e\dashboard-multiple-posts.spec.ts:17:9 › Dashboard Multiple Posts (BUG-002) › Authenticated › should display most recent post when multiple revealed posts exist
+[1A[2K[3/12] [setup-firefox] › e2e\auth.setup.firefox.ts:12:6 › authenticate for Firefox
+[1A[2K[4/12] [chromium] › e2e\dashboard-multiple-posts.spec.ts:223:9 › Dashboard Multiple Posts (BUG-002) › Authenticated › should handle 10+ posts without performance issues
+[1A[2K[5/12] [chromium] › e2e\dashboard-multiple-posts.spec.ts:142:9 › Dashboard Multiple Posts (BUG-002) › Authenticated › should not display posts with status='pending'
+[1A[2K[chromium] › e2e\dashboard-multiple-posts.spec.ts:17:9 › Dashboard Multiple Posts (BUG-002) › Authenticated › should display most recent post when multiple revealed posts exist
+[authenticateProgrammatically] Using isolated user: test-ad124ca3ccb0bef961e0@example.com
+
+[1A[2K[chromium] › e2e\dashboard-multiple-posts.spec.ts:223:9 › Dashboard Multiple Posts (BUG-002) › Authenticated › should handle 10+ posts without performance issues
+[authenticateProgrammatically] Using isolated user: test-ad124ca3ccb0bef961e0@example.com
+
+[1A[2K[chromium] › e2e\dashboard-multiple-posts.spec.ts:142:9 › Dashboard Multiple Posts (BUG-002) › Authenticated › should not display posts with status='pending'
+[authenticateProgrammatically] Using isolated user: test-ad124ca3ccb0bef961e0@example.com
+
+[1A[2K[setup-firefox] › e2e\auth.setup.firefox.ts:12:6 › authenticate for Firefox
+⚠️ [Firefox] Session invalid or expired.
+
+[1A[2K🔄 [Firefox] Performing full authentication...
+
+[1A[2K[chromium] › e2e\dashboard-multiple-posts.spec.ts:17:9 › Dashboard Multiple Posts (BUG-002) › Authenticated › should display most recent post when multiple revealed posts exist
+[authenticateProgrammatically] Session created for user: test-ad124ca3ccb0bef961e0@example.com
+
+[1A[2K[chromium] › e2e\dashboard-multiple-posts.spec.ts:223:9 › Dashboard Multiple Posts (BUG-002) › Authenticated › should handle 10+ posts without performance issues
+[authenticateProgrammatically] Session created for user: test-ad124ca3ccb0bef961e0@example.com
+
+[1A[2K[chromium] › e2e\dashboard-multiple-posts.spec.ts:142:9 › Dashboard Multiple Posts (BUG-002) › Authenticated › should not display posts with status='pending'
+[authenticateProgrammatically] Session created for user: test-ad124ca3ccb0bef961e0@example.com
+
+[1A[2K[chromium] › e2e\dashboard-multiple-posts.spec.ts:223:9 › Dashboard Multiple Posts (BUG-002) › Authenticated › should handle 10+ posts without performance issues
+[authenticateProgrammatically] Session injected via context.addCookies (Firefox-compatible)
+
+[1A[2K[chromium] › e2e\dashboard-multiple-posts.spec.ts:17:9 › Dashboard Multiple Posts (BUG-002) › Authenticated › should display most recent post when multiple revealed posts exist
+[authenticateProgrammatically] Session injected via context.addCookies (Firefox-compatible)
+
+[1A[2K[authenticateProgrammatically] Session injected into localStorage AND cookies as sb-hoomcbsfqunrkeapxbvh-auth-token
+
+[1A[2K[chromium] › e2e\dashboard-multiple-posts.spec.ts:223:9 › Dashboard Multiple Posts (BUG-002) › Authenticated › should handle 10+ posts without performance issues
+[authenticateProgrammatically] Session injected into localStorage AND cookies as sb-hoomcbsfqunrkeapxbvh-auth-token
+
+[1A[2K[chromium] › e2e\dashboard-multiple-posts.spec.ts:142:9 › Dashboard Multiple Posts (BUG-002) › Authenticated › should not display posts with status='pending'
+[authenticateProgrammatically] Session injected via context.addCookies (Firefox-compatible)
+
+[1A[2K[authenticateProgrammatically] Session injected into localStorage AND cookies as sb-hoomcbsfqunrkeapxbvh-auth-token
+
+[1A[2K[setup-firefox] › e2e\auth.setup.firefox.ts:12:6 › authenticate for Firefox
+🛠️ [Firefox] Ensuring data consistency...
+
+[1A[2K✅ [Firefox] Seed post already exists.
+
+[1A[2K✅ [Firefox] Dashboard loaded successfully
+
+[1A[2K✅ [Firefox] Auth state saved to: e2e/.auth/user.firefox.json
+
+[1A[2K  1) [chromium] › e2e\dashboard-multiple-posts.spec.ts:223:9 › Dashboard Multiple Posts (BUG-002) › Authenticated › should handle 10+ posts without performance issues 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: getByText('Test Performance Post 0')
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 5000ms[22m
+    [2m  - waiting for getByText('Test Performance Post 0')[22m
+
+
+      324 |
+      325 |       // Verify: Most recent post (Post 0) is displayed
+    > 326 |       await expect(page.getByText("Test Performance Post 0")).toBeVisible();
+          |                                                               ^
+      327 |
+      328 |       // Verify: Performance is acceptable (loads within 5 seconds)
+      329 |       expect(loadTime).toBeLessThan(5000);
+        at C:\dev\postry-ai\e2e\dashboard-multiple-posts.spec.ts:326:63
+
+    Error Context: test-results\dashboard-multiple-posts-D-98c25--without-performance-issues-chromium\error-context.md
+
+
+[1A[2K(node:34592) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K(node:37844) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K(node:32280) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K(node:8152) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K(node:34592) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K(node:37844) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K(node:32280) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K(node:8152) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K[6/12] [setup-webkit] › e2e\auth.setup.webkit.ts:12:6 › authenticate for WebKit
+[1A[2K[7/12] [firefox] › e2e\dashboard-multiple-posts.spec.ts:142:9 › Dashboard Multiple Posts (BUG-002) › Authenticated › should not display posts with status='pending'
+[1A[2K[8/12] [firefox] › e2e\dashboard-multiple-posts.spec.ts:17:9 › Dashboard Multiple Posts (BUG-002) › Authenticated › should display most recent post when multiple revealed posts exist
+[1A[2K[9/12] [firefox] › e2e\dashboard-multiple-posts.spec.ts:223:9 › Dashboard Multiple Posts (BUG-002) › Authenticated › should handle 10+ posts without performance issues
+[1A[2K[setup-webkit] › e2e\auth.setup.webkit.ts:12:6 › authenticate for WebKit
+⚠️ [WebKit] Session invalid or expired.
+
+[1A[2K🔄 [WebKit] Performing full authentication...
+
+[1A[2K🛠️ [WebKit] Ensuring data consistency...
+
+[1A[2K✅ [WebKit] Seed post already exists.
+
+[1A[2K✅ [WebKit] Dashboard loaded successfully
+
+[1A[2K✅ [WebKit] Auth state saved to: e2e/.auth/user.webkit.json
+
+[1A[2K(node:9036) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K(node:15320) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K(node:5800) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K(node:15320) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K(node:9036) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K(node:5800) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1A[2K[10/12] [webkit] › e2e\dashboard-multiple-posts.spec.ts:142:9 › Dashboard Multiple Posts (BUG-002) › Authenticated › should not display posts with status='pending'
+[1A[2K[11/12] [webkit] › e2e\dashboard-multiple-posts.spec.ts:17:9 › Dashboard Multiple Posts (BUG-002) › Authenticated › should display most recent post when multiple revealed posts exist
+[1A[2K[12/12] [webkit] › e2e\dashboard-multiple-posts.spec.ts:223:9 › Dashboard Multiple Posts (BUG-002) › Authenticated › should handle 10+ posts without performance issues
+[1A[2K[webkit] › e2e\dashboard-multiple-posts.spec.ts:142:9 › Dashboard Multiple Posts (BUG-002) › Authenticated › should not display posts with status='pending'
+[authenticateProgrammatically] Using isolated user: test-ad124ca3ccb0bef961e0@example.com
+
+[1A[2K[webkit] › e2e\dashboard-multiple-posts.spec.ts:17:9 › Dashboard Multiple Posts (BUG-002) › Authenticated › should display most recent post when multiple revealed posts exist
+[authenticateProgrammatically] Using isolated user: test-ad124ca3ccb0bef961e0@example.com
+
+[1A[2K[webkit] › e2e\dashboard-multiple-posts.spec.ts:223:9 › Dashboard Multiple Posts (BUG-002) › Authenticated › should handle 10+ posts without performance issues
+[authenticateProgrammatically] Using isolated user: test-ad124ca3ccb0bef961e0@example.com
+
+[1A[2K[authenticateProgrammatically] Session created for user: test-ad124ca3ccb0bef961e0@example.com
+
+[1A[2K[webkit] › e2e\dashboard-multiple-posts.spec.ts:142:9 › Dashboard Multiple Posts (BUG-002) › Authenticated › should not display posts with status='pending'
+[authenticateProgrammatically] Session created for user: test-ad124ca3ccb0bef961e0@example.com
+
+[1A[2K[webkit] › e2e\dashboard-multiple-posts.spec.ts:17:9 › Dashboard Multiple Posts (BUG-002) › Authenticated › should display most recent post when multiple revealed posts exist
+[authenticateProgrammatically] Session created for user: test-ad124ca3ccb0bef961e0@example.com
+
+[1A[2K[webkit] › e2e\dashboard-multiple-posts.spec.ts:223:9 › Dashboard Multiple Posts (BUG-002) › Authenticated › should handle 10+ posts without performance issues
+[authenticateProgrammatically] Session injected via context.addCookies (Firefox-compatible)
+
+[1A[2K[authenticateProgrammatically] Session injected into localStorage AND cookies as sb-hoomcbsfqunrkeapxbvh-auth-token
+
+[1A[2K[webkit] › e2e\dashboard-multiple-posts.spec.ts:142:9 › Dashboard Multiple Posts (BUG-002) › Authenticated › should not display posts with status='pending'
+[authenticateProgrammatically] Session injected via context.addCookies (Firefox-compatible)
+
+[1A[2K[authenticateProgrammatically] Session injected into localStorage AND cookies as sb-hoomcbsfqunrkeapxbvh-auth-token
+
+[1A[2K[webkit] › e2e\dashboard-multiple-posts.spec.ts:17:9 › Dashboard Multiple Posts (BUG-002) › Authenticated › should display most recent post when multiple revealed posts exist
+[authenticateProgrammatically] Session injected via context.addCookies (Firefox-compatible)
+
+[1A[2K[authenticateProgrammatically] Session injected into localStorage AND cookies as sb-hoomcbsfqunrkeapxbvh-auth-token
+
+[1A[2K  2) [webkit] › e2e\dashboard-multiple-posts.spec.ts:223:9 › Dashboard Multiple Posts (BUG-002) › Authenticated › should handle 10+ posts without performance issues 
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: getByText('Test Performance Post 0')
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 5000ms[22m
+    [2m  - waiting for getByText('Test Performance Post 0')[22m
+
+
+      324 |
+      325 |       // Verify: Most recent post (Post 0) is displayed
+    > 326 |       await expect(page.getByText("Test Performance Post 0")).toBeVisible();
+          |                                                               ^
+      327 |
+      328 |       // Verify: Performance is acceptable (loads within 5 seconds)
+      329 |       expect(loadTime).toBeLessThan(5000);
+        at C:\dev\postry-ai\e2e\dashboard-multiple-posts.spec.ts:326:63
+
+    Error Context: test-results\dashboard-multiple-posts-D-98c25--without-performance-issues-webkit\error-context.md
+
+
+[1A[2K  2 failed
+    [chromium] › e2e\dashboard-multiple-posts.spec.ts:223:9 › Dashboard Multiple Posts (BUG-002) › Authenticated › should handle 10+ posts without performance issues 
+    [webkit] › e2e\dashboard-multiple-posts.spec.ts:223:9 › Dashboard Multiple Posts (BUG-002) › Authenticated › should handle 10+ posts without performance issues 
+  3 skipped
+  7 passed (43.0s)

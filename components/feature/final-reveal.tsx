@@ -1,9 +1,11 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Archetype, Vstyle, PostGenerationResponse } from '@/lib/types';
 import { Loader2, ChevronDown, ChevronUp, X } from 'lucide-react';
 import { LoaderMachine } from '../ui/loader-machine';
+import { AuthModal } from './auth-modal';
+import { supabase } from '@/lib/supabase-client';
 
 interface FinalRevealProps {
   profile: {
@@ -12,16 +14,72 @@ interface FinalRevealProps {
   };
   archetype: Archetype;
   vector: Vstyle;
+  initialPost?: PostGenerationResponse | null;
+  onPostGenerated?: (post: PostGenerationResponse, topic: string) => void;
+  topic?: string;
+  acquisitionTheme?: string;
+  quizAnswers?: any;
 }
 
-export function FinalReveal({ profile, archetype, vector }: FinalRevealProps) {
-  const [topic, setTopic] = useState('');
+export function FinalReveal({
+  profile,
+  archetype,
+  vector,
+  initialPost,
+  onPostGenerated,
+  topic: initialTopic,
+  acquisitionTheme,
+  quizAnswers
+}: FinalRevealProps) {
+  const [topic, setTopic] = useState(initialTopic || '');
   const [isLoading, setIsLoading] = useState(false);
-  const [generatedPost, setGeneratedPost] = useState<PostGenerationResponse | null>(null);
+  const [generatedPost, setGeneratedPost] = useState<PostGenerationResponse | null>(initialPost || null);
+  const [isPostGenerated, setIsPostGenerated] = useState(!!initialPost);
   const [error, setError] = useState<string | null>(null);
   const [showAnalysis, setShowAnalysis] = useState(false);
-  const [email, setEmail] = useState('');
-  const [showGate, setShowGate] = useState(true);
+
+  useEffect(() => {
+    if (initialPost) {
+      setGeneratedPost(initialPost);
+      setIsPostGenerated(true);
+    }
+  }, [initialPost]);
+
+  useEffect(() => {
+    if (initialTopic) {
+      setTopic(initialTopic);
+    }
+  }, [initialTopic]);
+  const [showAuthModal, setShowAuthModal] = useState(false);
+  const [isAuthLoading, setIsAuthLoading] = useState(true);
+
+  // Lock navigation when post is generated to prevent back button usage
+  useEffect(() => {
+    if (isPostGenerated) {
+      // Push current state to stack
+      window.history.pushState(null, "", window.location.href);
+      
+      const handlePopState = () => {
+        // If user tries to go back, push state again to stay here
+        window.history.pushState(null, "", window.location.href);
+      };
+
+      window.addEventListener("popstate", handlePopState);
+      return () => window.removeEventListener("popstate", handlePopState);
+    }
+  }, [isPostGenerated]);
+
+  useEffect(() => {
+    const checkSession = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        setShowAuthModal(true);
+      }
+      setIsAuthLoading(false);
+    };
+
+    checkSession();
+  }, []);
 
   const handleGenerate = async () => {
     if (!topic || topic.length < 3) return;
@@ -44,6 +102,8 @@ export function FinalReveal({ profile, archetype, vector }: FinalRevealProps) {
 
       const data = await res.json();
       setGeneratedPost(data);
+      setIsPostGenerated(true);
+      if (onPostGenerated) onPostGenerated(data, topic);
     } catch (err) {
       setError('Impossible de générer le post. Veuillez réessayer.');
       console.error(err);
@@ -65,7 +125,7 @@ export function FinalReveal({ profile, archetype, vector }: FinalRevealProps) {
       <div className="fixed inset-0 z-50 bg-zinc-50 flex flex-col overflow-y-auto animate-in fade-in duration-500">
 
         <div className="flex-1 max-w-2xl mx-auto w-full p-6 md:p-12 flex flex-col items-center pt-20">
-           
+            
            {/* Meta Info Section */}
            <div className="w-full text-center mb-8 space-y-4">
               {/* Profile & Analysis Toggle */}
@@ -115,40 +175,46 @@ export function FinalReveal({ profile, archetype, vector }: FinalRevealProps) {
                     
                     <div className="relative">
                        {/* Content Masking Logic */}
-                       <div className="relative z-0">
+                       <div
+                         className={`relative z-0 transition-all duration-1000 ease-out ${(showAuthModal || isAuthLoading) ? 'select-none' : ''}`}
+                         data-testid="post-content"
+                       >
                           {generatedPost.content}
                        </div>
-                       
-                       {/* Blur Gradient Overlay - Only if gated */}
-                       {showGate && (
-                         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/80 to-white z-10 pointer-events-none"
-                              style={{ background: 'linear-gradient(to bottom, transparent 10%, rgba(255,255,255,0.6) 20%, #ffffff 35%)' }} />
+                        
+                       {/* Blur/Gate Logic (Story 2.3/2.4) */}
+                       {(showAuthModal || isAuthLoading) && (
+                         <div className="absolute inset-0 bg-[linear-gradient(to_bottom,rgba(255,255,255,0)_0%,rgba(255,255,255,1)_40%,rgba(255,255,255,1)_60%)] z-10 pointer-events-none" />
                        )}
-                       
-                       {/* Email Gate Overlay */}
-                       {showGate && (
-                         <div className="absolute inset-0 z-20 flex flex-col items-center justify-center pt-32">
-                            <div className="bg-white p-8 border-2 border-dashed border-zinc-300 text-center max-w-sm mx-auto shadow-2xl">
-                               <h3 className="font-bold text-xl mb-2 uppercase tracking-tight">Post Prêt</h3>
-                               <p className="text-zinc-600 mb-6">Entrez votre email pour sauvegarder votre post et le découvrir en entier.</p>
-                               <input
-                                  type="email"
-                                  placeholder="votre@email.com"
-                                  className="raw-input w-full mb-4 text-center"
-                                  value={email}
-                                  onChange={(e) => setEmail(e.target.value)}
-                               />
-                               <button
-                                 className="raw-button raw-button-primary w-full"
-                                 disabled={!email.includes('@')}
-                                 onClick={() => setShowGate(false)}
-                               >
-                                  Voir mon résultat
-                               </button>
-                            </div>
-                         </div>
-                       )}
-                    </div>
+                        
+                       {/* Auth Modal Integration Point (Story 2.3) */}
+                       {showAuthModal && !isAuthLoading && (
+                         <div className="absolute inset-0 z-20 flex items-center justify-center">
+                          <AuthModal 
+                            postData={{
+                              theme: topic,
+                              content: `${generatedPost.hook}\n\n${generatedPost.content}\n\n${generatedPost.cta}`,
+                              quiz_answers: {
+                                acquisition_theme: acquisitionTheme || '',
+                                p1: quizAnswers?.p1 || {},
+                                p2: quizAnswers?.p2 || {}
+                              },
+                              equalizer_settings: {
+                                vector: vector,
+                                profile: profile,
+                                archetype: archetype.name,
+                                components: {
+                                  hook: generatedPost.hook,
+                                  content_body: generatedPost.content,
+                                  cta: generatedPost.cta,
+                                  style_analysis: generatedPost.style_analysis
+                                }
+                              }
+                            }}
+                          />
+                        </div>
+                      )}
+                   </div>
                  </div>
               </div>
            </div>
@@ -195,7 +261,7 @@ export function FinalReveal({ profile, archetype, vector }: FinalRevealProps) {
           <button
             className="raw-button raw-button-primary whitespace-nowrap min-w-[140px] flex justify-center items-center py-4 md:py-0"
             onClick={handleGenerate}
-            disabled={isLoading || topic.length < 3}
+            disabled={isLoading || topic.length < 3 || isPostGenerated}
           >
             {isLoading ? <Loader2 className="animate-spin" /> : 'Générer un post'}
           </button>

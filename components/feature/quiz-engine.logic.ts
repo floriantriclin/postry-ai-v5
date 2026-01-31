@@ -31,6 +31,15 @@ export interface QuizState {
   // Profile State
   profileData: ProfileResponse | null;
   
+  // Post Generation State (Persisted)
+  postTopic: string | null;
+  generatedPost: {
+    hook: string;
+    content: string;
+    cta: string;
+    style_analysis: string;
+  } | null;
+
   error: string | null;
 }
 
@@ -55,6 +64,7 @@ export type QuizAction =
   | { type: 'API_PROFILE_SUCCESS'; payload: ProfileResponse }
   | { type: 'API_PROFILE_ERROR'; payload: { error: string; fallback: ProfileResponse } }
   | { type: 'FINISH_LOADING' }
+  | { type: 'POST_GENERATED'; payload: { post: { hook: string; content: string; cta: string; style_analysis: string }; topic: string } }
   | { type: 'HYDRATE'; payload: QuizState };
 
 export const initialState: QuizState = {
@@ -69,6 +79,8 @@ export const initialState: QuizState = {
   answersP2: {},
   currentVector: null,
   profileData: null,
+  postTopic: null,
+  generatedPost: null,
   error: null,
 };
 
@@ -257,6 +269,9 @@ export function quizReducer(state: QuizState, action: QuizAction): QuizState {
     case 'FINISH_LOADING':
       if (state.step !== 'LOADING_RESULTS') return state;
       return { ...state, step: 'FINAL_REVEAL' };
+
+    case 'POST_GENERATED':
+      return { ...state, generatedPost: action.payload.post, postTopic: action.payload.topic };
 
     case 'HYDRATE':
       return action.payload;

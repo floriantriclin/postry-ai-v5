@@ -1,0 +1,99 @@
+
+> postry-ai@0.1.0 test
+> vitest --no-color
+
+TAP version 13
+1..93
+ok 1 - hooks/use-copy-to-clipboard.test.ts > useCopyToClipboard > should copy text to clipboard and update copied state # time=18.24ms
+ok 2 - lib/gemini.test.ts > lib/gemini.ts utilities > cleanJsonResponse > should handle pure JSON # time=1.30ms
+ok 3 - lib/gemini.test.ts > lib/gemini.ts utilities > cleanJsonResponse > should handle markdown blocks # time=0.32ms
+ok 4 - lib/gemini.test.ts > lib/gemini.ts utilities > cleanJsonResponse > should handle markdown blocks with surrounding text # time=0.17ms
+ok 5 - lib/gemini.test.ts > lib/gemini.ts utilities > cleanJsonResponse > should handle text before and after JSON # time=0.16ms
+ok 6 - lib/gemini.test.ts > lib/gemini.ts utilities > cleanJsonResponse > should throw error on invalid JSON structure # time=1.00ms
+ok 7 - lib/gemini.test.ts > lib/gemini.ts utilities > sanitizeTopic > should remove tags # time=0.39ms
+ok 8 - lib/gemini.test.ts > lib/gemini.ts utilities > sanitizeTopic > should remove prompt injection attempts # time=0.15ms
+ok 9 - lib/gemini.test.ts > lib/gemini.ts utilities > sanitizeTopic > should truncate long topics # time=0.16ms
+ok 10 - lib/gemini.test.ts > lib/gemini.ts utilities > generateWithGemini > should return parsed data on success # time=4.77ms
+ok 11 - lib/gemini.test.ts > lib/gemini.ts utilities > generateWithGemini > should retry on failure and succeed # time=1013.54ms
+ok 12 - lib/gemini.test.ts > lib/gemini.ts utilities > generateWithGemini > should fail after maximum retries # time=1004.32ms
+ok 13 - lib/gemini.test.ts > lib/gemini.ts utilities > generateWithGemini > should throw error if Gemini returns invalid JSON structure # time=0.43ms
+ok 14 - lib/gemini.test.ts > lib/gemini.ts utilities > generateWithGemini > should throw error if Gemini returns data that fails Zod validation # time=0.79ms
+ok 15 - lib/ice-protocol.spec.ts > ICE Protocol Core Logic > Suite 1: Data Integrity & Constants > should have exactly 15 archetypes in the registry # time=1.54ms
+ok 16 - lib/ice-protocol.spec.ts > ICE Protocol Core Logic > Suite 1: Data Integrity & Constants > should validate all archetypes have correct structure and valid values # time=2.33ms
+ok 17 - lib/ice-protocol.spec.ts > ICE Protocol Core Logic > Suite 2: Archetype Detection (getClosestArchetype) > should identify the correct archetype from an exact signature (Strategist) # time=0.35ms
+ok 18 - lib/ice-protocol.spec.ts > ICE Protocol Core Logic > Suite 2: Archetype Detection (getClosestArchetype) > should identify the correct archetype from a signature with 1-bit difference # time=0.17ms
+ok 19 - lib/ice-protocol.spec.ts > ICE Protocol Core Logic > Suite 2: Archetype Detection (getClosestArchetype) > should follow the tie-breaking rule (first found) when equidistant from two archetypes # time=0.25ms
+ok 20 - lib/ice-protocol.spec.ts > ICE Protocol Core Logic > Suite 3: Vector Evolution (updateVector) > should round to 60 when updating Current=85 towards Target=0 (Option A) # time=0.21ms
+ok 21 - lib/ice-protocol.spec.ts > ICE Protocol Core Logic > Suite 3: Vector Evolution (updateVector) > should round to 90 when updating Current=85 towards Target=100 (Option B) # time=0.11ms
+ok 22 - lib/ice-protocol.spec.ts > ICE Protocol Core Logic > Suite 3: Vector Evolution (updateVector) > should remain stable at boundaries (0 towards 0) # time=0.14ms
+ok 23 - lib/ice-protocol.spec.ts > ICE Protocol Core Logic > Suite 3: Vector Evolution (updateVector) > should remain stable at boundaries (100 towards 100) # time=0.12ms
+ok 24 - lib/ice-protocol.spec.ts > ICE Protocol Core Logic > Suite 4: Phase 2 Dimension Selection (getTargetDimensions) > should always include the three mandatory dimensions (STR, INF, ANC) # time=1.49ms
+ok 25 - lib/ice-protocol.spec.ts > ICE Protocol Core Logic > Suite 4: Phase 2 Dimension Selection (getTargetDimensions) > should select dimensions closest to 50 among Phase 1 dimensions # time=0.39ms
+ok 26 - lib/ice-protocol.spec.ts > ICE Protocol Core Logic > Suite 4: Phase 2 Dimension Selection (getTargetDimensions) > should follow Phase 1 order tie-breaking rule when distances from 50 are equal # time=0.60ms
+ok 27 - lib/quiz-api-client.test.ts > QuizApiClient > 1.8.1-UNIT-001: should return typed data on 200 OK (generateQuestions) # time=6.52ms
+ok 28 - lib/quiz-api-client.test.ts > QuizApiClient > 1.8.1-UNIT-001: should return typed data on 200 OK (identifyArchetype) # time=1.01ms
+ok 29 - lib/quiz-api-client.test.ts > QuizApiClient > 1.8.1-UNIT-002: should throw specific errors on 4xx/5xx # time=2.28ms
+ok 30 - lib/quiz-api-client.test.ts > QuizApiClient > 1.8.1-UNIT-002: should throw generic error if no error message in JSON # time=0.78ms
+ok 31 - app/dashboard/post-reveal-view.test.tsx > PostRevealView > should render the post content # time=25.66ms
+ok 32 - app/dashboard/post-reveal-view.test.tsx > PostRevealView > TI-2.5-02: should render the loader when post is undefined # time=7.14ms
+ok 33 - app/dashboard/post-reveal-view.test.tsx > PostRevealView > TI-2.5-03: should render the empty state when post is null # time=87.40ms
+ok 34 - components/feature/auth-modal.test.tsx > AuthModal Component > should display the initial state correctly # time=106.55ms
+ok 35 - components/feature/auth-modal.test.tsx > AuthModal Component > should show an error if the form is submitted with an empty email # time=50.63ms
+ok 36 - components/feature/auth-modal.test.tsx > AuthModal Component > should show an API error for invalid email format # time=217.86ms
+ok 37 - components/feature/auth-modal.test.tsx > AuthModal Component > should call signInWithOtp with a valid email containing special characters # time=548.51ms
+ok 38 - components/feature/auth-modal.test.tsx > AuthModal Component > should show a loading state during submission # time=378.53ms
+ok 39 - components/feature/auth-modal.test.tsx > AuthModal Component > should show a success message on successful submission # time=358.84ms
+ok 40 - components/feature/auth-modal.test.tsx > AuthModal Component > should show an API error message on failed submission # time=367.52ms
+ok 41 - components/feature/auth-modal.test.tsx > AuthModal Component > should have role="dialog" on the modal container # time=1.96ms
+ok 42 - components/feature/auth-modal.test.tsx > AuthModal Component > should trap focus within the modal # time=148.10ms
+ok 43 - components/feature/auth-modal.test.tsx > AuthModal Component > should execute onPreAuth before authentication if provided # time=351.03ms
+ok 44 - components/feature/auth-modal.test.tsx > AuthModal Component > should stop and show error if onPreAuth fails # time=378.19ms
+ok 45 - components/feature/quiz-engine.logic.test.ts > Quiz Engine Logic (Reducer) > should start in THEMES step with idle status # time=1.73ms
+ok 46 - components/feature/quiz-engine.logic.test.ts > Quiz Engine Logic (Reducer) > should transition to INSTRUCTIONS when a theme is selected # time=0.57ms
+ok 47 - components/feature/quiz-engine.logic.test.ts > Quiz Engine Logic (Reducer) > should handle API_LOAD_P1_START # time=0.37ms
+ok 48 - components/feature/quiz-engine.logic.test.ts > Quiz Engine Logic (Reducer) > should handle API_LOAD_P1_SUCCESS # time=0.85ms
+ok 49 - components/feature/quiz-engine.logic.test.ts > Quiz Engine Logic (Reducer) > should handle API_LOAD_P1_ERROR with fallback # time=0.44ms
+ok 50 - components/feature/quiz-engine.logic.test.ts > Quiz Engine Logic (Reducer) > should transition to PHASE1 when START_QUIZ is dispatched # time=0.41ms
+ok 51 - components/feature/quiz-engine.logic.test.ts > Quiz Engine Logic (Reducer) > should increment question index in PHASE1 # time=0.29ms
+ok 52 - components/feature/quiz-engine.logic.test.ts > Quiz Engine Logic (Reducer) > should handle API_ARCHETYPE_START # time=0.16ms
+ok 53 - components/feature/quiz-engine.logic.test.ts > Quiz Engine Logic (Reducer) > should transition to TRANSITION_ARCHETYPE on API_ARCHETYPE_SUCCESS # time=0.24ms
+ok 54 - components/feature/quiz-engine.logic.test.ts > Quiz Engine Logic (Reducer) > should handle PREVIOUS_PHASE1 and remove last answer # time=0.30ms
+ok 55 - components/feature/quiz-engine.test.tsx > QuizEngine Integration (Orchestration) > 1.8.1-INT-001: should call /generate when entering INSTRUCTIONS step # time=28.79ms
+ok 56 - components/feature/quiz-engine.test.tsx > QuizEngine Integration (Orchestration) > 1.8.1-INT-002: should call /archetype after 6th question # time=32.98ms
+ok 57 - components/feature/quiz-engine.test.tsx > QuizEngine Integration (Orchestration) > 1.8.1-INT-003: should fallback to mock-quiz.json on API error # time=19.77ms
+ok 58 - app/api/quiz/logic.test.ts > Quiz Logic API Integration Tests > POST /api/quiz/archetype > should return 400 if dimensions are missing # time=10.28ms
+ok 59 - app/api/quiz/logic.test.ts > Quiz Logic API Integration Tests > POST /api/quiz/archetype > should return 400 if values are not A or B # time=2.16ms
+ok 60 - app/api/quiz/logic.test.ts > Quiz Logic API Integration Tests > POST /api/quiz/archetype > should calculate archetype and target dimensions for a valid payload # time=3.43ms
+ok 61 - app/api/quiz/logic.test.ts > Quiz Logic API Integration Tests > POST /api/quiz/archetype > should select dimensions closest to 50 for Phase 2 (1.6-INT-009) # time=2.77ms
+ok 62 - app/api/quiz/logic.test.ts > Quiz Logic API Integration Tests > POST /api/quiz/refine > should return 400 for invalid vector length # time=2.43ms
+ok 63 - app/api/quiz/logic.test.ts > Quiz Logic API Integration Tests > POST /api/quiz/refine > should return 400 for invalid dimension code (1.6-INT-007) # time=1.58ms
+ok 64 - app/api/quiz/logic.test.ts > Quiz Logic API Integration Tests > POST /api/quiz/refine > should update vector correctly for answer A (target 0) # time=1.47ms
+ok 65 - app/api/quiz/logic.test.ts > Quiz Logic API Integration Tests > POST /api/quiz/refine > should update vector correctly for answer B (target 100) # time=1.15ms
+ok 66 - app/api/quiz/logic.test.ts > Quiz Logic API Integration Tests > POST /api/quiz/generate (Phase 2) > should generate Phase 2 questions with valid context # time=2.99ms
+ok 67 - app/api/quiz/logic.test.ts > Quiz Logic API Integration Tests > POST /api/quiz/generate (Phase 2) > should fail if context is inssing for phase 2 # time=1.43ms
+ok 68 - app/api/quiz/logic.test.ts > Quiz Logic API Integration Tests > POST /api/quiz/profile > should fail with invalid vector # time=2.44ms
+ok 69 - app/api/quiz/generate/route.test.ts > API /api/quiz/generate > should return 400 for invalid request body # time=9.64ms
+ok 70 - app/api/quiz/generate/route.test.ts > API /api/quiz/generate > should call generateWithGemini for Phase 1 # time=4.18ms
+ok 71 - app/api/quiz/generate/route.test.ts > API /api/quiz/generate > should call generateWithGemini for Phase 2 # time=3.13ms
+ok 72 - app/api/quiz/generate/route.test.ts > API /api/quiz/generate > should return 400 for Phase 2 without context # time=1.76ms
+ok 73 - app/api/quiz/generate/route.test.ts > API /api/quiz/generate > should return 502 if generateWithGemini fails # time=6.16ms
+ok 74 - app/api/quiz/generate/route.test.ts > API /api/quiz/generate > should sanitize the topic # time=1.16ms
+ok 75 - app/api/quiz/generate/route.test.ts > API /api/quiz/generate > should resolve theme ID to label # time=2.99ms
+ok 76 - app/api/quiz/generate/route.test.ts > API /api/quiz/generate > should return 504 on timeout # time=2.30ms
+ok 77 - app/api/quiz/archetype/route.test.ts > POST /api/quiz/archetype > should return 400 when payload is invalid (missing dimensions) # time=11.73ms
+ok 78 - app/api/quiz/archetype/route.test.ts > POST /api/quiz/archetype > should return archetype and target dimensions for a valid set of answers # time=2.48ms
+ok 79 - app/api/quiz/archetype/route.test.ts > POST /api/quiz/archetype > should handle internal server errors gracefully # time=4.65ms
+ok 80 - app/api/quiz/post/route.test.ts > POST /api/quiz/post > should generate a post successfully # time=13.87ms
+ok 81 - app/api/quiz/post/route.test.ts > POST /api/quiz/post > should return 400 for invalid body # time=2.63ms
+ok 82 - app/api/quiz/pre-persist/route.test.ts > API /api/quiz/pre-persist > should return 400 for invalid payload # time=10.57ms
+ok 83 - app/api/quiz/pre-persist/route.test.ts > API /api/quiz/pre-persist > should insert a new post if none is pending # time=2.58ms
+ok 84 - app/api/quiz/pre-persist/route.test.ts > API /api/quiz/pre-persist > should update an existing pending post # time=3.06ms
+ok 85 - app/api/quiz/profile/route.test.ts > API /api/quiz/profile > should return 400 for invalid request body # time=10.21ms
+ok 86 - app/api/quiz/profile/route.test.ts > API /api/quiz/profile > should return 200 and synthesized profile on success # time=5.24ms
+ok 87 - app/api/quiz/profile/route.test.ts > API /api/quiz/profile > should retry if Gemini returns malformed JSON # time=1016.87ms
+ok 88 - app/api/quiz/profile/route.test.ts > API /api/quiz/profile > should return 502 if Gemini fails after 3 retries # time=3017.97ms
+ok 89 - app/api/quiz/profile/route.test.ts > API /api/quiz/profile > should fail if word count is too low # time=3013.55ms
+ok 90 - app/api/quiz/profile/route.test.ts > API /api/quiz/profile > should fail if word count is too high # time=3013.50ms
+ok 91 - app/api/quiz/profile/route.test.ts > API /api/quiz/profile > Unit Tests: Helpers > formatVectorForPrompt should map vector to named dimensions # time=0.35ms
+ok 92 - app/api/quiz/profile/route.test.ts > API /api/quiz/profile > Unit Tests: Helpers > calculateDriftHint should identify the dimension with maximum drift # time=0.15ms
+ok 93 - app/api/quiz/profile/route.test.ts > API /api/quiz/profile > Extreme Vectors > should handle vectors with values < 15 or > 85 # time=0.82ms
